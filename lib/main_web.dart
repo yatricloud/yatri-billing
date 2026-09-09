@@ -26,6 +26,8 @@ import 'package:invoiso/services/supabase_config.dart';
 import 'package:invoiso/theme/app_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:invoiso/screens/missing_config_screen.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PaintingBinding.instance.imageCache.clear();
@@ -64,6 +66,25 @@ Future<void> main() async {
       ),
     );
   };
+
+  // Attempt to safely load environment variables (via compile-time or runtime /api/config)
+  await SupabaseConfig.load();
+
+  // If environment variables are missing, NEVER attempt to initialize database.
+  // Display the secure setup screen instead.
+  if (!SupabaseConfig.isConfigured) {
+    runApp(MaterialApp(
+      title: AppConfig.name,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      home: MissingConfigScreen(
+        onRetry: () {
+          main();
+        },
+      ),
+    ));
+    return;
+  }
 
   // Initialize Supabase with the public client credentials.
   await Supabase.initialize(

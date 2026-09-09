@@ -156,16 +156,40 @@ cd yatri-billing
 # 2. Install dependencies
 flutter pub get
 
-# 3. Run in debug mode
+# 3. Run Desktop in debug mode
 flutter run -d linux      # Linux
 flutter run -d windows    # Windows
 flutter run -d macos      # macOS
 
-# 4. Build a release binary
+# 4. Run Web Cloud Edition
+# Copy .env.example to .env and provide your Supabase credentials:
+cp .env.example .env
+flutter run -d chrome --dart-define-from-file=.env -t lib/main_web.dart
+
+# 5. Build for Web Production
+flutter build web --dart-define-from-file=.env -t lib/main_web.dart
+
+# 6. Build a Desktop release binary
 flutter build linux --release    # Linux
 flutter build windows --release  # Windows
 flutter build macos --release    # macOS
 ```
+
+### 🔒 Environment Variables & Security Principles
+
+Yatri Billing strictly isolates database connections and enforces modern security practices:
+- **Zero Hardcoded Secrets**: No database connection strings, passwords, or credentials are hardcoded into the frontend codebase.
+- **Strict Client-Side Shield**: If environment variables (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) are missing, the frontend will **never** load or connect to the database. Instead, a secure configuration screen is displayed.
+- **Service Role Prohibition**: The client automatically rejects and aborts if any `service_role` key is provided. Only the public `anon` (publishable) key is permitted.
+- **Row Level Security (RLS)**: All database queries are filtered and authorized strictly according to Supabase RLS policies.
+
+#### Configuring Vercel
+In your Vercel project dashboard:
+1. Go to **Settings > Environment Variables**.
+2. Add:
+   - `SUPABASE_URL`: Your Supabase Project URL (`https://<project-ref>.supabase.co`)
+   - `SUPABASE_ANON_KEY`: Your Supabase public anon key (never use your service_role key)
+3. Redeploy the application.
 
 Output locations:
 - **Linux:** `build/linux/x64/release/bundle/`

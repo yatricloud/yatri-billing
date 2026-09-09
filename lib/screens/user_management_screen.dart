@@ -159,7 +159,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen>
               title: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  color: const Color(0xFFEFF6FF), // blue-50 solid, matches Yatri Cloud reference
                   borderRadius: BorderRadius.circular(AppBorderRadius.xsmall),
                 ),
                 child: Row(

@@ -1,11 +1,11 @@
 {
-    "name": "invoiso",
-    "short_name": "invoiso",
+    "name": "Yatri Billing",
+    "short_name": "Yatri Billing",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Invoice generating desktop app built with Flutter",
+    "background_color": "#0070E0",
+    "theme_color": "#0070E0",
+    "description": "Cloud-Native Invoicing and Billing Platform by Yatri Cloud",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

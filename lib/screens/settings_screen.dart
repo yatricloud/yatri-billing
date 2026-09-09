@@ -19,6 +19,8 @@ import 'package:invoiso/models/user.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:image/image.dart' as img;
+import 'package:invoiso/theme/app_typography.dart';
+import 'package:invoiso/theme/coinbase_tokens.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   final User currentUser;
@@ -370,8 +372,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: primaryColor.withValues(alpha: 0.08),
+                      color: CbTokens.surfaceSoft,
                       shape: BoxShape.circle,
+                      border: Border.all(color: CbTokens.hairline),
                     ),
                     child: Icon(Icons.add_photo_alternate_outlined,
                         size: 36, color: primaryColor),
@@ -391,16 +394,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ));
 
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? null
-          : Theme.of(context).colorScheme.surfaceContainerHighest,
+      backgroundColor: CbTokens.background,
       appBar: AppBar(
-        title: const Text('Company Information'),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-            primaryColor,
-        foregroundColor: Colors.white,
+        title: Text('Company Information', style: AppTypography.titleMd(CbTokens.ink)),
+        backgroundColor: CbTokens.surface,
+        foregroundColor: CbTokens.ink,
         elevation: 0,
         centerTitle: false,
+        actionsIconTheme: const IconThemeData(color: CbTokens.ink, size: 20),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -999,7 +1000,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         icon: Icons.branding_watermark_rounded,
         title: 'White-label / Remove Branding',
         description:
-            'Remove all Invoiso branding from the app and PDF outputs, and replace it with your own company identity.',
+            'Remove all Yatri Billing branding from the app and PDF outputs, and replace it with your own company identity.',
         price: '\$100 – \$150',
         delivery: '3–6 days',
       ),
@@ -1060,15 +1061,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 final opt = options[index];
                 final isHighlighted = _highlightCustomIndex == index;
                 return Card(
-                  elevation: isHighlighted ? 4 : 0,
-                  shadowColor: isHighlighted ? primaryColor.withValues(alpha: 0.3) : Colors.transparent,
+                  elevation: 0,
                   color: isHighlighted
-                      ? primaryColor.withValues(alpha: 0.04)
-                      : Theme.of(context).colorScheme.surfaceContainer,
+                      ? const Color(0xFFEFF6FF)
+                      : CbTokens.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppBorderRadius.medium),
                     side: BorderSide(
-                      color: isHighlighted ? primaryColor : Theme.of(context).colorScheme.outlineVariant,
+                      color: isHighlighted ? primaryColor : CbTokens.hairline,
                       width: isHighlighted ? 2 : 1,
                     ),
                   ),
@@ -1082,8 +1082,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: primaryColor.withValues(alpha: isHighlighted ? 0.15 : 0.08),
+                                color: CbTokens.surfaceSoft,
                                 borderRadius: BorderRadius.circular(AppBorderRadius.small),
+                                border: Border.all(color: CbTokens.hairline),
                               ),
                               child: Icon(opt.icon, size: 20, color: primaryColor),
                             ),
@@ -1109,8 +1110,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: primaryColor.withValues(alpha: 0.08),
+                                color: CbTokens.surfaceSoft,
                                 borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: CbTokens.hairline),
                               ),
                               child: Text(
                                 opt.price,
@@ -1261,8 +1263,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
-                          Theme.of(context).brightness == Brightness.dark ? 'assets/images/logo_dark.png' : 'assets/images/logo.png',
-                          width: 130,
+                          'assets/images/yatricloud_logo.png',
+                          width: 52,
                           height: 52,
                           fit: BoxFit.contain,
                         ),
@@ -1296,10 +1298,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
-                            color: primaryColor.withValues(alpha: 0.08),
+                            color: CbTokens.surfaceSoft,
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color: primaryColor.withValues(alpha: 0.3)),
+                            border: Border.all(color: CbTokens.hairline),
                           ),
                           child: Text(
                             cfg.version,
@@ -1515,7 +1516,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       label: const Text('Check Now'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: primaryColor,
-                        side: BorderSide(color: primaryColor.withValues(alpha: 0.4)),
+                        side: const BorderSide(color: CbTokens.hairline),
                       ),
                     ),
                     if (hasUpdate) ...[
@@ -1525,7 +1526,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: const Icon(Icons.download_rounded, size: 16),
                         label: const Text('Download'),
                         onPressed: () => launchUrl(
-                          Uri.parse('https://invoiso.co.in/download.html'),
+                          Uri.parse('https://yatricloud.com'),
                           mode: LaunchMode.externalApplication,
                         ),
                       ),

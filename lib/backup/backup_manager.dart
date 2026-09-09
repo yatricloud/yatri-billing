@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:invoiso/constants.dart';
 import 'package:invoiso/database/database_helper.dart';
 import 'package:path/path.dart';
@@ -38,6 +39,13 @@ class BackupManager {
     BackupType type = BackupType.database,
   }) async {
     try {
+      if (kIsWeb) {
+        return BackupResult(
+          success: false,
+          message:
+              'Backup is not available in the browser. Use the desktop app instead.',
+        );
+      }
       // Request storage permission
       if (!await _requestStoragePermission()) {
         return BackupResult(
@@ -132,6 +140,13 @@ class BackupManager {
     required String backupPath,
   }) async {
     try {
+      if (kIsWeb) {
+        return BackupResult(
+          success: false,
+          message:
+              'Restore is not available in the browser. Use the desktop app instead.',
+        );
+      }
       final backupFile = File(backupPath);
       if (!await backupFile.exists()) {
         return BackupResult(
@@ -266,6 +281,7 @@ class BackupManager {
 
   // Get list of available backups
   Future<List<BackupInfo>> getBackupList() async {
+    if (kIsWeb) return []; // No local backups directory exists in the browser.
     final backupDir = await _getBackupDirectory();
     final directory = Directory(backupDir);
 
@@ -349,6 +365,13 @@ class BackupManager {
   // Import backup from external source
   Future<BackupResult> importBackup() async {
     try {
+      if (kIsWeb) {
+        return BackupResult(
+          success: false,
+          message:
+              'Importing backups is not available in the browser. Use the desktop app instead.',
+        );
+      }
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['invoicedb', 'json'],
@@ -374,6 +397,13 @@ class BackupManager {
   // Download backup file to Downloads folder
   Future<BackupResult> downloadBackup(String backupPath) async {
     try {
+      if (kIsWeb) {
+        return BackupResult(
+          success: false,
+          message:
+              'Downloading backups is not available in the browser. Use the desktop app instead.',
+        );
+      }
       final file = File(backupPath);
       if (!await file.exists()) {
         return BackupResult(success: false, message: 'Backup file not found');

@@ -43,7 +43,7 @@ class UpdateDialog extends StatelessWidget {
           _versionRow(context, 'Latest version', info.latestVersion, Colors.green.shade700),
           const SizedBox(height: 16),
           Text(
-            'A new version of invoiso is available. Visit the download page to get the latest release.',
+            'A new version of Yatri Billing is available. Visit the download page to get the latest release.',
             style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
           ),
           const SizedBox(height: 8),
@@ -65,7 +65,7 @@ class UpdateDialog extends StatelessWidget {
             await UpdateService.markNotified(info.latestVersion);
             if (context.mounted) Navigator.of(context).pop();
             await launchUrl(
-              Uri.parse('https://invoiso.co.in/download.html'),
+              Uri.parse('https://yatricloud.com'),
               mode: LaunchMode.externalApplication,
             );
           },

@@ -4,11 +4,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:invoiso/models/invoice.dart';
 import 'package:invoiso/services/pdf_service.dart';
 import 'package:invoiso/utils/formatters.dart';
+import 'package:invoiso/utils/save_file.dart';
 
 class ExportService {
   static Future<String> exportInvoicesToCsv(List<Invoice> invoices,
@@ -67,12 +69,13 @@ class ExportService {
     final rows = <List<dynamic>>[header, ...dataRows];
     final csv = buildQuotedCsv(rows);
     // Prepend UTF-8 BOM so Excel and other apps render Unicode correctly
-    final dir = await getApplicationDocumentsDirectory();
     final prefix = '${type.toLowerCase()}s'; // 'invoices' or 'quotations'
     final filename = '${prefix}_${DateTime.now().millisecondsSinceEpoch}.csv';
-    final file = File('${dir.path}/$filename');
-    await file.writeAsBytes(utf8.encode('\uFEFF$csv'));
-    return file.path;
+    return SaveFile.save(
+      filename: filename,
+      bytes: utf8.encode('\uFEFF$csv'),
+      extension: 'csv',
+    );
   }
 
   /// Generates a PDF for each invoice in [invoices], saves them into
@@ -85,6 +88,12 @@ class ExportService {
     String? outputDirectory,
     PdfGenerationSettings? settings,
   }) async {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'Bulk PDF folder export is not available on web. '
+        'Use "Save as ZIP" or download individual PDFs instead.',
+      );
+    }
     final Directory exportDir;
     if (outputDirectory != null) {
       exportDir = Directory(outputDirectory);
@@ -125,6 +134,38 @@ class ExportService {
     PdfGenerationSettings? settings,
   }) async {
     final s = settings ?? await PDFService.fetchPdfSettings();
+
+    if (kIsWeb) {
+      // Browser download of a single combined ZIP file — no filesystem.
+      final archive = Archive();
+      for (int i = 0; i < invoices.length; i++) {
+        final invoice = invoices[i];
+        final previousBalanceDue = s.showPreviousBalance
+            ? await BackendServices.invoices
+                .getPreviousBalanceDueForInvoice(invoice)
+            : 0.0;
+        final pdf = PDFService.generateInvoicePDFWithSettings(
+          invoice,
+          s,
+          previousBalanceDue: previousBalanceDue,
+        );
+        final bytes = await pdf.save();
+        final filename = PDFService.buildPdfFilename(invoice);
+        archive.add(
+          ArchiveFile(filename, bytes.length, Uint8List.fromList(bytes)),
+        );
+        onProgress?.call(i + 1, invoices.length);
+      }
+      final zipBytes = ZipEncoder().encodeBytes(archive);
+      final filename =
+          'invoices_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.zip';
+      return SaveFile.save(
+        filename: filename,
+        bytes: zipBytes,
+        extension: 'zip',
+      );
+    }
+
     final output = OutputFileStream(savePath);
     final encoder = ZipEncoder()..startEncode(output);
 

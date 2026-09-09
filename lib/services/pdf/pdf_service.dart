@@ -455,6 +455,11 @@ class PDFService {
   static Future<void> _downloadWithPicker(
       BuildContext context, Uint8List pdfBytes, Invoice invoice) async {
     final filename = buildPdfFilename(invoice);
+    if (kIsWeb) {
+      // Browser download — no filesystem save dialog available on web.
+      await Printing.sharePdf(bytes: pdfBytes, filename: filename);
+      return;
+    }
     final savePath = await FilePicker.platform.saveFile(
       dialogTitle: 'Save Invoice PDF',
       fileName: filename,

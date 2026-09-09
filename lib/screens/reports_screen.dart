@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -10,6 +10,9 @@ import 'package:invoiso/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invoiso/database/report_service.dart';
 import 'package:invoiso/providers/repositories.dart';
+import 'package:invoiso/utils/save_file.dart';
+import 'package:invoiso/theme/app_typography.dart';
+import 'package:invoiso/theme/coinbase_tokens.dart';
 
 // ─── Date preset enum ─────────────────────────────────────────────────────────
 
@@ -575,25 +578,17 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   Future<void> _saveCsv(String csv, String filename) async {
-    String? savePath;
-    try {
-      savePath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save CSV Report',
-        fileName: filename,
-        type: FileType.custom,
-        allowedExtensions: ['csv'],
-      );
-    } catch (_) {
-      // FilePicker not supported on this platform, fall back to Documents dir
-      final dir = await getApplicationDocumentsDirectory();
-      savePath = '${dir.path}/$filename';
-    }
-    if (savePath == null) return; // user cancelled
-    await File(savePath).writeAsString('﻿$csv'); // BOM for Excel
+    final saved = await SaveFile.saveWithDialog(
+      filename: filename,
+      bytes: utf8.encode('\uFEFF$csv'),
+      dialogTitle: 'Save CSV Report',
+      extension: 'csv',
+    );
+    if (saved == null) return;
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Saved: $savePath'),
+        content: Text('Saved: $saved'),
         action: SnackBarAction(label: 'OK', onPressed: () {}),
         duration: const Duration(seconds: 4),
       ),
@@ -601,24 +596,17 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   Future<void> _savePdf(Uint8List bytes, String filename) async {
-    String? savePath;
-    try {
-      savePath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save PDF Report',
-        fileName: filename,
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-    } catch (_) {
-      final dir = await getApplicationDocumentsDirectory();
-      savePath = '${dir.path}/$filename';
-    }
-    if (savePath == null) return; // user cancelled
-    await File(savePath).writeAsBytes(bytes);
+    final saved = await SaveFile.saveWithDialog(
+      filename: filename,
+      bytes: bytes,
+      dialogTitle: 'Save PDF Report',
+      extension: 'pdf',
+    );
+    if (saved == null) return;
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Saved: $savePath'),
+        content: Text('Saved: $saved'),
         action: SnackBarAction(label: 'OK', onPressed: () {}),
         duration: const Duration(seconds: 4),
       ),
@@ -647,13 +635,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     final primary = Theme.of(context).primaryColor;
     final isCurrentTabLoading = _tabLoading[_selectedIndex] == true;
     return Scaffold(
+      backgroundColor: CbTokens.background,
       appBar: AppBar(
-        backgroundColor:
-            Theme.of(context).appBarTheme.backgroundColor ?? primary,
-        foregroundColor: Colors.white,
+        backgroundColor: CbTokens.surface,
+        foregroundColor: CbTokens.ink,
         elevation: 0,
-        title: const Text('Reports',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Reports',
+            style: AppTypography.titleMd(CbTokens.ink)),
+        actionsIconTheme: const IconThemeData(color: CbTokens.ink, size: 20),
         actions: [
           if (isCurrentTabLoading)
             const Padding(
@@ -814,19 +803,20 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
         decoration: BoxDecoration(
-          color: sel ? primary.withValues(alpha: 0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          color: sel ? const Color(0xFFEFF6FF) : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+          border: sel ? Border.all(color: const Color(0xFFBFDBFE)) : null,
         ),
         child: Row(
           children: [
             Icon(sel ? iconFilled : iconOut,
-                size: 18, color: sel ? primary : Theme.of(context).colorScheme.onSurfaceVariant),
+                size: 18, color: sel ? const Color(0xFF007CFF) : const Color(0xFF64748B)),
             const SizedBox(width: 10),
             Text(label,
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: sel ? FontWeight.w600 : FontWeight.normal,
-                    color: sel ? primary : Theme.of(context).colorScheme.onSurfaceVariant)),
+                    color: sel ? const Color(0xFF007CFF) : const Color(0xFF64748B))),
           ],
         ),
       ),
@@ -916,8 +906,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
+                    color: CbTokens.surfaceSoft,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: CbTokens.hairline),
                   ),
                   child: Icon(icon, color: color, size: 18),
                 ),
@@ -1568,8 +1559,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: bucketColor.withValues(alpha: 0.1),
+                  color: CbTokens.surfaceSoft,
                   borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: CbTokens.hairline),
                 ),
                 child: Text(bucketLabel,
                     style: TextStyle(
@@ -1792,14 +1784,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     return ChoiceChip(
       label: Text(label),
       selected: selected,
-      selectedColor: const Color(0xFF002E78).withValues(alpha: 0.12),
+      selectedColor: CbTokens.primary,
       labelStyle: TextStyle(
         fontSize: 12,
         fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-        color: selected ? const Color(0xFF002E78) : Theme.of(context).colorScheme.onSurfaceVariant,
+        color: selected ? Colors.white : CbTokens.ink,
       ),
       side: BorderSide(
-          color: selected ? const Color(0xFF002E78) : Theme.of(context).colorScheme.outlineVariant),
+          color: selected ? CbTokens.primary : CbTokens.hairline),
       onSelected: (_) {
         if (!mounted) return;
         setState(() => _customerMode = mode);
@@ -2036,14 +2028,15 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF002E78).withValues(alpha: 0.08),
+                  color: CbTokens.surfaceSoft,
                   borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: CbTokens.hairline),
                 ),
                 child: Text(statement.currencyCode,
                     style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF002E78))),
+                        color: CbTokens.primary)),
               ),
             ],
           ),
@@ -2698,18 +2691,18 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: sel
-              ? const Color(0xFF1D4ED8).withValues(alpha: 0.12)
-              : Colors.transparent,
+              ? CbTokens.primary
+              : CbTokens.surface,
           border: Border.all(
-              color: sel ? const Color(0xFF1D4ED8) : Theme.of(context).colorScheme.outlineVariant),
+              color: sel ? CbTokens.primary : CbTokens.hairline),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(label,
             style: TextStyle(
-                fontSize: 12,
-                fontWeight: sel ? FontWeight.w600 : FontWeight.normal,
-                color:
-                    sel ? const Color(0xFF1D4ED8) : Theme.of(context).colorScheme.onSurfaceVariant)),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: sel ? Colors.white : CbTokens.ink,
+            )),
       ),
     );
   }
@@ -3092,23 +3085,16 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       _InvoiceFilter.unpaid => 'Unpaid (${_invoiceCount('Unpaid')})',
       _InvoiceFilter.overdue => 'Overdue ($_overdueCount)',
     };
-    final color = switch (f) {
-      _InvoiceFilter.paid => const Color(0xFF16A34A),
-      _InvoiceFilter.partial => const Color(0xFFF59E0B),
-      _InvoiceFilter.unpaid => Theme.of(context).colorScheme.onSurfaceVariant,
-      _InvoiceFilter.overdue => const Color(0xFFDC2626),
-      _ => const Color(0xFF002E78),
-    };
     return ChoiceChip(
       label: Text(label),
       selected: sel,
-      selectedColor: color.withValues(alpha: 0.12),
+      selectedColor: CbTokens.primary,
       labelStyle: TextStyle(
         fontSize: 12,
         fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
-        color: sel ? color : Theme.of(context).colorScheme.onSurfaceVariant,
+        color: sel ? Colors.white : CbTokens.ink,
       ),
-      side: BorderSide(color: sel ? color : Theme.of(context).colorScheme.outlineVariant),
+      side: BorderSide(color: sel ? CbTokens.primary : CbTokens.hairline),
       onSelected: (_) {
         if (!mounted) return;
         setState(() {
@@ -3203,8 +3189,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: statusColor.withValues(alpha: 0.1),
+                        color: CbTokens.surfaceSoft,
                         borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: CbTokens.hairline),
                       ),
                       child: Text(r.status,
                           style: TextStyle(
@@ -3218,15 +3205,15 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color:
-                              const Color(0xFFDC2626).withValues(alpha: 0.08),
+                          color: const Color(0xFFFEE2E2),
                           borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: const Color(0xFFFCA5A5)),
                         ),
                         child: const Text('Overdue',
                             style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFFDC2626))),
+                                color: Color(0xFFB91C1C))),
                       ),
                     ],
                   ],

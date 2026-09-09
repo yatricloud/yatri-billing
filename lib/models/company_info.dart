@@ -24,8 +24,9 @@ class CompanyInfo {
   });
 
   factory CompanyInfo.fromMap(Map<String, dynamic> map) {
+    final rawId = map['id'];
     return CompanyInfo(
-      id: map['id'],
+      id: rawId is int ? rawId : int.tryParse(rawId?.toString() ?? ''),
       name: map['name'],
       address: map['address'],
       phone: map['phone'],

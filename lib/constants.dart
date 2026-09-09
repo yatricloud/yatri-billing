@@ -1,5 +1,6 @@
 
 // constants.dart
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:invoiso/common.dart';
 
@@ -63,15 +64,16 @@ class AppBorderRadius
 
 class AppConfig
 {
-  static const kIsCloud = false;
-  static const name = "invoiso";
-  static const version = "v4.3.4";
-  static const developer = "ANOOP P";
-  static const supportEmail = "anooppkrishnan96@gmail.com";
-  static const supportForm = "https://forms.gle/k2Pk7CHr4fAewE7VA";
-  static const website = "https://invoiso.co.in/";
+  static const kIsCloud = kIsWeb;
+  static const name = "Yatri Billing";
+  static const version = "v1.0.0";
+  static const developer = "Yatri Cloud";
+  static const supportEmail = "info@yatricloud.com";
+  static const supportPhone = "+91 9724823602";
+  static const supportForm = "mailto:info@yatricloud.com";
+  static const website = "https://yatricloud.com";
   static const license = "MIT";
-  static const description = "Invoiso is a modern invoice and quotation management app for freelancers and small businesses.";
+  static const description = "Yatri Billing is a modern cloud invoicing and billing management suite for businesses.";
 }
 
 class Tax

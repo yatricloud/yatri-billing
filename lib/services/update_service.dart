@@ -31,7 +31,7 @@ class UpdateInfo {
 
 class UpdateService {
   static const _apiUrl =
-      'https://api.github.com/repos/Anooppandikashala/invoiso/releases/latest';
+      'https://api.github.com/repos/yatri-cloud/yatri-billing/releases/latest';
   static const _checkIntervalHours = 24;
 
   /// Returns [UpdateInfo] if a check was performed (or cached).

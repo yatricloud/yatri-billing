@@ -1,49 +1,24 @@
 <div align="center">
-  <img src="landing/assets/images/logo.svg" alt="Invoiso Logo" width="200" />
+  <img src="assets/images/logo.svg" alt="Yatri Billing Logo" width="160" />
 
-  <h1>Invoiso</h1>
+  <h1>Yatri Billing</h1>
 
-  <p><strong>Free offline invoice &amp; billing software for Windows, Linux &amp; macOS</strong></p>
-  <p>Create professional PDF invoices, track payments, manage customers, products and inventory — entirely offline. Built for small businesses, shops and freelancers. No subscription, no cloud, no account needed.</p>
+  <p><strong>Cloud-Native &amp; Offline Invoicing &amp; Billing Platform by Yatri Cloud</strong></p>
+  <p>Create professional GST-compliant PDF invoices, track payments, manage customers, products, and inventory — seamlessly online and offline. Built for modern businesses, enterprises, and freelancers.</p>
 
   <p>
-    <a href="https://github.com/Anooppandikashala/invoiso/releases/latest">
-      <img src="https://img.shields.io/github/v/release/Anooppandikashala/invoiso?label=Latest%20Release&color=4f8ef7" alt="Latest Release" />
-    </a>
-    <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue" alt="Platform" />
+    <img src="https://img.shields.io/badge/Platform-Web%20%7C%20Windows%20%7C%20Linux%20%7C%20macOS-blue" alt="Platform" />
     <img src="https://img.shields.io/badge/License-MIT-green" alt="License" />
     <img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter" alt="Flutter" />
-    <img src="https://img.shields.io/badge/Price-Free-brightgreen" alt="Free" />
+    <img src="https://img.shields.io/badge/Brand-Yatri%20Cloud-0070E0" alt="Yatri Cloud" />
   </p>
 
   <p>
-    <a href="https://www.producthunt.com/products/invoiso?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-invoiso" target="_blank" rel="noopener noreferrer"><img alt="Invoiso - Free Offline Invoice &amp; Billing Software for all. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1105229&theme=light&t=1774412242179" /></a>
-    &nbsp;
-    <a href="https://www.shipit.buzz/products/invoiso?ref=badge" target="_blank" rel="noopener noreferrer"><img src="https://www.shipit.buzz/api/products/invoiso/badge?theme=light" alt="Featured on Shipit" height="54" /></a>
-    &nbsp;
-    <a href="https://sourceforge.net/projects/invoiso/" target="_blank" rel="noopener noreferrer"><img src="https://sourceforge.net/cdn/syndication/badge_img/4068440/oss-rising-star-black" alt="SourceForge OSS Rising Star" height="54" /></a>
+    <a href="https://yatricloud.com/">🌐 Website</a> &nbsp;·&nbsp;
+    <a href="https://yatricloud.com/">⬇️ Download</a> &nbsp;·&nbsp;
+    <a href="https://yatricloud.com/">❓ Documentation</a> &nbsp;·&nbsp;
+    <a href="https://github.com/yatri-cloud/yatri-billing/issues">🐛 Report an Issue</a>
   </p>
-
-  <p>
-    <a href="https://invoiso.co.in/">🌐 Website</a> &nbsp;·&nbsp;
-    <a href="https://invoiso.co.in/download.html">⬇️ Download</a> &nbsp;·&nbsp;
-    <a href="https://invoiso.co.in/faq.html">❓ FAQ</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Anooppandikashala/invoiso/issues">🐛 Report a Bug</a>
-  </p>
-
-  <p>
-    <a href="https://github.com/sponsors/anooppandikashala">
-      <img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=github-sponsors&logoColor=white" alt="Sponsor on GitHub" />
-    </a>
-    &nbsp;
-    <a href="https://buymeacoffee.com/anoopp">
-      <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-FFDD00?logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" />
-    </a>
-  </p>
-
-  <br/>
-
-  <img src="landing/assets/images/invoiso_banner.webp" alt="Invoiso — Free Offline Invoice &amp; Billing Software for Windows and Linux" width="100%" />
 </div>
 
 ---
@@ -136,28 +111,29 @@ Special thanks to [sparsh1220](https://github.com/sparsh1220) for thoroughly tes
 
 | Platform | Format | Link |
 |----------|--------|------|
-| **Windows** | `.exe` Installer | [Download v3.4.2](https://invoiso.co.in/download.html) |
-| **Linux** | `.AppImage` (portable) | [Download v3.4.2](https://invoiso.co.in/download.html) |
-| **Linux** | `.deb` Package | [Download v3.4.2](https://invoiso.co.in/download.html) |
-| **macOS** | `.dmg` Installer | [GitHub Releases](https://github.com/Anooppandikashala/invoiso/releases/latest) |
+| **Web** | Cloud Edition | [Launch Yatri Billing](https://billing.yatricloud.com) |
+| **Windows** | `.exe` Installer | [Download](https://yatricloud.com) |
+| **Linux** | `.AppImage` (portable) | [Download](https://yatricloud.com) |
+| **Linux** | `.deb` Package | [Download](https://yatricloud.com) |
+| **macOS** | `.dmg` Installer | [GitHub Releases](https://github.com/yatri-cloud/yatri-billing/releases/latest) |
 
 ### Linux Quick Install
 
 Use the DEB option for Ubuntu 22.04 or 24.04:
 
 ```bash
-curl -fsSL https://invoiso.co.in/install.sh | bash -s -- --deb
+curl -fsSL https://yatricloud.com/install.sh | bash -s -- --deb
 ```
 
 Use the AppImage option for other Linux distributions or when you want a portable app:
 
 ```bash
-curl -fsSL https://invoiso.co.in/install.sh | bash -s -- --appimage
+curl -fsSL https://yatricloud.com/install.sh | bash -s -- --appimage
 ```
 
 The quick-install script downloads the latest release from GitHub. DEB installs through `apt-get`; AppImage is saved to `~/Applications`.
 
-> Always download from the [official website](https://invoiso.co.in/download.html) or the [GitHub releases page](https://github.com/Anooppandikashala/invoiso/releases/latest).
+> Always download from the [official website](https://yatricloud.com) or the [GitHub releases page](https://github.com/yatri-cloud/yatri-billing/releases/latest).
 
 ---
 
@@ -174,8 +150,8 @@ The quick-install script downloads the latest release from GitHub. DEB installs 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Anooppandikashala/invoiso.git
-cd invoiso
+git clone https://github.com/yatri-cloud/yatri-billing.git
+cd yatri-billing
 
 # 2. Install dependencies
 flutter pub get
@@ -194,7 +170,7 @@ flutter build macos --release    # macOS
 Output locations:
 - **Linux:** `build/linux/x64/release/bundle/`
 - **Windows:** `build/windows/x64/runner/Release/`
-- **macOS:** `build/macos/Build/Products/Release/invoiso.app`
+- **macOS:** `build/macos/Build/Products/Release/yatri_billing.app`
 
 ---
 
@@ -224,7 +200,7 @@ lib/
 ├── main.dart                        # App entry point and window setup
 ├── common.dart                      # Shared enums, extensions, data classes
 ├── constants.dart                   # UI constants, spacing, font sizes
-├── invoiso_colors.dart              # App colour palette
+├── theme/                           # Yatri Cloud / Fold Money tokens & typography
 ├── backup/                          # Backup and restore logic
 ├── database/                        # SQLite init, migrations, CRUD services
 ├── models/                          # Invoice, payment, customer, product, user models
@@ -247,19 +223,11 @@ Contributions, bug reports, and feature requests are welcome.
 4. **Push** to the branch: `git push origin feature/your-feature`
 5. **Open a Pull Request**
 
-For bug reports and feature requests, please use [GitHub Issues](https://github.com/Anooppandikashala/invoiso/issues).
+For bug reports and feature requests, please use [GitHub Issues](https://github.com/yatri-cloud/yatri-billing/issues).
 
 ---
 
 ## 📄 License
 
-Invoiso is released under the [MIT License](LICENSE).
-Copyright © 2025 [Anoop Pandikashala](https://github.com/Anooppandikashala)
-
----
-
-<div align="center">
-  <p>If Invoiso saves you time, consider supporting its development.</p>
-
-  [![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=anoopp&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/anoopp)
-</div>
+Yatri Billing is released under the [MIT License](LICENSE).
+Copyright © 2026 [Yatri Cloud](https://yatricloud.com)

@@ -1,7 +1,7 @@
 name: invoiso
 description: "Invoice generating desktop app built with Flutter"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 4.3.4
+version: 1.0.0+1
 environment:
   sdk: '>=3.3.3 <4.0.0'
 
@@ -24,6 +24,7 @@ dependencies:
   csv: ^6.0.0
   archive: ^4.0.0
   flutter_riverpod: ^2.5.1
+  supabase_flutter: ^2.8.4
   open_file: ^3.3.2
   url_launcher: ^6.2.6
   http: ^1.2.0
@@ -41,6 +42,8 @@ dependencies:
   flex_color_picker: ^3.6.0
   thermal_printer: ^1.0.5
   flutter_esc_pos_utils: ^1.0.1
+  file_saver: ^0.4.0
+  google_fonts: ^8.2.1
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +56,8 @@ flutter:
   uses-material-design: true
   assets:
    - assets/images/logo.png
+   - assets/images/yatri_logo.png
+   - assets/images/yatricloud_logo.png
    - assets/images/logo_dark.png
    - assets/images/logo.svg
    - assets/images/logo_v.png
@@ -83,17 +88,17 @@ flutter_launcher_icons:
 
 package_rename_config:
   linux:
-    app_name: invoiso
-    package_name: invoiso
-    exe_name: invoiso
+    app_name: Yatri Billing
+    package_name: yatri_billing
+    exe_name: yatri_billing
 
   windows:
-    app_name: invoiso
-    organization: anoopp
-    copyright_notice: Copyright ©️ 2025 anoopp. All rights reserved.
-    exe_name: invoiso
+    app_name: Yatri Billing
+    organization: Yatri Cloud
+    copyright_notice: Copyright ©️ 2026 Yatri Cloud. All rights reserved.
+    exe_name: yatri_billing
 
   web:
-    app_name: invoiso
-    short_app_name: invoiso
-    description: Invoice generating desktop app built with Flutter
+    app_name: Yatri Billing
+    short_app_name: Yatri Billing
+    description: Cloud-Native & Offline Invoicing Platform by Yatri Cloud

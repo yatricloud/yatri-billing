@@ -16,19 +16,28 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Invoice generating desktop app built with Flutter">
+  <meta name="description" content="Yatri Billing - Modern, Cloud-Native Invoicing & Billing Platform by Yatri Cloud">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="invoiso">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-title" content="Yatri Billing">
+  <link rel="apple-touch-icon" href="favicon.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png">
 
-  <title>invoiso</title>
+  <title>Yatri Billing - Cloud Invoicing & Billing Software</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Google Fonts: Plus Jakarta Sans (Fold/GT Walsheim alternative), Inter Tight, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter+Tight:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400..600&display=swap" rel="stylesheet">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
   <script>
     // The value below is injected by flutter build, do not touch.
@@ -39,12 +48,24 @@
 </head>
 <body>
   <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (var name of names) {
+          caches.delete(name);
+        }
+      });
+    }
     window.addEventListener('load', function(ev) {
-      // Download main.dart.js
+      // Download fresh main.dart.js with cache busting
       _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
+        entrypointUrl: "main.dart.js?v=" + Date.now(),
         onEntrypointLoaded: function(engineInitializer) {
           engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();

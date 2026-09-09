@@ -981,3 +981,21 @@ SignatureSize signatureSizeFromKey(String? key) {
     orElse: () => SignatureSize.medium,
   );
 }
+
+/// Cleans and formats invoice numbers for display:
+/// - Strips leading '#' symbol
+/// - Strips excessive leading zeros (e.g. '00000001' becomes '001')
+/// - Preserves alphanumeric custom IDs (e.g. 'INV-2026-001')
+String formatDisplayInvoiceNumber(String? raw) {
+  if (raw == null || raw.trim().isEmpty) return '';
+  String clean = raw.trim();
+  if (clean.startsWith('#')) {
+    clean = clean.substring(1).trim();
+  }
+  final intVal = int.tryParse(clean);
+  if (intVal != null) {
+    // Standard minimal 3-digit padding (e.g. 001, 025, 100)
+    return intVal.toString().padLeft(3, '0');
+  }
+  return clean;
+}

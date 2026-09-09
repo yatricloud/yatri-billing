@@ -1575,8 +1575,13 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                                       maxLength: DefaultValues.additionalNotesLength,
                                       maxLines: 3,
                                       decoration: InputDecoration(
-                                        labelText: 'Additional Information',
-                                        prefixIcon: const Icon(Icons.info_outline),
+                                        prefixIcon: Container(
+                                          width: 44,
+                                          alignment: Alignment.topCenter,
+                                          padding: const EdgeInsets.only(top: 14),
+                                          child: const Icon(Icons.info_outline, size: 20),
+                                        ),
+                                        prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 48, maxHeight: 80),
                                         alignLabelWithHint: true,
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
@@ -1612,8 +1617,13 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                                       maxLines: 3,
                                       decoration: InputDecoration(
                                         labelText: 'Thank You Note',
-                                        prefixIcon:
-                                            const Icon(Icons.favorite_outline),
+                                        prefixIcon: Container(
+                                          width: 44,
+                                          alignment: Alignment.topCenter,
+                                          padding: const EdgeInsets.only(top: 14),
+                                          child: const Icon(Icons.favorite_outline, size: 20),
+                                        ),
+                                        prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 48, maxHeight: 80),
                                         alignLabelWithHint: true,
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(

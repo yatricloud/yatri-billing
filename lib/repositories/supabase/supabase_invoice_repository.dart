@@ -241,7 +241,7 @@ class SupabaseInvoiceRepository implements InvoiceRepository {
     // Atomically consume the per-type counter via the Postgres RPC.
     final result = await _c.rpc('next_invoice_number', params: {'_type': type});
     final next = (result as num).toInt();
-    return next.toString().padLeft(8, '0');
+    return next.toString().padLeft(3, '0');
   }
 
   @override
@@ -262,7 +262,7 @@ class SupabaseInvoiceRepository implements InvoiceRepository {
         .eq('type', type)
         .maybeSingle();
     final last = (row?['last_value'] as num?)?.toInt() ?? 0;
-    return (last + 1).toString().padLeft(8, '0');
+    return (last + 1).toString().padLeft(3, '0');
   }
 
   // ─────────────────────────────────────────────

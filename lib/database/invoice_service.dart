@@ -917,7 +917,7 @@ class InvoiceService {
       if (nextNumber < 1) nextNumber = 1;
     }
 
-    return nextNumber.toString().padLeft(8, '0');
+    return nextNumber.toString().padLeft(3, '0');
   }
 
   /// Generates the next **display** number for [type] ('Invoice' |
@@ -968,6 +968,6 @@ class InvoiceService {
       nextNumber = 1;
     }
 
-    return nextNumber.toString().padLeft(8, '0');
+    return nextNumber.toString().padLeft(3, '0');
   }
 }

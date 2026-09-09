@@ -36,6 +36,7 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
   int _currentPage = 0;
   int _totalCustomerCount = 0;
   bool _isLoading = false;
+  int _mobileViewTab = 0; // 0: list, 1: add form on small screens
   final FocusNode _searchFocusNode = FocusNode();
   final ScrollController _horizontalScrollController = ScrollController();
 
@@ -160,6 +161,7 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
 
       _clearForm();
       await _loadCustomers();
+      if (mounted) setState(() => _mobileViewTab = 0);
     } catch (e) {
       _showSnackBar('Error saving customer: $e', isError: true);
     } finally {
@@ -951,19 +953,68 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 320,
-              child: SingleChildScrollView(child: _buildAddCustomerCard()),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 900;
+          if (isMobile) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton<int>(
+                      segments: [
+                        ButtonSegment<int>(
+                          value: 0,
+                          icon: const Icon(Icons.people_outline, size: 16),
+                          label: Text(
+                            'All Customers ($_totalCustomerCount)',
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                          ),
+                        ),
+                        const ButtonSegment<int>(
+                          value: 1,
+                          icon: Icon(Icons.person_add_outlined, size: 16),
+                          label: Text(
+                            '+ Add Customer',
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                          ),
+                        ),
+                      ],
+                      selected: {_mobileViewTab},
+                      onSelectionChanged: (set) {
+                        setState(() => _mobileViewTab = set.first);
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: _mobileViewTab == 0
+                        ? _buildCustomerTable(currentPageCustomers, totalPages)
+                        : SingleChildScrollView(child: _buildAddCustomerCard()),
+                  ),
+                ),
+              ],
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 320,
+                  child: SingleChildScrollView(child: _buildAddCustomerCard()),
+                ),
+                const SizedBox(width: 16),
+                Expanded(child: _buildCustomerTable(currentPageCustomers, totalPages)),
+              ],
             ),
-            const SizedBox(width: 16),
-            Expanded(child: _buildCustomerTable(currentPageCustomers, totalPages)),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -976,25 +1027,33 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              gradient: CustomerManagementScreenColors.topBarBackgroundGradientColor,
+              color: const Color(0xFFF8FAFC),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.person_add, color: Colors.white, size: 28),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: Icon(Icons.person_add_outlined, color: Color(0xFF007CFF), size: 20),
+                ),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Add New Customer',
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F172A),
                     ),
                   ),
                 ),
@@ -1151,82 +1210,87 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
               color: Color(0xFF0F172A),
             ),
           ),
-          Row(
-            children: [
-              OutlinedButton(
-                onPressed: _showImportDialog,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0F172A),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-                child: const Text('Import CSV'),
-              ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: _exportToCSV,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0F172A),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-                child: const Text('Export CSV'),
-              ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: _exportToPDF,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0F172A),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-                child: const Text('Export PDF'),
-              ),
-              if (widget.user.isAdmin()) ...[
-                const SizedBox(width: 8),
-                PopupMenuButton<String>(
-                  tooltip: 'More actions',
-                  color: Colors.white,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+          Flexible(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  OutlinedButton(
+                    onPressed: _showImportDialog,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    child: const Text('Import CSV'),
                   ),
-                  onSelected: (value) {
-                    if (value == 'delete_all') _confirmDeleteAll();
-                  },
-                  itemBuilder: (ctx) => [
-                    const PopupMenuItem<String>(
-                      value: 'delete_all',
-                      child: Text('Delete All Customers',
-                          style: TextStyle(color: Color(0xFFDC2626))),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: _exportToCSV,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
-                  ],
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                    decoration: BoxDecoration(
+                    child: const Text('Export CSV'),
+                  ),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: _exportToPDF,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    child: const Text('Export PDF'),
+                  ),
+                  if (widget.user.isAdmin()) ...[
+                    const SizedBox(width: 8),
+                    PopupMenuButton<String>(
+                      tooltip: 'More actions',
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFFCBD5E1)),
-                    ),
-                    child: const Text(
-                      'More ▾',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF334155),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      onSelected: (value) {
+                        if (value == 'delete_all') _confirmDeleteAll();
+                      },
+                      itemBuilder: (ctx) => [
+                        const PopupMenuItem<String>(
+                          value: 'delete_all',
+                          child: Text('Delete All Customers',
+                              style: TextStyle(color: Color(0xFFDC2626))),
+                        ),
+                      ],
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFCBD5E1)),
+                        ),
+                        child: const Text(
+                          'More ▾',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF334155),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ],
+                  ],
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -1366,21 +1430,21 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.visibility, size: 20),
-                    color: Colors.blue,
-                    onPressed: () => _showCustomerDialog(customer,false),
+                    icon: const Icon(Icons.visibility_outlined, size: 18),
+                    color: const Color(0xFF64748B),
+                    onPressed: () => _showCustomerDialog(customer, false),
                     tooltip: 'View',
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit, size: 20),
-                    color: Colors.orange,
-                    onPressed: () => _showCustomerDialog(customer,true),
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    color: const Color(0xFF64748B),
+                    onPressed: () => _showCustomerDialog(customer, true),
                     tooltip: 'Edit',
                   ),
                   if (widget.user.isAdmin())
                     IconButton(
-                      icon: const Icon(Icons.delete, size: 20),
-                      color: Colors.red,
+                      icon: const Icon(Icons.delete_outline, size: 18),
+                      color: const Color(0xFF64748B),
                       onPressed: () => _confirmDelete(customer),
                       tooltip: 'Delete',
                     ),

@@ -73,13 +73,13 @@ class _InvoiceManagementScreenState
   static const Map<int, TableColumnWidth> _invoiceColumnWidths = {
     0: FixedColumnWidth(44),   // Checkbox
     1: FixedColumnWidth(50),   // # Index
-    2: FixedColumnWidth(115),  // Invoice ID (e.g. #000001 never truncates)
-    3: FlexColumnWidth(2.2),   // Customer Name
-    4: FixedColumnWidth(125),  // Date
+    2: FixedColumnWidth(95),   // Invoice ID (e.g. 001)
+    3: FlexColumnWidth(2.0),   // Customer Name
+    4: FixedColumnWidth(165),  // Date (full date + status badge)
     5: FixedColumnWidth(64),   // Items count
-    6: FixedColumnWidth(130),  // Total
-    7: FixedColumnWidth(95),   // Status badge
-    8: FixedColumnWidth(130),  // Outstanding
+    6: FixedColumnWidth(125),  // Total
+    7: FixedColumnWidth(100),  // Status badge
+    8: FixedColumnWidth(125),  // Outstanding
     9: FixedColumnWidth(145),  // Actions
   };
 
@@ -87,11 +87,11 @@ class _InvoiceManagementScreenState
   static const Map<int, TableColumnWidth> _quotationColumnWidths = {
     0: FixedColumnWidth(44),   // Checkbox
     1: FixedColumnWidth(50),   // # Index
-    2: FixedColumnWidth(115),  // Quotation ID
+    2: FixedColumnWidth(95),   // Quotation ID
     3: FlexColumnWidth(2.5),   // Customer
-    4: FixedColumnWidth(125),  // Date
+    4: FixedColumnWidth(165),  // Date
     5: FixedColumnWidth(64),   // Items
-    6: FixedColumnWidth(130),  // Total
+    6: FixedColumnWidth(125),  // Total
     7: FixedColumnWidth(145),  // Actions
   };
 
@@ -242,7 +242,7 @@ class _InvoiceManagementScreenState
           ],
         ),
         content: Text(
-          'Create a copy of Invoice #${invoice.invoiceNumber ?? invoice.id}\n(${invoice.customer.name}) as:',
+          'Create a copy of Invoice ${formatDisplayInvoiceNumber(invoice.invoiceNumber ?? invoice.id)}\n(${invoice.customer.name}) as:',
         ),
         actions: [
           TextButton(
@@ -275,7 +275,7 @@ class _InvoiceManagementScreenState
     final confirmed = await AppError.confirm(
       context,
       title: 'Move to Trash',
-      message: 'Move Invoice #${invoice.invoiceNumber ?? invoice.id} to trash?',
+      message: 'Move Invoice ${formatDisplayInvoiceNumber(invoice.invoiceNumber ?? invoice.id)} to trash?',
       confirmLabel: 'Move to Trash',
       confirmColor: Colors.orange,
     );
@@ -748,7 +748,7 @@ class _InvoiceManagementScreenState
                       controller: fromIdCtrl,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          labelText: 'From invoice #',
+                          labelText: 'From invoice ID',
                           border: OutlineInputBorder()),
                       onChanged: (_) => setS(() => matchCount = 0),
                     )),
@@ -758,7 +758,7 @@ class _InvoiceManagementScreenState
                       controller: toIdCtrl,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          labelText: 'To invoice #',
+                          labelText: 'To invoice ID',
                           border: OutlineInputBorder()),
                       onChanged: (_) => setS(() => matchCount = 0),
                     )),
@@ -1339,78 +1339,102 @@ class _InvoiceManagementScreenState
                                   ],
                                 ),
                                 clipBehavior: Clip.antiAlias,
-                                child: Column(
-                                  children: [
-                                    // Table header
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFFF8FAFC),
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: Color(0xFFE2E8F0),
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Table(
-                                        columnWidths: _columnWidths,
-                                        children: [
-                                          TableRow(
-                                            children: [
-                                              // Select-all checkbox
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 10,
-                                                        horizontal: 4),
-                                                child: Checkbox(
-                                                  value: _isAllPageSelected,
-                                                  tristate:
-                                                      _isSomePageSelected &&
-                                                          !_isAllPageSelected,
-                                                  onChanged: (_) =>
-                                                      _toggleSelectAll(),
-                                                  activeColor:
-                                                      const Color(0xFF007CFF),
-                                                  checkColor: Colors.white,
-                                                  side: const BorderSide(
-                                                      color: Color(0xFF94A3B8),
-                                                      width: 1.5),
-                                                ),
+                                child: LayoutBuilder(
+                                  builder: (context, box) {
+                                    final isNarrow = box.maxWidth < 1050;
+                                    final content = Column(
+                                      children: [
+                                        // Table header
+                                        Container(
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFFF8FAFC),
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                color: Color(0xFFE2E8F0),
+                                                width: 1.5,
                                               ),
-                                              _buildTableHeader('#'),
-                                              _buildTableHeader('Invoice ID'),
-                                              _buildTableHeader('Customer'),
-                                              _buildTableHeader('Date'),
-                                              _buildTableHeader('Items'),
-                                              _buildTableHeader('Total'),
-                                              if (widget.filterType ==
-                                                  'Invoice') ...[
-                                                _buildTableHeader('Status'),
-                                                _buildTableHeader(
-                                                    'Outstanding'),
-                                              ],
-                                              _buildTableHeader('Actions',
-                                                  align: TextAlign.center),
+                                            ),
+                                          ),
+                                          child: Table(
+                                            columnWidths: _columnWidths,
+                                            children: [
+                                              TableRow(
+                                                children: [
+                                                  // Select-all checkbox
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                            vertical: 10,
+                                                            horizontal: 4),
+                                                    child: Checkbox(
+                                                      value: _isAllPageSelected,
+                                                      tristate:
+                                                          _isSomePageSelected &&
+                                                              !_isAllPageSelected,
+                                                      onChanged: (_) =>
+                                                          _toggleSelectAll(),
+                                                      activeColor:
+                                                          const Color(0xFF007CFF),
+                                                      checkColor: Colors.white,
+                                                      side: const BorderSide(
+                                                          color: Color(0xFF94A3B8),
+                                                          width: 1.5),
+                                                    ),
+                                                  ),
+                                                  _buildTableHeader('#'),
+                                                  _buildTableHeader('Invoice ID'),
+                                                  _buildTableHeader('Customer'),
+                                                  _buildTableHeader('Date'),
+                                                  _buildTableHeader('Items'),
+                                                  _buildTableHeader('Total'),
+                                                  if (widget.filterType ==
+                                                      'Invoice') ...[
+                                                    _buildTableHeader('Status'),
+                                                    _buildTableHeader(
+                                                        'Outstanding'),
+                                                  ],
+                                                  _buildTableHeader('Actions',
+                                                      align: TextAlign.center),
+                                                ],
+                                              ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    // Table rows
-                                    ..._pageInvoices.asMap().entries.map(
-                                      (entry) {
-                                        final invoice = entry.value;
-                                        final index = entry.key;
-                                        final globalIndex =
-                                            (_currentPage * _pageSize) +
-                                                index +
-                                                1;
-                                        return _buildInvoiceRow(
-                                            invoice, globalIndex, index.isEven);
-                                      },
-                                    ),
-                                  ],
+                                        ),
+                                        // Table rows
+                                        ..._pageInvoices.asMap().entries.map(
+                                          (entry) {
+                                            final invoice = entry.value;
+                                            final index = entry.key;
+                                            final globalIndex =
+                                                (_currentPage * _pageSize) +
+                                                    index +
+                                                    1;
+                                            return _buildInvoiceRow(
+                                                invoice, globalIndex, index.isEven);
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                    if (isNarrow) {
+                                      return ScrollConfiguration(
+                                        behavior: ScrollConfiguration.of(context).copyWith(
+                                          dragDevices: {
+                                            PointerDeviceKind.touch,
+                                            PointerDeviceKind.mouse,
+                                            PointerDeviceKind.trackpad,
+                                          },
+                                        ),
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: SizedBox(
+                                            width: 1050,
+                                            child: content,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return content;
+                                  },
                                 ),
                               ),
                             ),
@@ -1710,7 +1734,7 @@ class _InvoiceManagementScreenState
               // Invoice ID
               _buildTableCell(
                 Text(
-                  '#${invoice.invoiceNumber ?? invoice.id}',
+                  formatDisplayInvoiceNumber(invoice.invoiceNumber ?? invoice.id),
                   style: const TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 13,
@@ -2008,24 +2032,21 @@ class _InvoiceManagementScreenState
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
-              child: Text(
-                dueStr,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11.5,
-                  color: isOverdue
-                      ? const Color(0xFFDC2626)
-                      : (isToday
-                          ? const Color(0xFFD97706)
-                          : const Color(0xFF64748B)),
-                  fontWeight:
-                      (isOverdue || isToday) ? FontWeight.w600 : FontWeight.normal,
-                ),
+            Text(
+              dueStr,
+              style: TextStyle(
+                fontSize: 11.5,
+                color: isOverdue
+                    ? const Color(0xFFDC2626)
+                    : (isToday
+                        ? const Color(0xFFD97706)
+                        : const Color(0xFF64748B)),
+                fontWeight:
+                    (isOverdue || isToday) ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
             if (isOverdue || isToday) ...[
-              const SizedBox(width: 4),
+              const SizedBox(width: 5),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
@@ -2223,7 +2244,7 @@ class _TrashDialogState extends ConsumerState<_TrashDialog> {
       context,
       title: 'Permanently Delete',
       message:
-          'Permanently delete Invoice #${invoice.invoiceNumber ?? invoice.id}? This cannot be undone.',
+          'Permanently delete Invoice ${formatDisplayInvoiceNumber(invoice.invoiceNumber ?? invoice.id)}? This cannot be undone.',
     );
     if (!confirmed) return;
     await ref.read(invoiceRepositoryProvider).permanentDeleteInvoice(invoice.id);
@@ -2284,7 +2305,7 @@ class _TrashDialogState extends ConsumerState<_TrashDialog> {
                     return ListTile(
                       leading:
                           Icon(Icons.receipt_long, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      title: Text('#${inv.invoiceNumber ?? inv.id} — ${inv.customer.name}'),
+                      title: Text('${formatDisplayInvoiceNumber(inv.invoiceNumber ?? inv.id)} — ${inv.customer.name}'),
                       subtitle: Row(
                         children: [
                           Text(AppFormatters.formatShortDate(inv.date,

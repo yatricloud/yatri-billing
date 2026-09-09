@@ -675,25 +675,199 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             ),
         ],
       ),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildSidebar(primary),
-          VerticalDivider(
-              width: 1,
-              thickness: 1,
-              color: Theme.of(context).colorScheme.outlineVariant),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).scaffoldBackgroundColor
-                  : Theme.of(context).colorScheme.surfaceContainer,
-              child: isCurrentTabLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _buildContent(),
-            ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 850;
+          if (isMobile) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildMobileNav(),
+                _buildMobileFilterBar(),
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).scaffoldBackgroundColor
+                        : Theme.of(context).colorScheme.surfaceContainer,
+                    child: isCurrentTabLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _buildContent(),
+                  ),
+                ),
+              ],
+            );
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildSidebar(primary),
+              VerticalDivider(
+                  width: 1,
+                  thickness: 1,
+                  color: Theme.of(context).colorScheme.outlineVariant),
+              Expanded(
+                child: Container(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).scaffoldBackgroundColor
+                      : Theme.of(context).colorScheme.surfaceContainer,
+                  child: isCurrentTabLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _buildContent(),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMobileNav() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            for (int i = 0; i < _navItems.length; i++) ...[
+              if (i > 0) const SizedBox(width: 8),
+              _buildMobileTabChip(i),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileTabChip(int index) {
+    final (iconOut, iconFilled, label) = _navItems[index];
+    final sel = _selectedIndex == index;
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: () {
+        if (_selectedIndex == index || !mounted) return;
+        setState(() => _selectedIndex = index);
+        if (!_loadedTabs.contains(index) && _tabLoading[index] != true) {
+          _loadTab(index);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: sel ? const Color(0xFF007CFF) : const Color(0xFFF1F5F9),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: sel ? const Color(0xFF007CFF) : const Color(0xFFE2E8F0),
           ),
-        ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              sel ? iconFilled : iconOut,
+              size: 15,
+              color: sel ? Colors.white : const Color(0xFF64748B),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: sel ? FontWeight.w600 : FontWeight.w500,
+                color: sel ? Colors.white : const Color(0xFF334155),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileFilterBar() {
+    final showPeriod = _selectedIndex != 6 && _selectedIndex != 7;
+    return Container(
+      color: const Color(0xFFF8FAFC),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            PopupMenuButton<_CurrencyScope>(
+              initialValue: _currencyScope,
+              onSelected: _onCurrencyScopeChange,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: const Color(0xFFCBD5E1)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.monetization_on_outlined, size: 14, color: Color(0xFF64748B)),
+                    const SizedBox(width: 5),
+                    Text(
+                      _currencyScope == _CurrencyScope.selected ? _currencyCode : 'All Currencies',
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.arrow_drop_down, size: 16, color: Color(0xFF64748B)),
+                  ],
+                ),
+              ),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: _CurrencyScope.selected,
+                  child: Text('Current ($_currencyName)'),
+                ),
+                const PopupMenuItem(
+                  value: _CurrencyScope.all,
+                  child: Text('All Currencies'),
+                ),
+              ],
+            ),
+            if (showPeriod) ...[
+              const SizedBox(width: 8),
+              PopupMenuButton<_DatePreset>(
+                initialValue: _preset,
+                onSelected: (p) => p == _DatePreset.custom ? _pickCustomRange() : _onPeriodChange(p),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.date_range_outlined, size: 14, color: Color(0xFF64748B)),
+                      const SizedBox(width: 5),
+                      Text(
+                        _preset == _DatePreset.custom && _customFrom != null && _customTo != null
+                            ? '${_formatDate(_customFrom!)} - ${_formatDate(_customTo!)}'
+                            : _preset.label,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_drop_down, size: 16, color: Color(0xFF64748B)),
+                    ],
+                  ),
+                ),
+                itemBuilder: (context) => [
+                  for (final p in _DatePreset.values)
+                    PopupMenuItem(
+                      value: p,
+                      child: Text(p == _DatePreset.custom ? 'Custom…' : p.label),
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -709,12 +883,12 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           // ── Nav items ──
           for (int i = 0; i < _navItems.length; i++) _navItem(i, primary),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
           ),
           // ── Currency scope ──
           Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: Text('CURRENCY',
                 style: TextStyle(
                     fontSize: 11,
@@ -726,12 +900,12 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           _currencyScopeItem(_CurrencyScope.all, primary),
           if (_selectedIndex != 6 && _selectedIndex != 7) ...[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
             ),
             // ── Period filter ──
             Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text('PERIOD',
                   style: TextStyle(
                       fontSize: 11,
@@ -816,20 +990,19 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
         decoration: BoxDecoration(
-          color: sel ? const Color(0xFFEFF6FF) : Colors.transparent,
+          color: sel ? const Color(0xFF007CFF) : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
-          border: sel ? Border.all(color: const Color(0xFFBFDBFE)) : null,
         ),
         child: Row(
           children: [
             Icon(sel ? iconFilled : iconOut,
-                size: 18, color: sel ? const Color(0xFF007CFF) : const Color(0xFF64748B)),
+                size: 18, color: sel ? Colors.white : const Color(0xFF64748B)),
             const SizedBox(width: 10),
             Text(label,
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: sel ? FontWeight.w600 : FontWeight.normal,
-                    color: sel ? const Color(0xFF007CFF) : const Color(0xFF64748B))),
+                    color: sel ? Colors.white : const Color(0xFF334155))),
           ],
         ),
       ),
@@ -1079,6 +1252,31 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     );
   }
 
+  Widget _buildResponsiveKpiRow(List<Widget> cards, {int maxCols = 5}) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final columns = width >= 1100
+            ? maxCols
+            : width >= 760
+                ? (maxCols >= 3 ? 3 : maxCols)
+                : width >= 480
+                    ? 2
+                    : 1;
+        const spacing = 12.0;
+        final cardWidth = (width - spacing * (columns - 1)) / columns;
+        return Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: [
+            for (final card in cards)
+              SizedBox(width: cardWidth, height: 104, child: card),
+          ],
+        );
+      },
+    );
+  }
+
   // ─── Section 1: Revenue ─────────────────────────────────────────────────────
 
   Widget _buildRevenue() {
@@ -1095,46 +1293,32 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               // KPI cards
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                          child: _kpiCard('Total Billed', _money(_kpi.billed),
-                              const Color(0xFF002E78), Icons.receipt_long)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Total Collected',
-                              _money(_kpi.collected),
-                              const Color(0xFF16A34A),
-                              Icons.check_circle_outline)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Outstanding',
-                              _money(_kpi.outstanding),
-                              const Color(0xFFDC2626),
-                              Icons.schedule)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Avg Invoice Value',
-                              _money(_kpi.avgInvoiceValue),
-                              const Color(0xFF7C3AED),
-                              Icons.trending_up)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Total Profit',
-                              _money(_kpi.profit),
-                              _kpi.profit < 0
-                                  ? const Color(0xFFDC2626)
-                                  : const Color(0xFF16A34A),
-                              Icons.savings_outlined)),
-                    ],
-                  ),
-                ),
+                child: _buildResponsiveKpiRow([
+                  _kpiCard('Total Billed', _money(_kpi.billed),
+                      const Color(0xFF002E78), Icons.receipt_long),
+                  _kpiCard(
+                      'Total Collected',
+                      _money(_kpi.collected),
+                      const Color(0xFF16A34A),
+                      Icons.check_circle_outline),
+                  _kpiCard(
+                      'Outstanding',
+                      _money(_kpi.outstanding),
+                      const Color(0xFFDC2626),
+                      Icons.schedule),
+                  _kpiCard(
+                      'Avg Invoice Value',
+                      _money(_kpi.avgInvoiceValue),
+                      const Color(0xFF7C3AED),
+                      Icons.trending_up),
+                  _kpiCard(
+                      'Total Profit',
+                      _money(_kpi.profit),
+                      _kpi.profit < 0
+                          ? const Color(0xFFDC2626)
+                          : const Color(0xFF16A34A),
+                      Icons.savings_outlined),
+                ]),
               ),
               if (_missingCostItemCount > 0)
                 Padding(
@@ -1404,11 +1588,22 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         child: _emptyState('No outstanding invoices'),
                       )
                     else ...[
-                      _agedHeader(),
-                      ..._aged
-                          .skip(_agedPage * _agedPageSize)
-                          .take(_agedPageSize)
-                          .map(_agedRow),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minWidth: 640),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _agedHeader(),
+                              ..._aged
+                                  .skip(_agedPage * _agedPageSize)
+                                  .take(_agedPageSize)
+                                  .map(_agedRow),
+                            ],
+                          ),
+                        ),
+                      ),
                       _buildReportPagination(
                         currentPage: _agedPage,
                         pageSize: _agedPageSize,
@@ -1545,7 +1740,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   overflow: TextOverflow.ellipsis)),
           Expanded(
               flex: 3,
-              child: Text(r.invoiceId,
+              child: Text(formatDisplayInvoiceNumber(r.invoiceId),
                   style: TextStyle(
                       fontSize: 12,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1607,30 +1802,18 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               // Total tax KPI
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: _kpiCard(
-                            'Total Tax Collected',
-                            _money(totalTax),
-                            const Color(0xFF7C3AED),
-                            Icons.account_balance_outlined),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _kpiCard(
-                            'Tax Rate Buckets',
-                            _taxBuckets.length.toString(),
-                            const Color(0xFF0284C7),
-                            Icons.pie_chart_outline),
-                      ),
-                      const SizedBox(width: 12),
-                      const Spacer(flex: 2),
-                    ],
-                  ),
-                ),
+                child: _buildResponsiveKpiRow([
+                  _kpiCard(
+                      'Total Tax Collected',
+                      _money(totalTax),
+                      const Color(0xFF7C3AED),
+                      Icons.account_balance_outlined),
+                  _kpiCard(
+                      'Tax Rate Buckets',
+                      _taxBuckets.length.toString(),
+                      const Color(0xFF0284C7),
+                      Icons.pie_chart_outline),
+                ], maxCols: 2),
               ),
 
               // Tax breakdown table
@@ -1892,15 +2075,26 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 }).toList(),
               ),
             ),
-            _customerTableHeader(),
-            ..._topCustomers
-                .skip(_customersPage * _customersPageSize)
-                .take(_customersPageSize)
-                .toList()
-                .asMap()
-                .entries
-                .map((e) => _customerRow(
-                    _customersPage * _customersPageSize + e.key + 1, e.value)),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 640),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _customerTableHeader(),
+                    ..._topCustomers
+                        .skip(_customersPage * _customersPageSize)
+                        .take(_customersPageSize)
+                        .toList()
+                        .asMap()
+                        .entries
+                        .map((e) => _customerRow(
+                            _customersPage * _customersPageSize + e.key + 1, e.value)),
+                  ],
+                ),
+              ),
+            ),
             _buildReportPagination(
               currentPage: _customersPage,
               pageSize: _customersPageSize,
@@ -2058,15 +2252,29 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
           child: _statementSummaryCards(statement),
         ),
-        _statementTableHeader(),
-        if (statement.lines.isEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: _emptyState('No transactions in this period'),
-          )
-        else
-          ...statement.lines.asMap().entries.map(
-              (entry) => _statementRow(statement, entry.key + 1, entry.value)),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 700),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _statementTableHeader(),
+                if (statement.lines.isEmpty)
+                  SizedBox(
+                    width: 700,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: _emptyState('No transactions in this period'),
+                    ),
+                  )
+                else
+                  ...statement.lines.asMap().entries.map(
+                      (entry) => _statementRow(statement, entry.key + 1, entry.value)),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -2085,28 +2293,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           const Color(0xFFDC2626), Icons.warning_amber_outlined),
     ];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final columns = width >= 1100
-            ? 5
-            : width >= 760
-                ? 3
-                : width >= 500
-                    ? 2
-                    : 1;
-        const spacing = 12.0;
-        final cardWidth = (width - spacing * (columns - 1)) / columns;
-        return Wrap(
-          spacing: spacing,
-          runSpacing: spacing,
-          children: [
-            for (final card in cards)
-              SizedBox(width: cardWidth, height: 112, child: card),
-          ],
-        );
-      },
-    );
+    return _buildResponsiveKpiRow(cards, maxCols: 5);
   }
 
   Widget _statementTableHeader() {
@@ -2157,7 +2344,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           : const Color(0xFF002E78)))),
           Expanded(
               flex: 3,
-              child: Text(line.reference,
+              child: Text(formatDisplayInvoiceNumber(line.reference),
                   style: TextStyle(
                       fontSize: 12,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -2407,19 +2594,30 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                                 }).toList(),
                               ),
                             ),
-                            // Full table
-                            _productTableHeader(),
-                            ..._topProducts
-                                .skip(_productsPage * _productsPageSize)
-                                .take(_productsPageSize)
-                                .toList()
-                                .asMap()
-                                .entries
-                                .map((e) => _productRow(
-                                    _productsPage * _productsPageSize +
-                                        e.key +
-                                        1,
-                                    e.value)),
+                            // Full table with horizontal scroll
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(minWidth: 700),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _productTableHeader(),
+                                    ..._topProducts
+                                        .skip(_productsPage * _productsPageSize)
+                                        .take(_productsPageSize)
+                                        .toList()
+                                        .asMap()
+                                        .entries
+                                        .map((e) => _productRow(
+                                            _productsPage * _productsPageSize +
+                                                e.key +
+                                                1,
+                                            e.value)),
+                                  ],
+                                ),
+                              ),
+                            ),
                             _buildReportPagination(
                               currentPage: _productsPage,
                               pageSize: _productsPageSize,
@@ -2602,11 +2800,22 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                               child: _emptyState('No sales in this period'),
                             )
                           else ...[
-                            _dailyTableHeader(),
-                            ..._dailyReport
-                                .skip(_dailyPage * _dailyPageSize)
-                                .take(_dailyPageSize)
-                                .map(_dailyRow),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(minWidth: 620),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _dailyTableHeader(),
+                                    ..._dailyReport
+                                        .skip(_dailyPage * _dailyPageSize)
+                                        .take(_dailyPageSize)
+                                        .map(_dailyRow),
+                                  ],
+                                ),
+                              ),
+                            ),
                             _buildReportPagination(
                               currentPage: _dailyPage,
                               pageSize: _dailyPageSize,
@@ -2821,36 +3030,23 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: _kpiCard(
-                                  'Quotations Issued',
-                                  _fmtInt.format(q.quotationsIssued),
-                                  const Color(0xFF0284C7),
-                                  Icons.request_quote_outlined),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _kpiCard(
-                                  'Invoices in Period',
-                                  _fmtInt.format(q.invoicesInPeriod),
-                                  const Color(0xFF16A34A),
-                                  Icons.receipt_outlined),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _kpiCard(
-                                  'Conversion Rate',
-                                  '${q.conversionRate.toStringAsFixed(1)}%',
-                                  const Color(0xFF7C3AED),
-                                  Icons.trending_up),
-                            ),
-                          ],
-                        ),
-                      ),
+                      child: _buildResponsiveKpiRow([
+                        _kpiCard(
+                            'Quotations Issued',
+                            _fmtInt.format(q.quotationsIssued),
+                            const Color(0xFF0284C7),
+                            Icons.request_quote_outlined),
+                        _kpiCard(
+                            'Invoices in Period',
+                            _fmtInt.format(q.invoicesInPeriod),
+                            const Color(0xFF16A34A),
+                            Icons.receipt_outlined),
+                        _kpiCard(
+                            'Conversion Rate',
+                            '${q.conversionRate.toStringAsFixed(1)}%',
+                            const Color(0xFF7C3AED),
+                            Icons.trending_up),
+                      ], maxCols: 3),
                     ),
                     _sectionCard(
                       child: Column(
@@ -2981,47 +3177,33 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               // KPI summary row
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                          child: _kpiCard(
-                              'Total Invoices',
-                              _fmtInt.format(_invoiceList.length),
-                              const Color(0xFF002E78),
-                              Icons.receipt_long_outlined)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Paid',
-                              _fmtInt.format(_invoiceCount('Paid')),
-                              const Color(0xFF16A34A),
-                              Icons.check_circle_outline)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Partial',
-                              _fmtInt.format(_invoiceCount('Partial')),
-                              const Color(0xFFF59E0B),
-                              Icons.timelapse_outlined)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Unpaid',
-                              _fmtInt.format(_invoiceCount('Unpaid')),
-                              Theme.of(context).colorScheme.onSurfaceVariant,
-                              Icons.remove_circle_outline)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                          child: _kpiCard(
-                              'Overdue',
-                              _fmtInt.format(_overdueCount),
-                              const Color(0xFFDC2626),
-                              Icons.warning_amber_outlined)),
-                    ],
-                  ),
-                ),
+                child: _buildResponsiveKpiRow([
+                  _kpiCard(
+                      'Total Invoices',
+                      _fmtInt.format(_invoiceList.length),
+                      const Color(0xFF002E78),
+                      Icons.receipt_long_outlined),
+                  _kpiCard(
+                      'Paid',
+                      _fmtInt.format(_invoiceCount('Paid')),
+                      const Color(0xFF16A34A),
+                      Icons.check_circle_outline),
+                  _kpiCard(
+                      'Partial',
+                      _fmtInt.format(_invoiceCount('Partial')),
+                      const Color(0xFFF59E0B),
+                      Icons.timelapse_outlined),
+                  _kpiCard(
+                      'Unpaid',
+                      _fmtInt.format(_invoiceCount('Unpaid')),
+                      Theme.of(context).colorScheme.onSurfaceVariant,
+                      Icons.remove_circle_outline),
+                  _kpiCard(
+                      'Overdue',
+                      _fmtInt.format(_overdueCount),
+                      const Color(0xFFDC2626),
+                      Icons.warning_amber_outlined),
+                ], maxCols: 5),
               ),
               // Table card
               _sectionCard(
@@ -3051,34 +3233,46 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         ],
                       ),
                     ),
-                    // Table header
-                    _invoiceStatusHeader(),
-                    // Rows
-                    if (filtered.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: _emptyState('No invoices match this filter'),
-                      )
-                    else ...[
-                      ...pageRows.asMap().entries.map((e) =>
-                          _invoiceStatusRow(pageStart + e.key + 1, e.value)),
-                      _buildReportPagination(
-                        currentPage: _invoicePage,
-                        pageSize: _invoicePageSize,
-                        total: filtered.length,
-                        onPageChange: (p) {
-                          if (!mounted) return;
-                          setState(() => _invoicePage = p);
-                        },
-                        onSizeChange: (s) {
-                          setState(() {
-                            if (!mounted) return;
-                            _invoicePageSize = s;
-                            _invoicePage = 0;
-                          });
-                        },
+                    // Table with horizontal scroll for responsiveness
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minWidth: 780),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _invoiceStatusHeader(),
+                            if (filtered.isEmpty)
+                              SizedBox(
+                                width: 780,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: _emptyState('No invoices match this filter'),
+                                ),
+                              )
+                            else
+                              ...pageRows.asMap().entries.map((e) =>
+                                  _invoiceStatusRow(pageStart + e.key + 1, e.value)),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
+                    _buildReportPagination(
+                      currentPage: _invoicePage,
+                      pageSize: _invoicePageSize,
+                      total: filtered.length,
+                      onPageChange: (p) {
+                        if (!mounted) return;
+                        setState(() => _invoicePage = p);
+                      },
+                      onSizeChange: (s) {
+                        setState(() {
+                          if (!mounted) return;
+                          _invoicePageSize = s;
+                          _invoicePage = 0;
+                        });
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -3124,7 +3318,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: const Row(
         children: [
-          SizedBox(width: 32, child: _TableHead('#')),
+          SizedBox(width: 32, child: _TableHead('No.')),
           Expanded(flex: 2, child: _TableHead('Date')),
           Expanded(flex: 3, child: _TableHead('Invoice ID')),
           Expanded(flex: 4, child: _TableHead('Customer')),
@@ -3157,7 +3351,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant))),
           Expanded(
               flex: 3,
-              child: Text(r.id,
+              child: Text(formatDisplayInvoiceNumber(r.id),
                   style: TextStyle(
                       fontSize: 12,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,

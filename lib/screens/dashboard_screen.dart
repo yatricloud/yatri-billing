@@ -50,6 +50,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String _cloneType = 'Invoice';
   bool _hasUpdate = false;
   final InvoiceFormGuard _invoiceFormGuard = InvoiceFormGuard();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  int _getBottomNavIndex() {
+    switch (_selectedIndex) {
+      case 0:
+        return 0; // Dashboard
+      case 2:
+        return 1; // Invoices
+      case 1:
+        return 2; // New Invoice
+      case 7:
+        return 3; // Reports
+      default:
+        return 4; // More
+    }
+  }
+
+  int _mapBottomNavToTab(int bottomIndex) {
+    switch (bottomIndex) {
+      case 0:
+        return 0; // Dashboard
+      case 1:
+        return 2; // Invoices
+      case 2:
+        return 1; // New Invoice
+      case 3:
+        return 7; // Reports
+      default:
+        return 0;
+    }
+  }
 
   @override
   void initState() {
@@ -249,7 +280,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  Widget _buildTopHeader() {
+  Widget _buildTopHeader({bool isMobile = false}) {
     return Container(
       height: 64,
       decoration: const BoxDecoration(
@@ -258,39 +289,57 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 24),
       child: Row(
         children: [
-          // Sidebar collapse/expand toggle
-          Tooltip(
-            message: _sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar',
-            child: InkWell(
-              onTap: () {
-                if (!mounted) return;
-                setState(() => _sidebarExpanded = !_sidebarExpanded);
-              },
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.transparent,
-                ),
-                child: const Icon(
-                  Icons.view_sidebar_outlined,
-                  color: Color(0xFF6B7280),
-                  size: 20,
+          if (isMobile) ...[
+            IconButton(
+              icon: const Icon(
+                Icons.menu_rounded,
+                color: Color(0xFF111827),
+                size: 24,
+              ),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+              tooltip: 'Open navigation',
+            ),
+            Container(
+              width: 1,
+              height: 22,
+              color: const Color(0xFFE2E8F0),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+            ),
+          ] else ...[
+            // Sidebar collapse/expand toggle
+            Tooltip(
+              message: _sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar',
+              child: InkWell(
+                onTap: () {
+                  if (!mounted) return;
+                  setState(() => _sidebarExpanded = !_sidebarExpanded);
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.transparent,
+                  ),
+                  child: const Icon(
+                    Icons.view_sidebar_outlined,
+                    color: Color(0xFF6B7280),
+                    size: 20,
+                  ),
                 ),
               ),
             ),
-          ),
-          Container(
-            width: 1,
-            height: 22,
-            color: const Color(0xFFE2E8F0),
-            margin: const EdgeInsets.symmetric(horizontal: 14),
-          ),
+            Container(
+              width: 1,
+              height: 22,
+              color: const Color(0xFFE2E8F0),
+              margin: const EdgeInsets.symmetric(horizontal: 14),
+            ),
+          ],
           // Route-aware breadcrumbs: Admin > Revenue
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -440,19 +489,75 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 768;
+
     return GestureDetector(
       onTap: SessionManager.onUserActivity,
       onPanDown: (_) => SessionManager.onUserActivity(),
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: const Color(0xFFF8FAFC), // slate-50 canvas
+        drawer: isMobile
+            ? Drawer(
+                width: 280,
+                child: SafeArea(
+                  child: _buildSidebar(inDrawer: true),
+                ),
+              )
+            : null,
+        bottomNavigationBar: isMobile
+            ? BottomNavigationBar(
+                currentIndex: _getBottomNavIndex(),
+                onTap: (index) {
+                  if (index == 4) {
+                    _scaffoldKey.currentState?.openDrawer();
+                  } else {
+                    final targetTab = _mapBottomNavToTab(index);
+                    _selectTab(targetTab);
+                  }
+                },
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.white,
+                selectedItemColor: const Color(0xFF007CFF),
+                unselectedItemColor: const Color(0xFF64748B),
+                selectedFontSize: 11,
+                unselectedFontSize: 11,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.grid_view_outlined),
+                    activeIcon: Icon(Icons.grid_view_rounded),
+                    label: 'Dashboard',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.receipt_long_outlined),
+                    activeIcon: Icon(Icons.receipt_long_rounded),
+                    label: 'Invoices',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.add_circle_outline_rounded),
+                    activeIcon: Icon(Icons.add_circle_rounded),
+                    label: 'New',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.bar_chart_outlined),
+                    activeIcon: Icon(Icons.bar_chart_rounded),
+                    label: 'Reports',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.menu_rounded),
+                    label: 'More',
+                  ),
+                ],
+              )
+            : null,
         body: Row(
           children: [
-            _buildSidebar(),
+            if (!isMobile) _buildSidebar(),
             Expanded(
               child: Column(
                 children: [
-                  _buildTopHeader(),
+                  _buildTopHeader(isMobile: isMobile),
                   Expanded(child: buildScreen()),
                 ],
               ),
@@ -463,18 +568,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildSidebar() {
-    final expanded = _sidebarExpanded;
+  Widget _buildSidebar({bool inDrawer = false}) {
+    final expanded = inDrawer || _sidebarExpanded;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
-      width: expanded ? 250.0 : 72.0,
-      decoration: const BoxDecoration(
+      width: inDrawer ? double.infinity : (expanded ? 250.0 : 72.0),
+      decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          right: BorderSide(color: Color(0xFFE2E8F0), width: 1),
-        ),
+        border: inDrawer
+            ? null
+            : const Border(
+                right: BorderSide(color: Color(0xFFE2E8F0), width: 1),
+              ),
       ),
       child: ClipRect(
         child: Column(
@@ -550,7 +657,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                       ),
-                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard'),
+                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard', inDrawer: inDrawer),
 
                       const SizedBox(height: 12),
 
@@ -570,7 +677,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         child: InkWell(
-                          onTap: () => _selectTab(2),
+                          onTap: () {
+                            if (inDrawer) Navigator.of(context).maybePop();
+                            _selectTab(2);
+                          },
                           borderRadius: BorderRadius.circular(8),
                           hoverColor: const Color(0xFFF1F5F9),
                           child: Padding(
@@ -606,31 +716,31 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _buildSubNavItem(2, 'Invoices'),
-                              _buildSubNavItem(1, 'New Invoice'),
-                              _buildSubNavItem(3, 'Quotations'),
-                              _buildSubNavItem(4, 'Receipts'),
-                              _buildSubNavItem(9, 'Revenue'),
+                              _buildSubNavItem(2, 'Invoices', inDrawer: inDrawer),
+                              _buildSubNavItem(1, 'New Invoice', inDrawer: inDrawer),
+                              _buildSubNavItem(3, 'Quotations', inDrawer: inDrawer),
+                              _buildSubNavItem(4, 'Receipts', inDrawer: inDrawer),
+                              _buildSubNavItem(9, 'Revenue', inDrawer: inDrawer),
                             ],
                           ),
                         ),
                       ),
-                      _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers'),
-                      _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products'),
-                      _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports'),
-                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings'),
+                      _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers', inDrawer: inDrawer),
+                      _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products', inDrawer: inDrawer),
+                      _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports', inDrawer: inDrawer),
+                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings', inDrawer: inDrawer),
                     ] else ...[
-                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard'),
+                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard', inDrawer: inDrawer),
                       const Divider(height: 12, indent: 12, endIndent: 12, color: Color(0xFFE5E7EB)),
-                      _buildNavItem(2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Invoices'),
-                      _buildNavItem(1, Icons.add_circle_outline_rounded, Icons.add_circle_rounded, 'New Invoice'),
-                      _buildNavItem(3, Icons.request_quote_outlined, Icons.request_quote_rounded, 'Quotations'),
-                      _buildNavItem(4, Icons.point_of_sale_outlined, Icons.point_of_sale_rounded, 'Receipts'),
-                      _buildNavItem(9, Icons.payments_outlined, Icons.payments_rounded, 'Revenue'),
-                      _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers'),
-                      _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products'),
-                      _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports'),
-                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings'),
+                      _buildNavItem(2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Invoices', inDrawer: inDrawer),
+                      _buildNavItem(1, Icons.add_circle_outline_rounded, Icons.add_circle_rounded, 'New Invoice', inDrawer: inDrawer),
+                      _buildNavItem(3, Icons.request_quote_outlined, Icons.request_quote_rounded, 'Quotations', inDrawer: inDrawer),
+                      _buildNavItem(4, Icons.point_of_sale_outlined, Icons.point_of_sale_rounded, 'Receipts', inDrawer: inDrawer),
+                      _buildNavItem(9, Icons.payments_outlined, Icons.payments_rounded, 'Revenue', inDrawer: inDrawer),
+                      _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers', inDrawer: inDrawer),
+                      _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products', inDrawer: inDrawer),
+                      _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports', inDrawer: inDrawer),
+                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings', inDrawer: inDrawer),
                     ],
                   ],
                 ),
@@ -647,7 +757,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ? SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
-                        onPressed: _logoutAndResetSession,
+                        onPressed: () {
+                          if (inDrawer) Navigator.of(context).maybePop();
+                          _logoutAndResetSession();
+                        },
                         icon: const Icon(
                           Icons.logout_rounded,
                           size: 16,
@@ -677,7 +790,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   : Tooltip(
                       message: 'Sign Out',
                       child: InkWell(
-                        onTap: _logoutAndResetSession,
+                        onTap: () {
+                          if (inDrawer) Navigator.of(context).maybePop();
+                          _logoutAndResetSession();
+                        },
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -773,7 +889,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
   */
 
-  Widget _buildSubNavItem(int index, String label) {
+  Widget _buildSubNavItem(int index, String label, {bool inDrawer = false}) {
     final selected = _selectedIndex == index;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.5),
@@ -781,19 +897,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(6),
         child: InkWell(
-          onTap: () => _selectTab(index),
+          onTap: () {
+            if (inDrawer) Navigator.of(context).maybePop();
+            _selectTab(index);
+          },
           borderRadius: BorderRadius.circular(6),
           hoverColor: const Color(0xFFF1F5F9),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9.5),
             decoration: BoxDecoration(
-              color: selected ? const Color(0xFFF1F5F9) : Colors.transparent,
+              color: selected ? const Color(0xFF007CFF) : Colors.transparent,
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               label,
               style: TextStyle(
-                color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                color: selected ? Colors.white : const Color(0xFF64748B),
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                 fontSize: 13.5,
               ),
@@ -806,10 +925,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildNavItem(
       int index, IconData outlinedIcon, IconData filledIcon, String label,
-      {bool showDot = false, bool? isSelectedOverride}) {
+      {bool showDot = false, bool? isSelectedOverride, bool inDrawer = false}) {
     final selected = isSelectedOverride ?? (_selectedIndex == index);
 
-    Future<void> onTap() => _selectTab(index);
+    Future<void> onTap() async {
+      if (inDrawer) Navigator.of(context).maybePop();
+      await _selectTab(index);
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -824,20 +946,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: InkWell(
                 onTap: onTap,
                 borderRadius: BorderRadius.circular(8),
-                hoverColor: const Color(0xFFF1F5F9),
+                hoverColor: selected ? const Color(0xFF007CFF) : const Color(0xFFF1F5F9),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
                   padding: const EdgeInsets.all(12),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: selected
-                        ? const Color(0xFFF1F5F9)
+                        ? const Color(0xFF007CFF)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     selected ? filledIcon : outlinedIcon,
-                    color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                    color: selected ? Colors.white : const Color(0xFF64748B),
                     size: 20,
                   ),
                 ),
@@ -854,14 +976,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: InkWell(
               onTap: onTap,
               borderRadius: BorderRadius.circular(8),
-              hoverColor: const Color(0xFFF1F5F9),
+              hoverColor: selected ? const Color(0xFF007CFF) : const Color(0xFFF1F5F9),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 10.5),
                 decoration: BoxDecoration(
                   color: selected
-                    ? const Color(0xFFF1F5F9)
+                    ? const Color(0xFF007CFF)
                     : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -869,7 +991,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: [
                     Icon(
                       selected ? filledIcon : outlinedIcon,
-                      color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                      color: selected ? Colors.white : const Color(0xFF64748B),
                       size: 18,
                     ),
                     const SizedBox(width: 12),
@@ -877,7 +999,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Text(
                         label,
                         style: TextStyle(
-                          color: selected ? const Color(0xFF0F172A) : const Color(0xFF334155),
+                          color: selected ? Colors.white : const Color(0xFF334155),
                           fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                           fontSize: 13.5,
                         ),
@@ -1295,74 +1417,72 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
     required Color accentColor,
     required IconData icon,
   }) {
-    return Expanded(
-      child: Container(
-        height: 136,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
+    return Container(
+      height: 136,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Stack(
+        children: [
+          Positioned(
+            right: -10,
+            top: -10,
+            child: Icon(
+              icon,
+              size: 92,
+              color: accentColor.withOpacity(0.06),
             ),
-          ],
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: Stack(
-          children: [
-            Positioned(
-              right: -10,
-              top: -10,
-              child: Icon(
-                icon,
-                size: 92,
-                color: accentColor.withOpacity(0.06),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                    color: Color(0xFF111827),
+                  ),
+                ),
+                Container(
+                  width: 48,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: accentColor,
+                    borderRadius: BorderRadius.circular(9999),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(22),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title.toUpperCase(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.8,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                  Text(
-                    value,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
-                      color: Color(0xFF111827),
-                    ),
-                  ),
-                  Container(
-                    width: 48,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: accentColor,
-                      borderRadius: BorderRadius.circular(9999),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1425,8 +1545,10 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       return num.contains(q) || name.contains(q) || email.contains(q) || itemMatch;
     }).toList();
 
+    final isNarrow = MediaQuery.of(context).size.width < 768;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 32),
+      padding: EdgeInsets.symmetric(horizontal: isNarrow ? 16 : 36, vertical: isNarrow ? 20 : 32),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1280),
@@ -1490,120 +1612,163 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
               const SizedBox(height: 28),
 
               // ── 4 Stats Cards ────────────────────────────────
-              Row(
-                children: [
-                  _buildYatriStatCard(
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final card1 = _buildYatriStatCard(
                     title: 'Total receipts',
                     value: totalInvoices.toString(),
                     accentColor: const Color(0xFF007CFF), // Yatri brand blue
                     icon: Icons.receipt_long_outlined,
-                  ),
-                  const SizedBox(width: 16),
-                  _buildYatriStatCard(
+                  );
+                  final card2 = _buildYatriStatCard(
                     title: 'Revenue in INR',
                     value: '$_currencySymbol${totalRevenue.toStringAsFixed(0)}',
                     accentColor: const Color(0xFF10B981),
                     icon: Icons.currency_rupee_rounded,
-                  ),
-                  const SizedBox(width: 16),
-                  _buildYatriStatCard(
+                  );
+                  final card3 = _buildYatriStatCard(
                     title: 'Paid in other currencies',
                     value: '0',
                     accentColor: const Color(0xFF3B82F6),
                     icon: Icons.public_rounded,
-                  ),
-                  const SizedBox(width: 16),
-                  _buildYatriStatCard(
+                  );
+                  final card4 = _buildYatriStatCard(
                     title: 'Categories',
                     value: totalProducts > 0 ? totalProducts.toString() : '3',
                     accentColor: const Color(0xFFF59E0B),
                     icon: Icons.layers_outlined,
-                  ),
-                ],
+                  );
+
+                  if (constraints.maxWidth < 900) {
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: card1),
+                            const SizedBox(width: 12),
+                            Expanded(child: card2),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(child: card3),
+                            const SizedBox(width: 12),
+                            Expanded(child: card4),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      Expanded(child: card1),
+                      const SizedBox(width: 16),
+                      Expanded(child: card2),
+                      const SizedBox(width: 16),
+                      Expanded(child: card3),
+                      const SizedBox(width: 16),
+                      Expanded(child: card4),
+                    ],
+                  );
+                },
               ),
 
               const SizedBox(height: 24),
 
               // ── 2 Secondary Summary Cards (50% / 50%) ─────────
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Revenue by category
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFE5E7EB)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Revenue by category',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF111827),
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          _buildCategoryRow('Store', '$totalInvoices ${totalInvoices == 1 ? "receipt" : "receipts"}'),
-                          const SizedBox(height: 12),
-                          _buildCategoryRow('Events', '0 receipts'),
-                          const SizedBox(height: 12),
-                          _buildCategoryRow('Training', '0 receipts'),
-                        ],
-                      ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final summaryCat = Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFFE5E7EB)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.02),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  // Revenue by currency
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFE5E7EB)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Revenue by category',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF111827),
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Revenue by currency',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF111827),
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          _buildCurrencyRow('Indian Rupee', '$_currencySymbol${totalRevenue.toStringAsFixed(0)}'),
-                          const SizedBox(height: 12),
-                          _buildCurrencyRow('USD', '\$0.00'),
-                          const SizedBox(height: 12),
-                          _buildCurrencyRow('EUR', '€0.00'),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 18),
+                        _buildCategoryRow('Store', '$totalInvoices ${totalInvoices == 1 ? "receipt" : "receipts"}'),
+                        const SizedBox(height: 12),
+                        _buildCategoryRow('Events', '0 receipts'),
+                        const SizedBox(height: 12),
+                        _buildCategoryRow('Training', '0 receipts'),
+                      ],
                     ),
-                  ),
-                ],
+                  );
+
+                  final summaryCurr = Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFFE5E7EB)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.02),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Revenue by currency',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF111827),
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        _buildCurrencyRow('Indian Rupee', '$_currencySymbol${totalRevenue.toStringAsFixed(0)}'),
+                        const SizedBox(height: 12),
+                        _buildCurrencyRow('USD', '\$0.00'),
+                        const SizedBox(height: 12),
+                        _buildCurrencyRow('EUR', '€0.00'),
+                      ],
+                    ),
+                  );
+
+                  if (constraints.maxWidth < 768) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        summaryCat,
+                        const SizedBox(height: 16),
+                        summaryCurr,
+                      ],
+                    );
+                  }
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: summaryCat),
+                      const SizedBox(width: 20),
+                      Expanded(child: summaryCurr),
+                    ],
+                  );
+                },
               ),
 
               const SizedBox(height: 24),
@@ -1628,215 +1793,291 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                     // Card Header with Title, Search and Export CSV
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                      child: Row(
-                        children: [
-                          const Text(
-                            'All receipts',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF111827),
-                            ),
-                          ),
-                          const Spacer(),
-                          // Search
-                          SizedBox(
-                            width: 280,
-                            height: 38,
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
-                              style: const TextStyle(fontSize: 13),
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF9CA3AF)),
-                                hintText: 'Search buyer, item or receipt number',
-                                hintStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF9CA3AF)),
-                                contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                                filled: true,
-                                fillColor: Colors.white,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(color: Color(0xFF007CFF)),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Export CSV Button
-                          OutlinedButton.icon(
-                            onPressed: _exportReceiptsCsv,
-                            icon: const Icon(Icons.download_rounded, size: 16, color: Color(0xFF374151)),
-                            label: const Text(
-                              'Export CSV',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF374151),
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFFE5E7EB)),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Table Column Headers — solid brand blue per Yatri Cloud reference
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF007CFF),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                      child: Row(
-                        children: const [
-                          SizedBox(
-                            width: 120,
-                            child: Text('Date', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
-                          ),
-                          SizedBox(
-                            width: 120,
-                            child: Text('Receipt', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Text('Buyer', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
-                          ),
-                          SizedBox(
-                            width: 110,
-                            child: Text('Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Text('Item', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
-                          ),
-                          SizedBox(
-                            width: 130,
-                            child: Text('Amount', textAlign: TextAlign.right, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Table Rows
-                    if (filtered.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(40),
-                        child: Center(
-                          child: Text(
-                            recentInvoices.isEmpty
-                                ? 'No receipts have been generated yet.'
-                                : 'No receipts match your search.',
-                            style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
-                          ),
-                        ),
-                      )
-                    else
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: filtered.length,
-                        separatorBuilder: (_, __) => const Divider(height: 1, color: Color(0xFFF3F4F6)),
-                        itemBuilder: (context, index) {
-                          final inv = filtered[index];
-                          final dateStr = DateFormat('dd MMM yyyy').format(inv.date);
-                          final itemsSummary = inv.items.isEmpty
-                              ? 'Store'
-                              : (inv.items.length == 1
-                                  ? inv.items.first.product.name
-                                  : '${inv.items.first.product.name} and ${inv.items.length - 1} more');
-
-                          return InkWell(
-                            onTap: () => widget.onEditInvoice(inv),
-                            hoverColor: const Color(0xFFF9FAFB),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 120,
-                                    child: Text(
-                                      dateStr,
-                                      style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 120,
-                                    child: Text(
-                                      inv.invoiceNumber?.isNotEmpty == true ? '#${inv.invoiceNumber}' : '#${inv.id}',
-                                      style: const TextStyle(
-                                        fontSize: 12.5,
-                                        fontFamily: 'monospace',
-                                        color: Color(0xFF111827),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          inv.customer.name.isNotEmpty ? inv.customer.name : 'Yatri',
-                                          style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: Color(0xFF111827)),
-                                        ),
-                                        if (inv.customer.email.isNotEmpty)
-                                          Text(
-                                            inv.customer.email,
-                                            style: const TextStyle(fontSize: 11.5, color: Color(0xFF6B7280)),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFEFF6FF),
-                                          borderRadius: BorderRadius.circular(6),
-                                          border: Border.all(color: const Color(0xFFBFDBFE)),
-                                        ),
-                                        child: const Text(
-                                          'Store',
-                                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF007CFF)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      itemsSummary,
-                                      style: const TextStyle(fontSize: 13, color: Color(0xFF374151)),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 130,
-                                    child: Text(
-                                      '$_currencySymbol${inv.total.toStringAsFixed(2)}',
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                        fontSize: 14,
+                      child: LayoutBuilder(
+                        builder: (context, box) {
+                          if (box.maxWidth < 650) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'All receipts',
+                                      style: TextStyle(
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w700,
                                         color: Color(0xFF111827),
                                       ),
                                     ),
+                                    OutlinedButton.icon(
+                                      onPressed: _exportReceiptsCsv,
+                                      icon: const Icon(Icons.download_rounded, size: 16, color: Color(0xFF374151)),
+                                      label: const Text(
+                                        'Export CSV',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF374151),
+                                        ),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(color: Color(0xFFE5E7EB)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  height: 38,
+                                  child: TextField(
+                                    controller: _searchController,
+                                    onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
+                                    style: const TextStyle(fontSize: 13),
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF9CA3AF)),
+                                      hintText: 'Search buyer, item or receipt number',
+                                      hintStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF9CA3AF)),
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: const BorderSide(color: Color(0xFF007CFF)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return Row(
+                            children: [
+                              const Text(
+                                'All receipts',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF111827),
+                                ),
+                              ),
+                              const Spacer(),
+                              // Search
+                              SizedBox(
+                                width: 280,
+                                height: 38,
+                                child: TextField(
+                                  controller: _searchController,
+                                  onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
+                                  style: const TextStyle(fontSize: 13),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF9CA3AF)),
+                                    hintText: 'Search buyer, item or receipt number',
+                                    hintStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF9CA3AF)),
+                                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF007CFF)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Export CSV Button
+                              OutlinedButton.icon(
+                                onPressed: _exportReceiptsCsv,
+                                icon: const Icon(Icons.download_rounded, size: 16, color: Color(0xFF374151)),
+                                label: const Text(
+                                  'Export CSV',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF374151),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(color: Color(0xFFE5E7EB)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: 860,
+                        child: Column(
+                          children: [
+                            // Table Column Headers — solid brand blue per Yatri Cloud reference
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF007CFF),
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                              child: Row(
+                                children: const [
+                                  SizedBox(
+                                    width: 120,
+                                    child: Text('Date', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                  ),
+                                  SizedBox(
+                                    width: 120,
+                                    child: Text('Receipt', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text('Buyer', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                  ),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text('Item', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                  ),
+                                  SizedBox(
+                                    width: 130,
+                                    child: Text('Amount', textAlign: TextAlign.right, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
                                   ),
                                 ],
                               ),
                             ),
-                          );
-                        },
+                            // Table Rows
+                            if (filtered.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.all(40),
+                                child: Center(
+                                  child: Text(
+                                    recentInvoices.isEmpty
+                                        ? 'No receipts have been generated yet.'
+                                        : 'No receipts match your search.',
+                                    style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                                  ),
+                                ),
+                              )
+                            else
+                              ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: filtered.length,
+                                separatorBuilder: (_, __) => const Divider(height: 1, color: Color(0xFFF3F4F6)),
+                                itemBuilder: (context, index) {
+                                  final inv = filtered[index];
+                                  final dateStr = DateFormat('dd MMM yyyy').format(inv.date);
+                                  final itemsSummary = inv.items.isEmpty
+                                      ? 'Store'
+                                      : (inv.items.length == 1
+                                          ? inv.items.first.product.name
+                                          : '${inv.items.first.product.name} and ${inv.items.length - 1} more');
+
+                                  return InkWell(
+                                    onTap: () => widget.onEditInvoice(inv),
+                                    hoverColor: const Color(0xFFF9FAFB),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 120,
+                                            child: Text(
+                                              dateStr,
+                                              style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 120,
+                                            child: Text(
+                                              formatDisplayInvoiceNumber(inv.invoiceNumber?.isNotEmpty == true ? inv.invoiceNumber : inv.id),
+                                              style: const TextStyle(
+                                                fontSize: 12.5,
+                                                fontFamily: 'monospace',
+                                                color: Color(0xFF111827),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  inv.customer.name.isNotEmpty ? inv.customer.name : 'Yatri',
+                                                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: Color(0xFF111827)),
+                                                ),
+                                                if (inv.customer.email.isNotEmpty)
+                                                  Text(
+                                                    inv.customer.email,
+                                                    style: const TextStyle(fontSize: 11.5, color: Color(0xFF6B7280)),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 110,
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFFEFF6FF),
+                                                  borderRadius: BorderRadius.circular(6),
+                                                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                                                ),
+                                                child: const Text(
+                                                  'Store',
+                                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF007CFF)),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Text(
+                                              itemsSummary,
+                                              style: const TextStyle(fontSize: 13, color: Color(0xFF374151)),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 130,
+                                            child: Text(
+                                              '$_currencySymbol${inv.total.toStringAsFixed(2)}',
+                                              textAlign: TextAlign.right,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xFF111827),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                          ],
+                        ),
                       ),
+                    ),
                   ],
                 ),
               ),

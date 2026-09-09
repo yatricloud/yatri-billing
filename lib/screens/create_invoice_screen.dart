@@ -4777,7 +4777,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      'Invoice # ',
+                      'Invoice ID: ',
                       style: TextStyle(
                         fontSize: 13,
                         color: Color(0xFF64748B),
@@ -4785,7 +4785,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                       ),
                     ),
                     Text(
-                      currentInvoiceNumber,
+                      formatDisplayInvoiceNumber(currentInvoiceNumber),
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invoiso/constants.dart';
-import 'package:invoiso/invoiso_colors.dart';
 import 'package:invoiso/providers/repositories.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pdf/pdf.dart';
@@ -79,6 +78,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
   String _newItemType = 'product'; // type for the add-product form
   bool _unlimitedStock = false;
   bool _priceIncludesTax = false;
+  int _mobileViewTab = 0; // 0: list, 1: add form on small screens
 
   static const _csvMaxRows = 500;
   static const _csvHeaders = [
@@ -278,6 +278,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
       _priceIncludesTax = false;
       _expiryDate = null;
       _manufactureDate = null;
+      _mobileViewTab = 0;
     });
   }
 
@@ -1584,19 +1585,70 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 320,
-              child: SingleChildScrollView(child: _buildAddProductCard()),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 900;
+          if (isMobile) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton<int>(
+                      segments: [
+                        ButtonSegment<int>(
+                          value: 0,
+                          icon: const Icon(Icons.list_alt, size: 16),
+                          label: Text(
+                            _newItemType == 'service'
+                                ? 'Services (${_products.length})'
+                                : 'Products (${_products.length})',
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                          ),
+                        ),
+                        ButtonSegment<int>(
+                          value: 1,
+                          icon: const Icon(Icons.add, size: 16),
+                          label: Text(
+                            '+ Add ${_newItemType == 'service' ? 'Service' : 'Product'}',
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                          ),
+                        ),
+                      ],
+                      selected: {_mobileViewTab},
+                      onSelectionChanged: (set) {
+                        setState(() => _mobileViewTab = set.first);
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: _mobileViewTab == 0
+                        ? _buildProductTable(totalPages)
+                        : SingleChildScrollView(child: _buildAddProductCard()),
+                  ),
+                ),
+              ],
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 320,
+                  child: SingleChildScrollView(child: _buildAddProductCard()),
+                ),
+                const SizedBox(width: 16),
+                Expanded(child: _buildProductTable(totalPages)),
+              ],
             ),
-            const SizedBox(width: 16),
-            Expanded(child: _buildProductTable(totalPages)),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -1609,26 +1661,33 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              gradient:
-                  ProductManagementScreenColors.topBarBackgroundGradientColor,
+              color: const Color(0xFFF8FAFC),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
             child: Row(
               children: [
-                Icon(Icons.add_box, color: Colors.white, size: 28),
-                SizedBox(width: 12),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.add_box_outlined, color: Color(0xFF007CFF), size: 20),
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Add new $_newItemType',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F172A),
                     ),
                   ),
                 ),
@@ -1990,82 +2049,87 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
               color: Color(0xFF0F172A),
             ),
           ),
-          Row(
-            children: [
-              OutlinedButton(
-                onPressed: _showImportDialog,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0F172A),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-                child: const Text('Import CSV'),
-              ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: _exportToCSV,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0F172A),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-                child: const Text('Export CSV'),
-              ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: _exportToPDF,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0F172A),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-                child: const Text('Export PDF'),
-              ),
-              if (widget.user.isAdmin()) ...[
-                const SizedBox(width: 8),
-                PopupMenuButton<String>(
-                  tooltip: 'More actions',
-                  color: Colors.white,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+          Flexible(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  OutlinedButton(
+                    onPressed: _showImportDialog,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    child: const Text('Import CSV'),
                   ),
-                  onSelected: (value) {
-                    if (value == 'delete_all') _confirmDeleteAll();
-                  },
-                  itemBuilder: (ctx) => [
-                    const PopupMenuItem<String>(
-                      value: 'delete_all',
-                      child: Text('Delete All Products',
-                          style: TextStyle(color: Color(0xFFDC2626))),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: _exportToCSV,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
-                  ],
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                    decoration: BoxDecoration(
+                    child: const Text('Export CSV'),
+                  ),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: _exportToPDF,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    child: const Text('Export PDF'),
+                  ),
+                  if (widget.user.isAdmin()) ...[
+                    const SizedBox(width: 8),
+                    PopupMenuButton<String>(
+                      tooltip: 'More actions',
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFFCBD5E1)),
-                    ),
-                    child: const Text(
-                      'More ▾',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF334155),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      onSelected: (value) {
+                        if (value == 'delete_all') _confirmDeleteAll();
+                      },
+                      itemBuilder: (ctx) => [
+                        const PopupMenuItem<String>(
+                          value: 'delete_all',
+                          child: Text('Delete All Products',
+                              style: TextStyle(color: Color(0xFFDC2626))),
+                        ),
+                      ],
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFCBD5E1)),
+                        ),
+                        child: const Text(
+                          'More ▾',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF334155),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ],
+                  ],
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -2240,126 +2304,103 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                 ),
               ),
             ),
+            // Price
             DataCell(
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  '$_currencySymbol${p.price.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green.shade700,
-                  ),
+              Text(
+                '$_currencySymbol${p.price.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: Color(0xFF0F172A),
                 ),
               ),
             ),
+            // Purchase Price
             DataCell(
-              p.purchasePrice > 0
-                  ? Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: p.purchasePrice > p.price
-                            ? Colors.red.shade50
-                            : Colors.blueGrey.shade50,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        '$_currencySymbol${p.purchasePrice.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: p.purchasePrice > p.price
-                              ? Colors.red.shade700
-                              : Colors.blueGrey.shade700,
+              Text(
+                p.purchasePrice > 0
+                    ? '$_currencySymbol${p.purchasePrice.toStringAsFixed(2)}'
+                    : '—',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+            ),
+            // Default Discount
+            DataCell(
+              Text(
+                p.defaultDiscount > 0
+                    ? '$_currencySymbol${p.defaultDiscount.toStringAsFixed(2)}'
+                    : '—',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+            ),
+            // Tax Rate
+            DataCell(
+              Text(
+                '${p.tax_rate}%',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF475569),
+                ),
+              ),
+            ),
+            // Stock
+            DataCell(
+              p.unlimitedStock
+                  ? const Text('∞', style: TextStyle(fontSize: 14, color: Color(0xFF64748B)))
+                  : p.stock == 0
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF2F2),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: const Color(0xFFFECACA)),
+                          ),
+                          child: const Text(
+                            'Out of stock',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFFDC2626),
+                            ),
+                          ),
+                        )
+                      : Text(
+                          p.stock.toString(),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF0F172A),
+                          ),
                         ),
-                      ),
-                    )
-                  : Text('—', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
             ),
-            DataCell(
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  '$_currencySymbol${p.defaultDiscount.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade700,
-                  ),
-                ),
-              ),
-            ),
-            DataCell(
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  '${p.tax_rate}%',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.blue.shade700,
-                  ),
-                ),
-              ),
-            ),
-            DataCell(
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: p.unlimitedStock
-                      ? Colors.blue.shade50
-                      : p.stock > 10
-                          ? Colors.green.shade50
-                          : p.stock > 0
-                              ? Colors.orange.shade50
-                              : Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  p.unlimitedStock ? '∞' : p.stock.toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: p.unlimitedStock
-                        ? Colors.blue.shade700
-                        : p.stock > 10
-                            ? Colors.green.shade700
-                            : p.stock > 0
-                                ? Colors.orange.shade700
-                                : Colors.red.shade700,
-                  ),
-                ),
-              ),
-            ),
-            DataCell(Text(p.unit.isEmpty ? '—' : p.unit.toUpperCase())),
+            DataCell(Text(p.unit.isEmpty ? '—' : p.unit.toUpperCase(), style: const TextStyle(fontSize: 12.5, color: Color(0xFF64748B)))),
             DataCell(
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.visibility, size: 20),
-                    color: Colors.blue,
+                    icon: const Icon(Icons.visibility_outlined, size: 18),
+                    color: const Color(0xFF64748B),
                     onPressed: () => _showProductDialog(p, false),
                     tooltip: 'View',
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit, size: 20),
-                    color: Colors.orange,
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    color: const Color(0xFF64748B),
                     onPressed: () => _showProductDialog(p, true),
                     tooltip: 'Edit',
                   ),
                   if (widget.user.isAdmin())
                     IconButton(
-                      icon: const Icon(Icons.delete, size: 20),
-                      color: Colors.red,
+                      icon: const Icon(Icons.delete_outline, size: 18),
+                      color: const Color(0xFF64748B),
                       onPressed: () => _confirmDelete(p),
                       tooltip: 'Delete',
                     ),

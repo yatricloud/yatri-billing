@@ -1741,7 +1741,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         hintText: hint,
         helperText: helper,
         helperMaxLines: 2,
-        prefixIcon: Icon(icon, size: 20),
+        prefixIcon: maxLines > 1
+            ? Container(
+                width: 44,
+                alignment: Alignment.topCenter,
+                padding: const EdgeInsets.only(top: 14),
+                child: Icon(icon, size: 20),
+              )
+            : Icon(icon, size: 20),
+        prefixIconConstraints: maxLines > 1
+            ? const BoxConstraints(minWidth: 44, minHeight: 48, maxHeight: 80)
+            : null,
         alignLabelWithHint: maxLines > 1,
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppBorderRadius.xsmall)),

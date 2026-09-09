@@ -165,6 +165,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return const ReportsScreen();
       case 8:
         return SettingsScreen(currentUser: _currentUser);
+      case 9:
+        return const ReportsScreen(
+          key: ValueKey('revenue_screen'),
+          initialTabIndex: 0,
+        );
       default:
         return const Center(child: Text('Unknown tab'));
     }
@@ -220,7 +225,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String _activeTabName() {
     switch (_selectedIndex) {
       case 0:
-        return 'Revenue';
+        return 'Dashboard';
       case 1:
         return 'New Invoice';
       case 2:
@@ -237,6 +242,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return 'Reports';
       case 8:
         return 'Settings';
+      case 9:
+        return 'Revenue';
       default:
         return 'Dashboard';
     }
@@ -543,7 +550,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                       ),
-                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard', isSelectedOverride: false),
+                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard'),
 
                       const SizedBox(height: 12),
 
@@ -559,22 +566,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                       ),
-                      // Accordion / Group: Payments
+                      // Accordion / Group: Invoicing
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         child: InkWell(
-                          onTap: () => _selectTab(0),
+                          onTap: () => _selectTab(2),
                           borderRadius: BorderRadius.circular(8),
                           hoverColor: const Color(0xFFF1F5F9),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
                             child: Row(
                               children: const [
-                                Icon(Icons.payment_outlined, size: 18, color: Color(0xFF475569)),
+                                Icon(Icons.receipt_long_outlined, size: 18, color: Color(0xFF475569)),
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    'Payments',
+                                    'Invoicing',
                                     style: TextStyle(
                                       color: Color(0xFF1E293B),
                                       fontWeight: FontWeight.w600,
@@ -599,11 +606,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _buildSubNavItem(0, 'Revenue'),
                               _buildSubNavItem(2, 'Invoices'),
                               _buildSubNavItem(1, 'New Invoice'),
                               _buildSubNavItem(3, 'Quotations'),
                               _buildSubNavItem(4, 'Receipts'),
+                              _buildSubNavItem(9, 'Revenue'),
                             ],
                           ),
                         ),
@@ -615,11 +622,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ] else ...[
                       _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard'),
                       const Divider(height: 12, indent: 12, endIndent: 12, color: Color(0xFFE5E7EB)),
-                      _buildNavItem(0, Icons.payment_outlined, Icons.payment_rounded, 'Revenue'),
                       _buildNavItem(2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Invoices'),
                       _buildNavItem(1, Icons.add_circle_outline_rounded, Icons.add_circle_rounded, 'New Invoice'),
                       _buildNavItem(3, Icons.request_quote_outlined, Icons.request_quote_rounded, 'Quotations'),
                       _buildNavItem(4, Icons.point_of_sale_outlined, Icons.point_of_sale_rounded, 'Receipts'),
+                      _buildNavItem(9, Icons.payments_outlined, Icons.payments_rounded, 'Revenue'),
                       _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers'),
                       _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products'),
                       _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports'),

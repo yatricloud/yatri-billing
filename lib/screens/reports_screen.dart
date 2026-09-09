@@ -3,8 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:invoiso/common.dart';
 import 'package:invoiso/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,14 +38,15 @@ enum _DailyMode { last30, monthYear }
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 class ReportsScreen extends ConsumerStatefulWidget {
-  const ReportsScreen({super.key});
+  final int initialTabIndex;
+  const ReportsScreen({super.key, this.initialTabIndex = 0});
 
   @override
   ConsumerState<ReportsScreen> createState() => _ReportsScreenState();
 }
 
 class _ReportsScreenState extends ConsumerState<ReportsScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   final Set<int> _loadedTabs = {};
   final Map<int, bool> _tabLoading = {};
 
@@ -205,12 +204,13 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.initialTabIndex;
     _init();
   }
 
   Future<void> _init() async {
     await _loadReportSettings();
-    _loadTab(0);
+    _loadTab(_selectedIndex);
   }
 
   @override

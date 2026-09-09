@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:invoiso/services/supabase_config.dart';
 
-/// Screen displayed when the application is started without database environment variables.
+/// Minimal, high-end configuration screen shown when environment variables are not set.
 ///
-/// Ensures that the frontend will NEVER attempt to load database tables or make
-/// unauthorized network requests until proper environment variables are provided.
+/// Strictly adheres to minimal monochrome styling (no rainbow colors, no congested text).
 class MissingConfigScreen extends StatefulWidget {
   final VoidCallback? onRetry;
 
@@ -31,7 +30,7 @@ class _MissingConfigScreenState extends State<MissingConfigScreen> {
       } else {
         setState(() {
           _errorMessage =
-              'Environment variables are not set yet. Please configure SUPABASE_URL and SUPABASE_ANON_KEY.';
+              'Configuration not found. Please set SUPABASE_URL and SUPABASE_ANON_KEY.';
         });
       }
     } catch (e) {
@@ -50,185 +49,157 @@ class _MissingConfigScreenState extends State<MissingConfigScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFFAFAFA),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
+            constraints: const BoxConstraints(maxWidth: 560),
             child: Container(
-              padding: const EdgeInsets.all(36),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 48),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
                 boxShadow: const [
                   BoxShadow(
-                    color: Color(0x0A0F172A),
-                    blurRadius: 24,
-                    offset: Offset(0, 10),
+                    color: Color(0x060F172A),
+                    blurRadius: 32,
+                    offset: Offset(0, 8),
                   ),
                 ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Security Shield Badge
+                  // Minimal Icon
                   Container(
-                    width: 64,
-                    height: 64,
+                    width: 44,
+                    height: 44,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFFBFDBFE)),
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Center(
                       child: Icon(
                         Icons.shield_outlined,
-                        size: 32,
-                        color: Color(0xFF007CFF),
+                        size: 22,
+                        color: Color(0xFF0F172A),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 28),
 
-                  // Title
+                  // Title with generous bottom margin
                   const Text(
-                    'Environment Configuration Required',
+                    'Database Configuration Required',
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
                       color: Color(0xFF0F172A),
-                      letterSpacing: -0.5,
+                      letterSpacing: -0.4,
+                      height: 1.3,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 14),
 
-                  // Description
+                  // Description with relaxed line-height and generous bottom margin
                   const Text(
-                    'For security and data integrity, database connections are strictly '
-                    'disabled until your environment variables are configured. '
+                    'To protect your data and ensure zero unauthorized database calls, '
+                    'connections remain disabled until your environment variables are configured. '
                     'No credentials are hardcoded in this build.',
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF64748B),
-                      height: 1.5,
+                      height: 1.6,
+                      fontWeight: FontWeight.w400,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 32),
 
                   if (_errorMessage != null) ...[
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFEF2F2),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFFECACA)),
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.error_outline,
-                              size: 18, color: Color(0xFFDC2626)),
+                          const Icon(Icons.info_outline,
+                              size: 16, color: Color(0xFF0F172A)),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               _errorMessage!,
                               style: const TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFFDC2626),
+                                color: Color(0xFF334155),
+                                height: 1.4,
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
                   ],
 
-                  // Instructions Card
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          children: [
-                            Icon(Icons.tune_outlined,
-                                size: 16, color: Color(0xFF475569)),
-                            SizedBox(width: 8),
-                            Text(
-                              'How to configure:',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF0F172A),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        _buildStep(
-                          '1',
-                          'Vercel Deployment',
-                          'Go to Vercel Project Settings > Environment Variables. Add SUPABASE_URL and SUPABASE_ANON_KEY.',
-                        ),
-                        const SizedBox(height: 12),
-                        _buildStep(
-                          '2',
-                          'Local Development (.env)',
-                          'Copy .env.example to .env and run: flutter run -d chrome --dart-define-from-file=.env',
-                        ),
-                        const SizedBox(height: 12),
-                        _buildStep(
-                          '3',
-                          'Security Rule',
-                          'Only supply your public anon key. NEVER use your service_role secret key.',
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Divider
+                  const Divider(color: Color(0xFFF1F5F9), height: 1),
                   const SizedBox(height: 28),
 
-                  // Actions
+                  // Configuration Steps with generous spacing
+                  _buildMinimalStep(
+                    'Vercel Deployment',
+                    'In your Vercel project, go to Settings > Environment Variables and add SUPABASE_URL and SUPABASE_ANON_KEY.',
+                  ),
+                  const SizedBox(height: 22),
+                  _buildMinimalStep(
+                    'Local Development',
+                    'Copy .env.example to .env and run with: flutter run -d chrome --dart-define-from-file=.env',
+                  ),
+                  const SizedBox(height: 22),
+                  _buildMinimalStep(
+                    'Security Policy',
+                    'Supply only your public anon key. The system automatically rejects any service_role key to prevent RLS bypass.',
+                  ),
+
+                  const SizedBox(height: 36),
+
+                  // Minimal Action Button
                   SizedBox(
                     width: double.infinity,
-                    height: 44,
-                    child: ElevatedButton.icon(
+                    height: 48,
+                    child: ElevatedButton(
                       onPressed: _isChecking ? null : _checkConfig,
-                      icon: _isChecking
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F172A),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: _isChecking
                           ? const SizedBox(
-                              width: 16,
-                              height: 16,
+                              width: 18,
+                              height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 color: Colors.white,
                               ),
                             )
-                          : const Icon(Icons.refresh, size: 18),
-                      label: Text(
-                        _isChecking ? 'Checking Configuration...' : 'Check Connection & Reload',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF007CFF),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                          : const Text(
+                              'Check Connection & Reload',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -240,51 +211,25 @@ class _MissingConfigScreenState extends State<MissingConfigScreen> {
     );
   }
 
-  Widget _buildStep(String number, String title, String description) {
-    return Row(
+  Widget _buildMinimalStep(String title, String description) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            color: const Color(0xFFE2E8F0),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Text(
-              number,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF475569),
-              ),
-            ),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 13.5,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0F172A),
           ),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF64748B),
-                  height: 1.4,
-                ),
-              ),
-            ],
+        const SizedBox(height: 6),
+        Text(
+          description,
+          style: const TextStyle(
+            fontSize: 13,
+            color: Color(0xFF64748B),
+            height: 1.55,
           ),
         ),
       ],

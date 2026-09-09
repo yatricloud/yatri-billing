@@ -179,12 +179,15 @@ class _HeroPanel extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: CbTokens.spaceBase),
+              const SizedBox(height: 24),
               CbFadeSlideIn(
                 delay: const Duration(milliseconds: 160),
                 child: Text(
                   subtitle,
-                  style: AppTypography.bodyMd(CbTokens.body),
+                  style: AppTypography.bodyMd(CbTokens.body).copyWith(
+                    height: 1.6,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ],
@@ -259,11 +262,11 @@ class _MockDashboardCard extends StatelessWidget {
               offset == 0 ? 'Revenue this month' : 'Pending collection',
               style: AppTypography.caption(CbTokens.muted),
             ),
-            const SizedBox(height: CbTokens.spaceLg),
+            const SizedBox(height: 20),
             Container(
-              height: 6,
+              height: 4,
               decoration: BoxDecoration(
-                color: CbTokens.primary,
+                color: const Color(0xFF0F172A),
                 borderRadius: BorderRadius.circular(CbTokens.radiusPill),
               ),
             ),

@@ -34,7 +34,7 @@ class _CbButtonState extends State<CbButton> {
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null && !widget.loading;
-    final height = widget.hero ? 56.0 : 44.0;
+    final height = widget.hero ? 56.0 : 48.0;
     final hPad = widget.hero ? 32.0 : 20.0;
 
     Color bg;
@@ -45,20 +45,20 @@ class _CbButtonState extends State<CbButton> {
       case CbButtonVariant.primary:
       case CbButtonVariant.hero:
         bg = enabled
-            ? (_pressed ? CbTokens.primaryActive : CbTokens.primary)
-            : CbTokens.primaryDisabled;
-        fg = CbTokens.onPrimary;
+            ? (_pressed ? const Color(0xFF1E293B) : const Color(0xFF0F172A))
+            : const Color(0xFF94A3B8);
+        fg = Colors.white;
       case CbButtonVariant.secondary:
-        bg = CbTokens.surfaceSoft;
-        fg = CbTokens.ink;
-        border = const BorderSide(color: CbTokens.hairline, width: 1);
+        bg = Colors.white;
+        fg = const Color(0xFF0F172A);
+        border = const BorderSide(color: Color(0xFFE2E8F0), width: 1);
       case CbButtonVariant.tertiary:
         bg = Colors.transparent;
-        fg = CbTokens.primary;
+        fg = const Color(0xFF0F172A);
       case CbButtonVariant.outlineDark:
         bg = Colors.transparent;
-        fg = CbTokens.onDark;
-        border = const BorderSide(color: CbTokens.onDark, width: 1);
+        fg = Colors.white;
+        border = const BorderSide(color: Colors.white, width: 1);
     }
 
     final child = AnimatedContainer(

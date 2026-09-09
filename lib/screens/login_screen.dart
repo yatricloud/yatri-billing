@@ -110,7 +110,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF111827),
+                        color: Color(0xFF0F172A),
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -119,7 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF007CFF),
+                        color: Color(0xFF0F172A),
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -128,19 +128,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ],
           ),
-        const SizedBox(height: CbTokens.spaceLg),
+        const SizedBox(height: 32),
         Text(
           isCloud ? 'Sign in to your workspace' : 'Welcome back',
-          style: AppTypography.titleLg(),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF0F172A),
+            letterSpacing: -0.4,
+          ),
         ),
-        const SizedBox(height: CbTokens.spaceXs),
+        const SizedBox(height: 12),
         Text(
           isCloud
               ? 'Manage invoices, customers, and reports from anywhere.'
               : 'Sign in to continue to Yatri Billing.',
-          style: AppTypography.bodySm(),
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF64748B),
+            height: 1.55,
+            fontWeight: FontWeight.w400,
+          ),
         ),
-        const SizedBox(height: CbTokens.spaceXl),
+        const SizedBox(height: 32),
         CbTextField(
           controller: _usernameController,
           label: isCloud ? 'Email' : 'Username',
@@ -148,7 +158,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           keyboardType:
               isCloud ? TextInputType.emailAddress : TextInputType.text,
         ),
-        const SizedBox(height: CbTokens.spaceBase),
+        const SizedBox(height: 20),
         CbTextField(
           controller: _passwordController,
           label: 'Password',
@@ -166,7 +176,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 setState(() => _obscurePassword = !_obscurePassword),
           ),
         ),
-        const SizedBox(height: CbTokens.spaceXl),
+        const SizedBox(height: 28),
         CbButton(
           label: 'Sign in',
           expand: true,
@@ -174,7 +184,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           onPressed: _isLoading ? null : () => _login(cfg),
         ),
         if (isCloud) ...[
-          const SizedBox(height: CbTokens.spaceBase),
+          const SizedBox(height: 14),
           CbButton(
             label: 'Create an account',
             variant: CbButtonVariant.secondary,
@@ -210,14 +220,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(width: 5),
               Text(
                 'info@yatricloud.com',
-                style: AppTypography.caption().copyWith(
-                  decoration: TextDecoration.underline,
-                ),
+                style: AppTypography.caption(),
               ),
             ],
           ),
         ),
-        const SizedBox(height: CbTokens.spaceXs),
+        const SizedBox(height: 6),
         // Phone contact
         InkWell(
           onTap: () => launchUrl(
@@ -233,9 +241,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(width: 5),
               Text(
                 '+91 9724823602',
-                style: AppTypography.caption().copyWith(
-                  decoration: TextDecoration.underline,
-                ),
+                style: AppTypography.caption(),
               ),
             ],
           ),

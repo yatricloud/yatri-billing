@@ -611,7 +611,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers'),
                       _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products'),
                       _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports'),
-                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings', showDot: _hasUpdate),
+                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings'),
                     ] else ...[
                       _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard'),
                       const Divider(height: 12, indent: 12, endIndent: 12, color: Color(0xFFE5E7EB)),
@@ -623,7 +623,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers'),
                       _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products'),
                       _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports'),
-                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings', showDot: _hasUpdate),
+                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings'),
                     ],
                   ],
                 ),
@@ -769,7 +769,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildSubNavItem(int index, String label) {
     final selected = _selectedIndex == index;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1.5),
+      padding: const EdgeInsets.symmetric(vertical: 2.5),
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(6),
@@ -778,7 +778,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           borderRadius: BorderRadius.circular(6),
           hoverColor: const Color(0xFFF1F5F9),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9.5),
             decoration: BoxDecoration(
               color: selected ? const Color(0xFFF1F5F9) : Colors.transparent,
               borderRadius: BorderRadius.circular(6),
@@ -788,7 +788,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               style: TextStyle(
                 color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                fontSize: 13,
+                fontSize: 13.5,
               ),
             ),
           ),
@@ -813,7 +813,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             message: label,
             preferBelow: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               child: InkWell(
                 onTap: onTap,
                 borderRadius: BorderRadius.circular(8),
@@ -840,7 +840,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         }
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
           child: Material(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(8),
@@ -851,7 +851,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10.5),
                 decoration: BoxDecoration(
                   color: selected
                     ? const Color(0xFFF1F5F9)

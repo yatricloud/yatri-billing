@@ -19,7 +19,6 @@ import 'package:invoiso/models/user.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:image/image.dart' as img;
-import 'package:invoiso/theme/app_typography.dart';
 import 'package:invoiso/theme/coinbase_tokens.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -396,12 +395,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Scaffold(
       backgroundColor: CbTokens.background,
       appBar: AppBar(
-        title: Text('Company Information', style: AppTypography.titleMd(CbTokens.ink)),
-        backgroundColor: CbTokens.surface,
-        foregroundColor: CbTokens.ink,
+        title: const Text(
+          'Settings & Preferences',
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
-        actionsIconTheme: const IconThemeData(color: CbTokens.ink, size: 20),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -423,10 +436,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               selected: {ref.watch(themeModeProvider)},
               showSelectedIcon: false,
               style: SegmentedButton.styleFrom(
-                foregroundColor: Colors.white,
-                selectedForegroundColor: Theme.of(context).primaryColor,
-                selectedBackgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.white70),
+                foregroundColor: const Color(0xFF64748B),
+                selectedForegroundColor: const Color(0xFF0F172A),
+                selectedBackgroundColor: const Color(0xFFF1F5F9),
+                side: const BorderSide(color: Color(0xFFE2E8F0)),
               ),
               onSelectionChanged: (selection) {
                 final mode = selection.first;
@@ -1233,12 +1246,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ? null
           : Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Software Information'),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-            primaryColor,
-        foregroundColor: Colors.white,
+        title: const Text(
+          'Software Information',
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
@@ -1736,11 +1763,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildDummySection(String title) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-            Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
       ),
       body: Center(
         child: Padding(

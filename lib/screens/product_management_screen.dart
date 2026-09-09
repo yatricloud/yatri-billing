@@ -18,7 +18,6 @@ import 'package:invoiso/models/product.dart';
 import 'package:invoiso/models/user.dart';
 import 'package:invoiso/utils/formatters.dart';
 import 'package:invoiso/utils/save_file.dart';
-import 'package:invoiso/theme/app_typography.dart';
 import 'package:invoiso/theme/coinbase_tokens.dart';
 
 class ProductManagementScreen extends ConsumerStatefulWidget {
@@ -1557,15 +1556,29 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
     return Scaffold(
       backgroundColor: CbTokens.background,
       appBar: AppBar(
-        title: Text('Product/Service Management', style: AppTypography.titleMd(CbTokens.ink)),
-        backgroundColor: CbTokens.surface,
-        foregroundColor: CbTokens.ink,
+        title: const Text(
+          'Product & Service Management',
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
-        actionsIconTheme: const IconThemeData(color: CbTokens.ink, size: 20),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Color(0xFF475569)),
             onPressed: _loadProducts,
             tooltip: 'Refresh',
           ),

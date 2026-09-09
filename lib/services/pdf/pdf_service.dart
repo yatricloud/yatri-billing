@@ -524,6 +524,21 @@ class PDFService {
             children: [
               AppBar(
                 automaticallyImplyLeading: false,
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF0F172A),
+                elevation: 0,
+                surfaceTintColor: Colors.transparent,
+                centerTitle: false,
+                titleSpacing: 24,
+                titleTextStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(1),
+                  child: Container(color: const Color(0xFFE2E8F0), height: 1),
+                ),
                 title: Text('${invoice.invoiceTitle ?? invoice.type} #${invoice.invoiceNumber ?? invoice.id}'),
                 actions: [
                   IconButton(

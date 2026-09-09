@@ -972,23 +972,34 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen>
       appBar: AppBar(
         title: const Text(
           "User Management",
-          style: TextStyle(letterSpacing: 0.5),
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
         ),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-            Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
         actions: [
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: SizedBox(
-                width: 24,
-                height: 24,
+                width: 20,
+                height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: Color(0xFF007CFF),
                 ),
               ),
             ),

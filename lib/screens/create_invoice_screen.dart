@@ -4640,9 +4640,21 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
       return _withUnsavedChangesPopScope(Scaffold(
         appBar: AppBar(
           title: Text('Create New $invoiceType'),
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-              Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.white,
+          foregroundColor: const Color(0xFF0F172A),
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          centerTitle: false,
+          titleSpacing: 24,
+          titleTextStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF0F172A),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(color: const Color(0xFFE2E8F0), height: 1),
+          ),
         ),
         body: const Center(
           child: Column(
@@ -4688,7 +4700,12 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
         foregroundColor: const Color(0xFF0F172A),
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-        titleSpacing: 0,
+        centerTitle: false,
+        titleSpacing: 16,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
@@ -4789,10 +4806,6 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
               ),
             ],
           ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(height: 1, color: const Color(0xFFE2E8F0)),
         ),
       ),
       body: !isEditing && _invoice != null

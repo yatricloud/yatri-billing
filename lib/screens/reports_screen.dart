@@ -11,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invoiso/database/report_service.dart';
 import 'package:invoiso/providers/repositories.dart';
 import 'package:invoiso/utils/save_file.dart';
-import 'package:invoiso/theme/app_typography.dart';
 import 'package:invoiso/theme/coinbase_tokens.dart';
 
 // ─── Date preset enum ─────────────────────────────────────────────────────────
@@ -637,12 +636,26 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     return Scaffold(
       backgroundColor: CbTokens.background,
       appBar: AppBar(
-        backgroundColor: CbTokens.surface,
-        foregroundColor: CbTokens.ink,
+        title: const Text(
+          'Reports & Analytics',
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
-        title: Text('Reports',
-            style: AppTypography.titleMd(CbTokens.ink)),
-        actionsIconTheme: const IconThemeData(color: CbTokens.ink, size: 20),
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
         actions: [
           if (isCurrentTabLoading)
             const Padding(
@@ -652,11 +665,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          color: Colors.white, strokeWidth: 2))),
+                          color: Color(0xFF007CFF), strokeWidth: 2))),
             )
           else
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh, color: Color(0xFF475569)),
               tooltip: 'Refresh',
               onPressed: _invalidateAndReload,
             ),

@@ -262,11 +262,26 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
             ? null
             : Theme.of(context).colorScheme.surfaceContainerHighest,
         appBar: AppBar(
-          title: const Text('Invoice Settings'),
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-              Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
+          title: const Text(
+            'Invoice Settings',
+            style: TextStyle(
+              color: Color(0xFF0F172A),
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.2,
+            ),
+          ),
+          titleSpacing: 24,
+          backgroundColor: Colors.white,
+          foregroundColor: const Color(0xFF0F172A),
+          iconTheme: const IconThemeData(color: Color(0xFF475569)),
+          elevation: 0,
+          scrolledUnderElevation: 0,
           centerTitle: false,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(color: const Color(0xFFE2E8F0), height: 1),
+          ),
         ),
         body: const Center(child: CircularProgressIndicator()),
       );
@@ -277,12 +292,26 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
           ? null
           : Theme.of(context).colorScheme.surfaceContainerHighest,
       appBar: AppBar(
-        title: const Text('Invoice Settings'),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
-            Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
+        title: const Text(
+          'Invoice Settings',
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        titleSpacing: 24,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF0F172A),
+        iconTheme: const IconThemeData(color: Color(0xFF475569)),
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
       ),
       body: Row(
         children: [

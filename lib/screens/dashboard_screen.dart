@@ -644,19 +644,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         icon: const Icon(
                           Icons.logout_rounded,
                           size: 16,
-                          color: Color(0xFFEF4444),
+                          color: Color(0xFF64748B),
                         ),
                         label: const Text(
                           'Sign Out',
                           style: TextStyle(
-                            color: Color(0xFFEF4444),
+                            color: Color(0xFF475569),
                             fontWeight: FontWeight.w500,
                             fontSize: 13,
                             letterSpacing: 0.1,
                           ),
                         ),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFFFCA5A5), width: 1),
+                          side: const BorderSide(color: Color(0xFFE2E8F0), width: 1),
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -677,9 +677,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFFFCA5A5), width: 1),
+                            border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
                           ),
-                          child: const Icon(Icons.logout_rounded, color: Color(0xFFEF4444), size: 18),
+                          child: const Icon(Icons.logout_rounded, color: Color(0xFF64748B), size: 18),
                         ),
                       ),
                     ),
@@ -769,25 +769,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildSubNavItem(int index, String label) {
     final selected = _selectedIndex == index;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 1.5),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
         child: InkWell(
           onTap: () => _selectTab(index),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
           hoverColor: const Color(0xFFF1F5F9),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8.5),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
             decoration: BoxDecoration(
-              color: selected ? const Color(0xFF007CFF) : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
+              color: selected ? const Color(0xFFF1F5F9) : Colors.transparent,
+              borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               label,
               style: TextStyle(
-                color: selected ? Colors.white : const Color(0xFF4B5563),
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                 fontSize: 13,
               ),
             ),
@@ -804,8 +804,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     Future<void> onTap() => _selectTab(index);
 
-    // Use LayoutBuilder so the layout switches based on actual rendered width,
-    // not just state — prevents overflow errors during the AnimatedContainer transition.
     return LayoutBuilder(
       builder: (context, constraints) {
         final useExpanded = constraints.maxWidth > 110;
@@ -817,44 +815,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               child: InkWell(
-                  onTap: onTap,
-                  borderRadius: BorderRadius.circular(8),
-                  hoverColor: const Color(0xFFF1F5F9),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    padding: const EdgeInsets.all(12),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? const Color(0xFF007CFF) // solid brand blue pill
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Icon(
-                          selected ? filledIcon : outlinedIcon,
-                          color: selected ? Colors.white : const Color(0xFF475569),
-                          size: 20,
-                        ),
-                        if (showDot)
-                          Positioned(
-                            right: -4,
-                            top: -4,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFF59E0B),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(8),
+                hoverColor: const Color(0xFFF1F5F9),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  padding: const EdgeInsets.all(12),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? const Color(0xFFF1F5F9)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    selected ? filledIcon : outlinedIcon,
+                    color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                    size: 20,
                   ),
                 ),
+              ),
             ),
           );
         }
@@ -871,45 +851,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
                 decoration: BoxDecoration(
                   color: selected
-                    ? const Color(0xFF007CFF) // solid brand blue pill
+                    ? const Color(0xFFF1F5F9)
                     : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Icon(
-                          selected ? filledIcon : outlinedIcon,
-                          color: selected ? Colors.white : const Color(0xFF475569),
-                          size: 18,
-                        ),
-                        if (showDot)
-                          Positioned(
-                            right: -4,
-                            top: -4,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFF59E0B),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                      ],
+                    Icon(
+                      selected ? filledIcon : outlinedIcon,
+                      color: selected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                      size: 18,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         label,
                         style: TextStyle(
-                          color: selected ? Colors.white : CbTokens.ink,
-                          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                          color: selected ? const Color(0xFF0F172A) : const Color(0xFF334155),
+                          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                           fontSize: 13.5,
                         ),
                       ),

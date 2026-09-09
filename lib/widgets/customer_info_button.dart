@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:invoiso/models/customer.dart';
 
-/// Tapping the ⓘ icon shows a clean dialog with the customer's full contact details.
+/// Tapping the ⓘ icon shows a clean, minimal modal with the customer's full contact details.
 class CustomerInfoButton extends StatelessWidget {
   final Customer customer;
 
@@ -14,9 +14,9 @@ class CustomerInfoButton extends StatelessWidget {
       child: InkWell(
         onTap: () => _showDialog(context),
         borderRadius: BorderRadius.circular(4),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          child: Icon(Icons.info_outline, size: 15, color: Colors.indigo[400]),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: Icon(Icons.info_outline, size: 14, color: Color(0xFF94A3B8)),
         ),
       ),
     );
@@ -32,7 +32,12 @@ class CustomerInfoButton extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
         child: SizedBox(
           width: 340,
           child: Column(
@@ -43,26 +48,31 @@ class CustomerInfoButton extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
                 decoration: const BoxDecoration(
-                  color: Colors.indigo,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
+                  color: Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                  border: Border(
+                    bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.person, color: Colors.white, size: 20),
+                    const Icon(Icons.person_outline,
+                        color: Color(0xFF475569), size: 18),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         c.name,
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF0F172A),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white70, size: 20),
+                      icon: const Icon(Icons.close,
+                          color: Color(0xFF64748B), size: 18),
                       onPressed: () => Navigator.pop(ctx),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -73,26 +83,29 @@ class CustomerInfoButton extends StatelessWidget {
 
               // Contact details body
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (!hasAny)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
                         child: Text(
                           'No contact details available.',
-                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
+                          style: TextStyle(
+                            color: Color(0xFF64748B),
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     if (c.phone.isNotEmpty)
-                      _infoRow(context, Icons.phone_outlined, 'Phone', c.phone, Colors.green),
+                      _infoRow(Icons.phone_outlined, 'Phone', c.phone),
                     if (c.email.isNotEmpty)
-                      _infoRow(context, Icons.email_outlined, 'Email', c.email, Colors.blue),
+                      _infoRow(Icons.email_outlined, 'Email', c.email),
                     if (c.address.isNotEmpty)
-                      _infoRow(context, Icons.location_on_outlined, 'Address', c.address, Colors.orange),
+                      _infoRow(Icons.location_on_outlined, 'Address', c.address),
                     if (c.gstin.isNotEmpty)
-                      _infoRow(context, Icons.badge_outlined, 'GSTIN', c.gstin, Colors.purple),
+                      _infoRow(Icons.badge_outlined, 'GSTIN', c.gstin),
                   ],
                 ),
               ),
@@ -101,9 +114,16 @@ class CustomerInfoButton extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 4, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(0, 4, 16, 14),
                   child: TextButton(
                     onPressed: () => Navigator.pop(ctx),
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFF0F172A),
+                      textStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     child: const Text('Close'),
                   ),
                 ),
@@ -115,19 +135,20 @@ class CustomerInfoButton extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(BuildContext context, IconData icon, String label, String value, Color color) {
+  Widget _infoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
             ),
-            child: Icon(icon, size: 15, color: color),
+            child: Icon(icon, size: 14, color: const Color(0xFF475569)),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -136,16 +157,20 @@ class CustomerInfoButton extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: Color(0xFF64748B),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF0F172A),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),

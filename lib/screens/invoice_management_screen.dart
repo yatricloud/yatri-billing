@@ -61,12 +61,12 @@ class _InvoiceManagementScreenState
 
   /// Shared column widths used by both the header table and every row table so
   /// they always align pixel-perfectly.
-  static const List<(String, String, Color)> _dueDateFilterOptions = [
-    ('all', 'All Dues', Colors.grey),
-    ('overdue', 'Overdue', Colors.red),
-    ('due_today', 'Due Today', Colors.orange),
-    ('due_week', 'Due This Week', Colors.blue),
-    ('due_month', 'Due This Month', Colors.teal),
+  static const List<(String, String)> _dueDateFilterOptions = [
+    ('all', 'All Dues'),
+    ('overdue', 'Overdue'),
+    ('due_today', 'Due Today'),
+    ('due_week', 'Due This Week'),
+    ('due_month', 'Due This Month'),
   ];
 
   // Invoice table: checkbox | # | ID | Customer | Date | Items | Total | Status | Outstanding | Actions
@@ -1872,10 +1872,10 @@ class _InvoiceManagementScreenState
                             child: Row(
                               children: [
                                 Icon(Icons.payments_outlined,
-                                    size: 16, color: Color(0xFF059669)),
+                                    size: 16, color: Color(0xFF475569)),
                                 SizedBox(width: 8),
                                 Text('Apply Payment',
-                                    style: TextStyle(fontSize: 13)),
+                                    style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                               ],
                             ),
                           ),
@@ -1887,7 +1887,7 @@ class _InvoiceManagementScreenState
                                   size: 16, color: Color(0xFF475569)),
                               SizedBox(width: 8),
                               Text('Duplicate',
-                                  style: TextStyle(fontSize: 13)),
+                                  style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                             ],
                           ),
                         ),
@@ -1899,7 +1899,7 @@ class _InvoiceManagementScreenState
                                   size: 16, color: Color(0xFF475569)),
                               SizedBox(width: 8),
                               Text('Download PDF',
-                                  style: TextStyle(fontSize: 13)),
+                                  style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                             ],
                           ),
                         ),
@@ -1910,7 +1910,7 @@ class _InvoiceManagementScreenState
                               Icon(Icons.print_outlined,
                                   size: 16, color: Color(0xFF475569)),
                               SizedBox(width: 8),
-                              Text('Print', style: TextStyle(fontSize: 13)),
+                              Text('Print', style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                             ],
                           ),
                         ),
@@ -1921,12 +1921,12 @@ class _InvoiceManagementScreenState
                             child: Row(
                               children: [
                                 Icon(Icons.delete_outline,
-                                    size: 16, color: Color(0xFFDC2626)),
+                                    size: 16, color: Color(0xFF475569)),
                                 SizedBox(width: 8),
                                 Text('Move to Trash',
                                     style: TextStyle(
                                         fontSize: 13,
-                                        color: Color(0xFFDC2626))),
+                                        color: Color(0xFF0F172A))),
                               ],
                             ),
                           ),

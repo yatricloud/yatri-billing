@@ -421,7 +421,7 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
                   },
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                      decoration: const BoxDecoration(color: Color(0xFF007CFF)),
                       children: const [
                         _TableHeader('Column'),
                         _TableHeader('Required'),
@@ -1386,19 +1386,23 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
   Widget _buildDataTable(List<Customer> customers) {
     return DataTable(
       headingRowColor: WidgetStateProperty.all(
-        CbTokens.surfaceSoft,
+        const Color(0xFF007CFF),
+      ),
+      headingTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
       ),
       dataRowMinHeight: 56,
       dataRowMaxHeight: 72,
       columns: [
-        const DataColumn(label: Text('Sl. No', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Name', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Business Name', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Email', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Phone', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Tax/VAT No', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Address', style: TextStyle(fontWeight: FontWeight.bold))),
-        const DataColumn(label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold))),
+        const DataColumn(label: Text('Sl. No', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Name', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Business Name', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Email', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Phone', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Tax/VAT No', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Address', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+        const DataColumn(label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
       ],
       rows: List.generate(customers.length, (index) {
         final customer = customers[index];
@@ -1539,7 +1543,7 @@ class _TableHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       child: Text(text,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white)),
     );
   }
 }

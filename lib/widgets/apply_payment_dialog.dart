@@ -481,9 +481,9 @@ class _ApplyPaymentDialogState extends ConsumerState<ApplyPaymentDialog> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: Color(0xFF007CFF),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
               ),
@@ -492,27 +492,27 @@ class _ApplyPaymentDialogState extends ConsumerState<ApplyPaymentDialog> {
               children: [
                 SizedBox(
                     width: 130,
-                    child: Text('Receipt #',
+                    child: Text('Receipt ID',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600))),
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white))),
                 SizedBox(
                     width: 90,
                     child: Text('Date',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600))),
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white))),
                 Expanded(
                     child: Text('Amount',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600))),
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white))),
                 Expanded(
                     child: Text('Tax Covered',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600))),
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white))),
                 SizedBox(
                     width: 100,
                     child: Text('Method',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600))),
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white))),
                 SizedBox(width: 72),
               ],
             ),

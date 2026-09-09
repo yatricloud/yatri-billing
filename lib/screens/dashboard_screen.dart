@@ -3464,24 +3464,28 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             ],
           ),
           const SizedBox(height: 4),
-          // Header row
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+          // Header row — solid brand blue per Yatri Cloud reference
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF007CFF),
+              borderRadius: BorderRadius.circular(6),
+            ),
             child: Row(
-              children: [
+              children: const [
                 Expanded(
                     flex: 2,
                     child: Text('Invoice',
                         style: TextStyle(
                             fontSize: 11,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Colors.white,
                             fontWeight: FontWeight.w600))),
                 Expanded(
                     flex: 3,
                     child: Text('Customer',
                         style: TextStyle(
                             fontSize: 11,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Colors.white,
                             fontWeight: FontWeight.w600))),
                 Expanded(
                     flex: 2,
@@ -3489,9 +3493,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                         textAlign: TextAlign.right,
                         style: TextStyle(
                             fontSize: 11,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Colors.white,
                             fontWeight: FontWeight.w600))),
-                const SizedBox(width: 60),
+                SizedBox(width: 60),
               ],
             ),
           ),

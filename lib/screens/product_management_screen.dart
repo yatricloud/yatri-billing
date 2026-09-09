@@ -877,7 +877,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                   },
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                      decoration: const BoxDecoration(color: Color(0xFF007CFF)),
                       children: const [
                         _TableHeader('Column'),
                         _TableHeader('Required'),
@@ -2218,49 +2218,53 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
   Widget _buildDataTable() {
     return DataTable(
       headingRowColor: WidgetStateProperty.all(
-        CbTokens.surfaceSoft,
+        const Color(0xFF007CFF),
+      ),
+      headingTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
       ),
       dataRowMinHeight: 56,
       dataRowMaxHeight: 72,
       columns: [
         const DataColumn(
             label:
-                Text('Sl. No', style: TextStyle(fontWeight: FontWeight.bold))),
+                Text('Sl. No', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
-            label: Text('Name', style: TextStyle(fontWeight: FontWeight.bold))),
+            label: Text('Name', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label:
-                Text('Alias', style: TextStyle(fontWeight: FontWeight.bold))),
+                Text('Alias', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         if (_businessType == BusinessType.both)
           const DataColumn(
-              label:Text('Type', style: TextStyle(fontWeight: FontWeight.bold))),
+              label: Text('Type', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label: Text('HSN/SAC',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label: Text('Description',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label:
-                Text('Price', style: TextStyle(fontWeight: FontWeight.bold))),
+                Text('Price', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label: Text('Purchase Price',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label:
-            Text('Discount', style: TextStyle(fontWeight: FontWeight.bold))),
+            Text('Discount', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label: Text('Tax Rate',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label:
-                Text('Stock', style: TextStyle(fontWeight: FontWeight.bold))),
+                Text('Stock', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label:
-                Text('Unit', style: TextStyle(fontWeight: FontWeight.bold))),
+                Text('Unit', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
         const DataColumn(
             label:
-                Text('Actions', style: TextStyle(fontWeight: FontWeight.bold))),
+                Text('Actions', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
       ],
       rows: List.generate(_products.length, (index) {
         final p = _products[index];
@@ -2499,7 +2503,7 @@ class _TableHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       child: Text(text,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white)),
     );
   }
 }

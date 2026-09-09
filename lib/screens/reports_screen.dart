@@ -1699,8 +1699,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _agedHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: Row(
         children: const [
           Expanded(flex: 3, child: _TableHead('Customer')),
@@ -1854,8 +1860,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _taxTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: const Row(
         children: [
           Expanded(flex: 2, child: _TableHead('Tax Rate (%)')),
@@ -2298,8 +2310,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _statementTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: const Row(
         children: [
           SizedBox(width: 48, child: _TableHead('SL')),
@@ -2385,8 +2403,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _customerTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: const Row(
         children: [
           SizedBox(width: 48, child: _TableHead('SL')),
@@ -2644,8 +2668,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _productTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: const Row(
         children: [
           SizedBox(width: 48, child: _TableHead('SL')),
@@ -2931,8 +2961,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _dailyTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: const Row(
         children: [
           Expanded(flex: 2, child: _TableHead('Date')),
@@ -3314,8 +3350,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   Widget _invoiceStatusHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF007CFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
       child: const Row(
         children: [
           SizedBox(width: 32, child: _TableHead('No.')),
@@ -3445,10 +3487,10 @@ class _TableHead extends StatelessWidget {
     return Text(
       text.toUpperCase(),
       textAlign: right ? TextAlign.right : TextAlign.left,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.bold,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        color: Colors.white,
         letterSpacing: 0.5,
       ),
     );

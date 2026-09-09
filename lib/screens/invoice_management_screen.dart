@@ -1347,13 +1347,7 @@ class _InvoiceManagementScreenState
                                         // Table header
                                         Container(
                                           decoration: const BoxDecoration(
-                                            color: Color(0xFFF8FAFC),
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Color(0xFFE2E8F0),
-                                                width: 1.5,
-                                              ),
-                                            ),
+                                            color: Color(0xFF007CFF),
                                           ),
                                           child: Table(
                                             columnWidths: _columnWidths,
@@ -1374,10 +1368,11 @@ class _InvoiceManagementScreenState
                                                       onChanged: (_) =>
                                                           _toggleSelectAll(),
                                                       activeColor:
+                                                          Colors.white,
+                                                      checkColor:
                                                           const Color(0xFF007CFF),
-                                                      checkColor: Colors.white,
                                                       side: const BorderSide(
-                                                          color: Color(0xFF94A3B8),
+                                                          color: Colors.white,
                                                           width: 1.5),
                                                     ),
                                                   ),
@@ -1675,9 +1670,9 @@ class _InvoiceManagementScreenState
         text,
         textAlign: align,
         style: const TextStyle(
-          color: Color(0xFF475569),
+          color: Colors.white,
           fontSize: 12,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
           letterSpacing: 0.5,
         ),
       ),

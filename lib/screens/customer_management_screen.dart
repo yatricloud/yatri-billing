@@ -1027,33 +1027,33 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
-              borderRadius: const BorderRadius.only(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            decoration: const BoxDecoration(
+              color: Color(0xFF007CFF),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
-              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Color(0xFFEFF6FF),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
                   ),
-                  child: Icon(Icons.person_add_outlined, color: Color(0xFF007CFF), size: 20),
+                  child: const Icon(Icons.person_add_outlined, color: Colors.white, size: 20),
                 ),
-                SizedBox(width: 12),
-                Expanded(
+                const SizedBox(width: 12),
+                const Expanded(
                   child: Text(
                     'Add New Customer',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -1190,16 +1190,16 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
 
   Widget _buildTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFFF8FAFC),
+        color: Color(0xFF007CFF),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
-        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
@@ -1207,44 +1207,45 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
+              color: Colors.white,
             ),
           ),
           Flexible(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: _showImportDialog,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0F172A),
-                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      foregroundColor: const Color(0xFF007CFF),
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                     child: const Text('Import CSV'),
                   ),
                   const SizedBox(width: 8),
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: _exportToCSV,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0F172A),
-                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      foregroundColor: const Color(0xFF007CFF),
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                     child: const Text('Export CSV'),
                   ),
                   const SizedBox(width: 8),
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: _exportToPDF,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0F172A),
-                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      foregroundColor: const Color(0xFF007CFF),
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
@@ -1258,7 +1259,6 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
-                        side: const BorderSide(color: Color(0xFFE2E8F0)),
                       ),
                       onSelected: (value) {
                         if (value == 'delete_all') _confirmDeleteAll();
@@ -1275,14 +1275,13 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFCBD5E1)),
                         ),
                         child: const Text(
                           'More ▾',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF334155),
+                            color: Color(0xFF007CFF),
                           ),
                         ),
                       ),

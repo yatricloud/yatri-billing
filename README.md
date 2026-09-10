@@ -169,7 +169,12 @@ flutter run -d chrome --dart-define-from-file=.env -t lib/main_web.dart
 # 5. Build for Web Production
 flutter build web --dart-define-from-file=.env -t lib/main_web.dart
 
-# 6. Build a Desktop release binary
+# 6. Run compiled Web locally (on port 8080 or other)
+# Note: Always serve the `build/web` directory, NOT `web`, to ensure SQLite workers load properly.
+npx serve build/web -l 8080
+# To run on another port, change 8080: npx serve build/web -l 3458
+
+# 7. Build a Desktop release binary
 flutter build linux --release    # Linux
 flutter build windows --release  # Windows
 flutter build macos --release    # macOS

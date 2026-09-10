@@ -20,6 +20,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:invoiso/theme/coinbase_tokens.dart';
+import 'package:flutter/foundation.dart';
+import 'package:invoiso/services/test_data_seeder.dart' as test_seeder;
 
 class SettingsScreen extends ConsumerStatefulWidget {
   final User currentUser;
@@ -534,12 +536,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     padding: const EdgeInsets.all(16),
                     child: SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton.icon(
+                      child: ElevatedButton(
                         onPressed: _isSaving ? null : _saveCompanyInfo,
-                        icon: _isSaving
-                            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                            : const Icon(Icons.save_rounded),
-                        label: Text(_isSaving ? 'Saving...' : 'Save'),
+                        child: _isSaving
+                            ? const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
+                                  SizedBox(width: 8),
+                                  Text('Saving...'),
+                                ],
+                              )
+                            : const Text('Save'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
                           foregroundColor: Colors.white,
@@ -1275,6 +1283,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (kDebugMode) ...[
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.bug_report),
+                    label: const Text('Run E2E Data Test (Seed DB)'),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
+                    onPressed: () async {
+                      showDialog(context: context, barrierDismissible: false, builder: (c) => const Center(child: CircularProgressIndicator()));
+                      try {
+                        final log = await test_seeder.TestDataSeeder.runE2ETests(ref);
+                        if(context.mounted) Navigator.pop(context);
+                        if(context.mounted) {
+                          showDialog(
+                            context: context, 
+                            builder: (c) => AlertDialog(
+                              title: const Text('E2E Test Results'),
+                              content: SingleChildScrollView(child: Text(log)),
+                              actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('Close'))]
+                            )
+                          );
+                        }
+                      } catch(e) {
+                        if(context.mounted) Navigator.pop(context);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                ],
                 // ── Hero card ────────────────────────────────────────────
                 Card(
                   elevation: 0,

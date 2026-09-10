@@ -24,8 +24,12 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDB() async {
-    final dbDir = await getApplicationSupportDirectory();
-    _path = join(dbDir.path, 'invoice_manager.db');
+    if (kIsWeb) {
+      _path = 'invoice_manager.db';
+    } else {
+      final dbDir = await getApplicationSupportDirectory();
+      _path = join(dbDir.path, 'invoice_manager.db');
+    }
     return await openDatabase(
       _path!,
       version: dbVersion,

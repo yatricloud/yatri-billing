@@ -360,10 +360,9 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
             onPressed: () => Navigator.pop(dialogContext, 'discard'),
             child: const Text('Discard'),
           ),
-          ElevatedButton.icon(
+          ElevatedButton(
             onPressed: () => Navigator.pop(dialogContext, 'save'),
-            icon: const Icon(Icons.save_rounded, size: 18),
-            label: const Text('Save'),
+            child: const Text('Save'),
           ),
         ],
       ),
@@ -1848,47 +1847,44 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFFF8FAFC),
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+              color: Color(0xFF007CFF),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.people_outline_rounded,
-                        size: 16, color: Color(0xFF64748B)),
-                    const SizedBox(width: 8),
-                    Text('Customers',
-                        style: AppTypography.titleSm(CbTokens.ink)),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                TextField(
-                  controller: customerSearchController,
-                  onChanged: _filterCustomers,
-                  decoration: InputDecoration(
-                    labelText: 'Search Customer',
-                    labelStyle: TextStyle(fontSize: AppFontSize.small, color: CbTokens.muted),
-                    border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(AppBorderRadius.xsmall),
-                        borderSide: const BorderSide(color: CbTokens.hairline)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(AppBorderRadius.xsmall),
-                        borderSide: const BorderSide(color: CbTokens.hairline)),
-                    filled: true,
-                    fillColor: CbTokens.canvas,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: AppPadding.small,
-                        vertical: AppPadding.xsmall),
-                  ),
-                ),
+                const Icon(Icons.people_outline_rounded,
+                    size: 16, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Customers',
+                    style: AppTypography.titleSm(Colors.white)),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: TextField(
+              controller: customerSearchController,
+              onChanged: _filterCustomers,
+              decoration: InputDecoration(
+                labelText: 'Search Customer',
+                labelStyle: TextStyle(fontSize: AppFontSize.small, color: CbTokens.muted),
+                border: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppBorderRadius.xsmall),
+                    borderSide: const BorderSide(color: CbTokens.hairline)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppBorderRadius.xsmall),
+                    borderSide: const BorderSide(color: CbTokens.hairline)),
+                filled: true,
+                fillColor: CbTokens.canvas,
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppPadding.small,
+                    vertical: AppPadding.xsmall),
+              ),
             ),
           ),
           SizedBox(
@@ -1970,32 +1966,34 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFFF8FAFC),
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+              color: Color(0xFF007CFF),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.inventory_2_outlined,
+                    size: 16, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Products & Services',
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.titleSm(Colors.white)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.inventory_2_outlined,
-                        size: 16, color: Color(0xFF64748B)),
-                    const SizedBox(width: 8),
-                    Text('Products & Services',
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.titleSm(CbTokens.ink)),
-                  ],
-                ),
-                const SizedBox(height: 4),
                 Text(
                   'Out of stock items are shown in red',
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.caption(const Color(0xFFDC2626)),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 TextField(
                   controller: searchController,
                   onChanged: _filterProducts,
@@ -2223,20 +2221,20 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 14),
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFFF8FAFC),
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+              color: Color(0xFF007CFF),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.receipt_long_outlined,
-                    size: 16, color: Color(0xFF64748B)),
+                    size: 16, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   '$invoiceType Details',
-                  style: AppTypography.titleSm(const Color(0xFF0F172A)),
+                  style: AppTypography.titleSm(Colors.white),
                 ),
               ],
             ),
@@ -2830,21 +2828,20 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
             decoration: const BoxDecoration(
-              color: Color(0xFFF8FAFC),
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+              color: Color(0xFF007CFF),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.person_outline_rounded,
-                    size: 16, color: Color(0xFF64748B)),
+                    size: 16, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   'Customer Details',
-                  style: AppTypography.titleSm(const Color(0xFF0F172A)),
+                  style: AppTypography.titleSm(Colors.white),
                 ),
                 const Spacer(),
                 Wrap(
@@ -2858,15 +2855,14 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEFF6FF),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: const Color(0xFFBFDBFE)),
                             ),
                             child: const Text(
                               'Saved',
                               style: TextStyle(
                                 fontSize: 12,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 color: Color(0xFF007CFF),
                               ),
                             ),
@@ -2876,8 +2872,8 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                             child: ElevatedButton(
                               onPressed: _isSavingCustomer ? null : _saveCustomer,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF007CFF),
-                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF007CFF),
                                 elevation: 0,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14, vertical: 8),
@@ -2902,14 +2898,15 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 6),
-                            side: const BorderSide(color: Color(0xFFCBD5E1)),
-                            foregroundColor: const Color(0xFF0F172A),
+                            side: const BorderSide(color: Colors.white54),
+                            backgroundColor: Colors.white.withValues(alpha: 0.15),
+                            foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           child: const Text('Refresh',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                         ),
                       ),
                       Tooltip(
@@ -2919,14 +2916,15 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 6),
-                            side: const BorderSide(color: Color(0xFFCBD5E1)),
-                            foregroundColor: const Color(0xFF0F172A),
+                            side: const BorderSide(color: Colors.white54),
+                            backgroundColor: Colors.white.withValues(alpha: 0.15),
+                            foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           child: const Text('Clear',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                         ),
                       ),
                     ],
@@ -3532,35 +3530,34 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFFF8FAFC),
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+              color: Color(0xFF007CFF),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.list_alt_rounded,
-                    size: 16, color: Color(0xFF64748B)),
+                    size: 16, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   '$invoiceType Items',
-                  style: AppTypography.titleSm(const Color(0xFF0F172A)),
+                  style: AppTypography.titleSm(Colors.white),
                 ),
                 const Spacer(),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEFF6FF),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFBFDBFE)),
                   ),
                   child: Text(
                     '${invoiceItems.length} items',
                     style: const TextStyle(
                         color: Color(0xFF007CFF),
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         fontSize: 12),
                   ),
                 ),

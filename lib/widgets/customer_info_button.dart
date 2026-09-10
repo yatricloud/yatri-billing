@@ -46,24 +46,21 @@ class CustomerInfoButton extends StatelessWidget {
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
+                padding: const EdgeInsets.fromLTRB(20, 14, 12, 14),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF8FAFC),
+                  color: Color(0xFF007CFF),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE2E8F0)),
-                  ),
                 ),
                 child: Row(
                   children: [
                     const Icon(Icons.person_outline,
-                        color: Color(0xFF475569), size: 18),
+                        color: Colors.white, size: 18),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         c.name,
                         style: const TextStyle(
-                          color: Color(0xFF0F172A),
+                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                         ),
@@ -72,7 +69,7 @@ class CustomerInfoButton extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.close,
-                          color: Color(0xFF64748B), size: 18),
+                          color: Colors.white, size: 18),
                       onPressed: () => Navigator.pop(ctx),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),

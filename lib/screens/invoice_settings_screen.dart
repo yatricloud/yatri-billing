@@ -413,12 +413,18 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                     padding: const EdgeInsets.all(16),
                     child: SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton.icon(
+                      child: ElevatedButton(
                         onPressed: _isSaving ? null : _saveSettings,
-                        icon: _isSaving
-                            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                            : const Icon(Icons.save_rounded),
-                        label: Text(_isSaving ? 'Saving...' : 'Save'),
+                        child: _isSaving
+                            ? const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
+                                  SizedBox(width: 8),
+                                  Text('Saving...'),
+                                ],
+                              )
+                            : const Text('Save'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor,
                           foregroundColor: Colors.white,

@@ -87,8 +87,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
     _currentUser = widget.loggedInUser;
     SessionManager.initialize(_onSessionTimeout);
-    if (ref.read(appEditionConfigProvider).enableUpdateCheck)
-    {
+    if (ref.read(appEditionConfigProvider).enableUpdateCheck) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
     }
   }
@@ -108,14 +107,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.dispose();
   }
 
-  void _logoutAndResetSession() async
-  {
+  void _logoutAndResetSession() async {
     await ref.read(authRepositoryProvider).logoutAndSessionReset();
-    if(!mounted) return;
+    if (!mounted) return;
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (_) => const LoginScreen()));
+        context, MaterialPageRoute(builder: (_) => const LoginScreen()));
   }
 
   void _onSessionTimeout() {
@@ -134,8 +130,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Future<void> _refreshUser() async {
     final cfg = ref.watch(appEditionConfigProvider);
-    if(cfg.isCloud || !mounted) return;
-    final fresh = await ref.read(authRepositoryProvider).getUserById(_currentUser.id);
+    if (cfg.isCloud || !mounted) return;
+    final fresh =
+        await ref.read(authRepositoryProvider).getUserById(_currentUser.id);
     if (fresh != null && mounted) {
       setState(() => _currentUser = fresh);
     }
@@ -157,7 +154,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           cloneType: _invoiceToClone != null ? _cloneType : null,
           guard: _invoiceFormGuard,
           onCreateNewInvoice: () {
-            if(!mounted) return;
+            if (!mounted) return;
             setState(() {
               invoiceToEdit = null;
               _invoiceToClone = null;
@@ -212,7 +209,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Future<void> _openEditInvoice(Invoice invoice) async {
     if (!await _canLeaveInvoiceForm()) return;
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       _selectedIndex = 1;
       invoiceToEdit = invoice;
@@ -226,7 +223,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Future<void> _openCloneInvoice(Invoice invoice, String type) async {
     if (!await _canLeaveInvoiceForm()) return;
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       _selectedIndex = 1;
       invoiceToEdit = null;
@@ -377,12 +374,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
                   title: const Row(
                     children: [
-                      Icon(Icons.headset_mic_outlined, color: Color(0xFF007CFF)),
+                      Icon(Icons.headset_mic_outlined,
+                          color: Color(0xFF007CFF)),
                       SizedBox(width: 10),
-                      Text('Contact & Support', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                      Text('Contact & Support',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w700)),
                     ],
                   ),
                   content: Column(
@@ -391,20 +392,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ListTile(
                         leading: const CircleAvatar(
                           backgroundColor: Color(0xFFEFF6FF),
-                          child: Icon(Icons.email_outlined, color: Color(0xFF007CFF), size: 20),
+                          child: Icon(Icons.email_outlined,
+                              color: Color(0xFF007CFF), size: 20),
                         ),
-                        title: const Text('Email Support', style: TextStyle(fontSize: 13, color: Color(0xFF64748B))),
-                        subtitle: const Text('info@yatricloud.com', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
-                        onTap: () => launchUrl(Uri.parse('mailto:info@yatricloud.com')),
+                        title: const Text('Email Support',
+                            style: TextStyle(
+                                fontSize: 13, color: Color(0xFF64748B))),
+                        subtitle: const Text('info@yatricloud.com',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF0F172A))),
+                        onTap: () =>
+                            launchUrl(Uri.parse('mailto:info@yatricloud.com')),
                       ),
                       const SizedBox(height: 8),
                       ListTile(
                         leading: const CircleAvatar(
                           backgroundColor: Color(0xFFF0FDF4),
-                          child: Icon(Icons.phone_outlined, color: Color(0xFF16A34A), size: 20),
+                          child: Icon(Icons.phone_outlined,
+                              color: Color(0xFF16A34A), size: 20),
                         ),
-                        title: const Text('Phone / WhatsApp', style: TextStyle(fontSize: 13, color: Color(0xFF64748B))),
-                        subtitle: const Text('+91 9724823602', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+                        title: const Text('Phone / WhatsApp',
+                            style: TextStyle(
+                                fontSize: 13, color: Color(0xFF64748B))),
+                        subtitle: const Text('+91 9724823602',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF0F172A))),
                         onTap: () => launchUrl(Uri.parse('tel:+919724823602')),
                       ),
                     ],
@@ -426,7 +442,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             style: OutlinedButton.styleFrom(
               foregroundColor: const Color(0xFF374151),
               side: const BorderSide(color: Color(0xFFE2E8F0)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             ),
           ),
@@ -447,7 +464,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      _currentUser.username.isNotEmpty ? _currentUser.username : 'Admin',
+                      _currentUser.username.isNotEmpty
+                          ? _currentUser.username
+                          : 'Admin',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -592,7 +611,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               height: 64,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
+                border: Border(
+                    bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
               ),
               child: Row(
                 children: [
@@ -657,7 +677,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                       ),
-                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard', inDrawer: inDrawer),
+                      _buildNavItem(0, Icons.grid_view_outlined,
+                          Icons.grid_view_rounded, 'Dashboard',
+                          inDrawer: inDrawer),
 
                       const SizedBox(height: 12),
 
@@ -675,7 +697,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       // Accordion / Group: Invoicing
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
                         child: InkWell(
                           onTap: () {
                             if (inDrawer) Navigator.of(context).maybePop();
@@ -684,10 +707,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           borderRadius: BorderRadius.circular(8),
                           hoverColor: const Color(0xFFF1F5F9),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 9),
                             child: Row(
                               children: const [
-                                Icon(Icons.receipt_long_outlined, size: 18, color: Color(0xFF475569)),
+                                Icon(Icons.receipt_long_outlined,
+                                    size: 18, color: Color(0xFF475569)),
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
@@ -699,7 +724,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                   ),
                                 ),
-                                Icon(Icons.keyboard_arrow_up_rounded, size: 18, color: Color(0xFF9CA3AF)),
+                                Icon(Icons.keyboard_arrow_up_rounded,
+                                    size: 18, color: Color(0xFF9CA3AF)),
                               ],
                             ),
                           ),
@@ -707,40 +733,80 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       // Sub-items indented with left vertical hairline
                       Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 10, bottom: 6),
+                        padding: const EdgeInsets.only(
+                            left: 30, right: 10, bottom: 6),
                         child: Container(
                           decoration: const BoxDecoration(
-                            border: Border(left: BorderSide(color: Color(0xFFE5E7EB), width: 1.5)),
+                            border: Border(
+                                left: BorderSide(
+                                    color: Color(0xFFE5E7EB), width: 1.5)),
                           ),
                           padding: const EdgeInsets.only(left: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _buildSubNavItem(2, 'Invoices', inDrawer: inDrawer),
-                              _buildSubNavItem(1, 'New Invoice', inDrawer: inDrawer),
-                              _buildSubNavItem(3, 'Quotations', inDrawer: inDrawer),
-                              _buildSubNavItem(4, 'Receipts', inDrawer: inDrawer),
-                              _buildSubNavItem(9, 'Revenue', inDrawer: inDrawer),
+                              _buildSubNavItem(2, 'Invoices',
+                                  inDrawer: inDrawer),
+                              _buildSubNavItem(1, 'New Invoice',
+                                  inDrawer: inDrawer),
+                              _buildSubNavItem(3, 'Quotations',
+                                  inDrawer: inDrawer),
+                              _buildSubNavItem(4, 'Receipts',
+                                  inDrawer: inDrawer),
+                              _buildSubNavItem(9, 'Revenue',
+                                  inDrawer: inDrawer),
                             ],
                           ),
                         ),
                       ),
-                      _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers', inDrawer: inDrawer),
-                      _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products', inDrawer: inDrawer),
-                      _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports', inDrawer: inDrawer),
-                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings', inDrawer: inDrawer),
+                      _buildNavItem(5, Icons.people_outline_rounded,
+                          Icons.people_rounded, 'Customers',
+                          inDrawer: inDrawer),
+                      _buildNavItem(6, Icons.inventory_2_outlined,
+                          Icons.inventory_2_rounded, 'Products',
+                          inDrawer: inDrawer),
+                      _buildNavItem(7, Icons.bar_chart_outlined,
+                          Icons.bar_chart_rounded, 'Reports',
+                          inDrawer: inDrawer),
+                      _buildNavItem(8, Icons.settings_outlined,
+                          Icons.settings_rounded, 'Settings',
+                          inDrawer: inDrawer),
                     ] else ...[
-                      _buildNavItem(0, Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard', inDrawer: inDrawer),
-                      const Divider(height: 12, indent: 12, endIndent: 12, color: Color(0xFFE5E7EB)),
-                      _buildNavItem(2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Invoices', inDrawer: inDrawer),
-                      _buildNavItem(1, Icons.add_circle_outline_rounded, Icons.add_circle_rounded, 'New Invoice', inDrawer: inDrawer),
-                      _buildNavItem(3, Icons.request_quote_outlined, Icons.request_quote_rounded, 'Quotations', inDrawer: inDrawer),
-                      _buildNavItem(4, Icons.point_of_sale_outlined, Icons.point_of_sale_rounded, 'Receipts', inDrawer: inDrawer),
-                      _buildNavItem(9, Icons.payments_outlined, Icons.payments_rounded, 'Revenue', inDrawer: inDrawer),
-                      _buildNavItem(5, Icons.people_outline_rounded, Icons.people_rounded, 'Customers', inDrawer: inDrawer),
-                      _buildNavItem(6, Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Products', inDrawer: inDrawer),
-                      _buildNavItem(7, Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Reports', inDrawer: inDrawer),
-                      _buildNavItem(8, Icons.settings_outlined, Icons.settings_rounded, 'Settings', inDrawer: inDrawer),
+                      _buildNavItem(0, Icons.grid_view_outlined,
+                          Icons.grid_view_rounded, 'Dashboard',
+                          inDrawer: inDrawer),
+                      const Divider(
+                          height: 12,
+                          indent: 12,
+                          endIndent: 12,
+                          color: Color(0xFFE5E7EB)),
+                      _buildNavItem(2, Icons.receipt_long_outlined,
+                          Icons.receipt_long_rounded, 'Invoices',
+                          inDrawer: inDrawer),
+                      _buildNavItem(1, Icons.add_circle_outline_rounded,
+                          Icons.add_circle_rounded, 'New Invoice',
+                          inDrawer: inDrawer),
+                      _buildNavItem(3, Icons.request_quote_outlined,
+                          Icons.request_quote_rounded, 'Quotations',
+                          inDrawer: inDrawer),
+                      _buildNavItem(4, Icons.point_of_sale_outlined,
+                          Icons.point_of_sale_rounded, 'Receipts',
+                          inDrawer: inDrawer),
+                      _buildNavItem(9, Icons.payments_outlined,
+                          Icons.payments_rounded, 'Revenue',
+                          inDrawer: inDrawer),
+                      _buildNavItem(5, Icons.people_outline_rounded,
+                          Icons.people_rounded, 'Customers',
+                          inDrawer: inDrawer),
+                      _buildNavItem(6, Icons.inventory_2_outlined,
+                          Icons.inventory_2_rounded, 'Products',
+                          inDrawer: inDrawer),
+                      _buildNavItem(7, Icons.bar_chart_outlined,
+                          Icons.bar_chart_rounded, 'Reports',
+                          inDrawer: inDrawer),
+                      _buildNavItem(8, Icons.settings_outlined,
+                          Icons.settings_rounded, 'Settings',
+                          inDrawer: inDrawer),
                     ],
                   ],
                 ),
@@ -751,7 +817,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
+                border:
+                    Border(top: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
               ),
               child: expanded
                   ? SizedBox(
@@ -776,13 +843,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFFE2E8F0), width: 1),
+                          side: const BorderSide(
+                              color: Color(0xFFE2E8F0), width: 1),
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 11,
+                            horizontal: 16,
+                            vertical: 11,
                           ),
                         ),
                       ),
@@ -800,9 +869,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
+                            border: Border.all(
+                                color: const Color(0xFFE2E8F0), width: 1),
                           ),
-                          child: const Icon(Icons.logout_rounded, color: Color(0xFF64748B), size: 18),
+                          child: const Icon(Icons.logout_rounded,
+                              color: Color(0xFF64748B), size: 18),
                         ),
                       ),
                     ),
@@ -946,15 +1017,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: InkWell(
                 onTap: onTap,
                 borderRadius: BorderRadius.circular(8),
-                hoverColor: selected ? const Color(0xFF007CFF) : const Color(0xFFF1F5F9),
+                hoverColor: selected
+                    ? const Color(0xFF007CFF)
+                    : const Color(0xFFF1F5F9),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
                   padding: const EdgeInsets.all(12),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: selected
-                        ? const Color(0xFF007CFF)
-                        : Colors.transparent,
+                    color:
+                        selected ? const Color(0xFF007CFF) : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -976,15 +1048,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: InkWell(
               onTap: onTap,
               borderRadius: BorderRadius.circular(8),
-              hoverColor: selected ? const Color(0xFF007CFF) : const Color(0xFFF1F5F9),
+              hoverColor:
+                  selected ? const Color(0xFF007CFF) : const Color(0xFFF1F5F9),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 10.5),
                 decoration: BoxDecoration(
-                  color: selected
-                    ? const Color(0xFF007CFF)
-                    : Colors.transparent,
+                  color:
+                      selected ? const Color(0xFF007CFF) : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -999,8 +1071,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Text(
                         label,
                         style: TextStyle(
-                          color: selected ? Colors.white : const Color(0xFF334155),
-                          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                          color:
+                              selected ? Colors.white : const Color(0xFF334155),
+                          fontWeight:
+                              selected ? FontWeight.w600 : FontWeight.w500,
                           fontSize: 13.5,
                         ),
                       ),
@@ -1054,6 +1128,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
   List<Map<String, dynamic>> _topProducts = [];
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  String _timeFilter = 'All time';
 
   @override
   void dispose() {
@@ -1067,9 +1142,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
     _loadDashboardData();
   }
 
-  Future<void> _loadDashboardData() async
-  {
-    if(!mounted) return;
+  Future<void> _loadDashboardData() async {
+    if (!mounted) return;
     setState(() => isLoading = true);
 
     final results = await Future.wait([
@@ -1081,13 +1155,21 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       ref.read(invoiceRepositoryProvider).getOverdueInvoices(limit: 10), // 5
       ref.read(settingsRepositoryProvider).getCurrency(), // 6
       ref.read(invoiceRepositoryProvider).getMonthlyRevenue(), // 7
-      ref.read(settingsRepositoryProvider).getSetting(SettingKey.dashboardLayout), // 8
+      ref
+          .read(settingsRepositoryProvider)
+          .getSetting(SettingKey.dashboardLayout), // 8
       ref.read(invoiceRepositoryProvider).getTopCustomers(), // 9
       ref.read(invoiceRepositoryProvider).getTopProducts(), // 10
-      ref.read(settingsRepositoryProvider).getSetting(SettingKey.layoutBannerDismissed), // 11
-      ref.read(settingsRepositoryProvider).getSetting(SettingKey.supportBannerDismissed), // 12
+      ref
+          .read(settingsRepositoryProvider)
+          .getSetting(SettingKey.layoutBannerDismissed), // 11
+      ref
+          .read(settingsRepositoryProvider)
+          .getSetting(SettingKey.supportBannerDismissed), // 12
       ref.read(productRepositoryProvider).getOutOfStockProducts(), // 13
-      ref.read(settingsRepositoryProvider).getSetting(SettingKey.themeBannerDismissed), // 14
+      ref
+          .read(settingsRepositoryProvider)
+          .getSetting(SettingKey.themeBannerDismissed), // 14
     ]);
 
     final customerCount = results[0] as int;
@@ -1113,7 +1195,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             : financials.count > 10
                 ? '10'
                 : '';
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       totalCustomers = customerCount;
       totalProducts = productCount;
@@ -1132,24 +1214,30 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       _showLayoutBanner = bannerDismissed != '1';
       _showThemeBanner = themeBannerDismissed != '1';
       _supportMilestone = milestone;
-      _showSupportBanner = milestone.isNotEmpty && supportDismissed != milestone;
+      _showSupportBanner =
+          milestone.isNotEmpty && supportDismissed != milestone;
       isLoading = false;
     });
   }
 
   Future<void> _dismissSupportBanner() async {
-    await ref.read(settingsRepositoryProvider).setSetting(
-        SettingKey.supportBannerDismissed, _supportMilestone);
+    await ref
+        .read(settingsRepositoryProvider)
+        .setSetting(SettingKey.supportBannerDismissed, _supportMilestone);
     if (mounted) setState(() => _showSupportBanner = false);
   }
 
   Future<void> _dismissLayoutBanner() async {
-    await ref.read(settingsRepositoryProvider).setSetting(SettingKey.layoutBannerDismissed, '1');
+    await ref
+        .read(settingsRepositoryProvider)
+        .setSetting(SettingKey.layoutBannerDismissed, '1');
     if (mounted) setState(() => _showLayoutBanner = false);
   }
 
   Future<void> _dismissThemeBanner() async {
-    await ref.read(settingsRepositoryProvider).setSetting(SettingKey.themeBannerDismissed, '1');
+    await ref
+        .read(settingsRepositoryProvider)
+        .setSetting(SettingKey.themeBannerDismissed, '1');
     if (mounted) setState(() => _showThemeBanner = false);
   }
 
@@ -1160,8 +1248,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       child: _showLayoutBanner
           ? Container(
               margin: const EdgeInsets.only(bottom: 20),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: const Color(0xFFEFF6FF),
                 borderRadius: BorderRadius.circular(10),
@@ -1228,8 +1315,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       child: _showThemeBanner
           ? Container(
               margin: const EdgeInsets.only(bottom: 20),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F3FF),
                 borderRadius: BorderRadius.circular(10),
@@ -1303,8 +1389,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       child: _showSupportBanner
           ? Container(
               margin: const EdgeInsets.only(bottom: 16),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFFBEB),
                 borderRadius: BorderRadius.circular(10),
@@ -1317,7 +1402,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                       isReviewMilestone
                           ? Icons.star_outline
                           : Icons.celebration_outlined,
-                      color: const Color(0xFFD97706), size: 22),
+                      color: const Color(0xFFD97706),
+                      size: 22),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -1387,7 +1473,17 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
   }
 
   Widget _buildContent() {
-    return _buildDefaultLayout();
+    switch (_dashboardLayout) {
+      case 'classic':
+        return _buildClassicLayout();
+      case 'simple':
+        return _buildSimpleFeedLayout();
+      case 'bento':
+        return _buildBentoLayout();
+      case 'default':
+      default:
+        return _buildDefaultLayout();
+    }
   }
 
   Future<void> _exportReceiptsCsv() async {
@@ -1398,10 +1494,13 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         );
         return;
       }
-      final path = await ExportService.exportInvoicesToCsv(recentInvoices, type: 'Receipt');
+      final path = await ExportService.exportInvoicesToCsv(recentInvoices,
+          type: 'Receipt');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Exported ${recentInvoices.length} receipts to CSV: $path')),
+        SnackBar(
+            content: Text(
+                'Exported ${recentInvoices.length} receipts to CSV: $path')),
       );
     } catch (e) {
       if (!mounted) return;
@@ -1541,14 +1640,19 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       final num = (inv.invoiceNumber ?? inv.id).toLowerCase();
       final name = inv.customer.name.toLowerCase();
       final email = inv.customer.email.toLowerCase();
-      final itemMatch = inv.items.any((it) => it.product.name.toLowerCase().contains(q));
-      return num.contains(q) || name.contains(q) || email.contains(q) || itemMatch;
+      final itemMatch =
+          inv.items.any((it) => it.product.name.toLowerCase().contains(q));
+      return num.contains(q) ||
+          name.contains(q) ||
+          email.contains(q) ||
+          itemMatch;
     }).toList();
 
     final isNarrow = MediaQuery.of(context).size.width < 768;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: isNarrow ? 16 : 36, vertical: isNarrow ? 20 : 32),
+      padding: EdgeInsets.symmetric(
+          horizontal: isNarrow ? 16 : 36, vertical: isNarrow ? 20 : 32),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1280),
@@ -1572,28 +1676,61 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFE5E7EB)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text(
-                              'All time',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF111827),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildLayoutToggle(),
+                          const SizedBox(width: 12),
+                          PopupMenuButton<String>(
+                            tooltip: 'Filter by time',
+                            offset: const Offset(0, 40),
+                            onSelected: (val) {
+                              if (!mounted) return;
+                              setState(() => _timeFilter = val);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Showing data for $val')),
+                              );
+                            },
+                            itemBuilder: (ctx) => const [
+                              PopupMenuItem(
+                                  value: 'All time', child: Text('All time')),
+                              PopupMenuItem(
+                                  value: 'This year', child: Text('This year')),
+                              PopupMenuItem(
+                                  value: 'This month',
+                                  child: Text('This month')),
+                              PopupMenuItem(
+                                  value: 'This week', child: Text('This week')),
+                            ],
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(color: const Color(0xFFE5E7EB)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    _timeFilter,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF111827),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.keyboard_arrow_down_rounded,
+                                      size: 16, color: Color(0xFF6B7280)),
+                                ],
                               ),
                             ),
-                            SizedBox(width: 8),
-                            Icon(Icons.keyboard_arrow_down_rounded, size: 16, color: Color(0xFF6B7280)),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -1705,7 +1842,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                           ),
                         ),
                         const SizedBox(height: 18),
-                        _buildCategoryRow('Store', '$totalInvoices ${totalInvoices == 1 ? "receipt" : "receipts"}'),
+                        _buildCategoryRow('Store',
+                            '$totalInvoices ${totalInvoices == 1 ? "receipt" : "receipts"}'),
                         const SizedBox(height: 12),
                         _buildCategoryRow('Events', '0 receipts'),
                         const SizedBox(height: 12),
@@ -1740,7 +1878,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                           ),
                         ),
                         const SizedBox(height: 18),
-                        _buildCurrencyRow('Indian Rupee', '$_currencySymbol${totalRevenue.toStringAsFixed(0)}'),
+                        _buildCurrencyRow('Indian Rupee',
+                            '$_currencySymbol${totalRevenue.toStringAsFixed(0)}'),
                         const SizedBox(height: 12),
                         _buildCurrencyRow('USD', '\$0.00'),
                         const SizedBox(height: 12),
@@ -1792,7 +1931,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   children: [
                     // Card Header with Title, Search and Export CSV
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 18),
                       child: LayoutBuilder(
                         builder: (context, box) {
                           if (box.maxWidth < 650) {
@@ -1800,7 +1940,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'All receipts',
@@ -1812,7 +1953,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                     ),
                                     OutlinedButton.icon(
                                       onPressed: _exportReceiptsCsv,
-                                      icon: const Icon(Icons.download_rounded, size: 16, color: Color(0xFF374151)),
+                                      icon: const Icon(Icons.download_rounded,
+                                          size: 16, color: Color(0xFF374151)),
                                       label: const Text(
                                         'Export CSV',
                                         style: TextStyle(
@@ -1822,9 +1964,13 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                         ),
                                       ),
                                       style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(color: Color(0xFFE5E7EB)),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                        side: const BorderSide(
+                                            color: Color(0xFFE5E7EB)),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 8),
                                       ),
                                     ),
                                   ],
@@ -1834,22 +1980,31 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                   height: 38,
                                   child: TextField(
                                     controller: _searchController,
-                                    onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
+                                    onChanged: (v) => setState(() =>
+                                        _searchQuery = v.trim().toLowerCase()),
                                     style: const TextStyle(fontSize: 13),
                                     decoration: InputDecoration(
-                                      prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF9CA3AF)),
-                                      hintText: 'Search buyer, item or receipt number',
-                                      hintStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF9CA3AF)),
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                      prefixIcon: const Icon(Icons.search,
+                                          size: 18, color: Color(0xFF9CA3AF)),
+                                      hintText:
+                                          'Search buyer, item or receipt number',
+                                      hintStyle: const TextStyle(
+                                          fontSize: 12.5,
+                                          color: Color(0xFF9CA3AF)),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 12),
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                                        borderSide: const BorderSide(
+                                            color: Color(0xFFE5E7EB)),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(color: Color(0xFF007CFF)),
+                                        borderSide: const BorderSide(
+                                            color: Color(0xFF007CFF)),
                                       ),
                                     ),
                                   ),
@@ -1874,22 +2029,30 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                 height: 38,
                                 child: TextField(
                                   controller: _searchController,
-                                  onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
+                                  onChanged: (v) => setState(() =>
+                                      _searchQuery = v.trim().toLowerCase()),
                                   style: const TextStyle(fontSize: 13),
                                   decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF9CA3AF)),
-                                    hintText: 'Search buyer, item or receipt number',
-                                    hintStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF9CA3AF)),
-                                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                    prefixIcon: const Icon(Icons.search,
+                                        size: 18, color: Color(0xFF9CA3AF)),
+                                    hintText:
+                                        'Search buyer, item or receipt number',
+                                    hintStyle: const TextStyle(
+                                        fontSize: 12.5,
+                                        color: Color(0xFF9CA3AF)),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12),
                                     filled: true,
                                     fillColor: Colors.white,
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xFFE5E7EB)),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(color: Color(0xFF007CFF)),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xFF007CFF)),
                                     ),
                                   ),
                                 ),
@@ -1898,7 +2061,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                               // Export CSV Button
                               OutlinedButton.icon(
                                 onPressed: _exportReceiptsCsv,
-                                icon: const Icon(Icons.download_rounded, size: 16, color: Color(0xFF374151)),
+                                icon: const Icon(Icons.download_rounded,
+                                    size: 16, color: Color(0xFF374151)),
                                 label: const Text(
                                   'Export CSV',
                                   style: TextStyle(
@@ -1908,9 +2072,12 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                   ),
                                 ),
                                 style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: Color(0xFFE5E7EB)),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                  side: const BorderSide(
+                                      color: Color(0xFFE5E7EB)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 10),
                                 ),
                               ),
                             ],
@@ -1929,32 +2096,64 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                               decoration: const BoxDecoration(
                                 color: Color(0xFF007CFF),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 14),
                               child: Row(
                                 children: const [
                                   SizedBox(
                                     width: 120,
-                                    child: Text('Date', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                    child: Text('Date',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.4)),
                                   ),
                                   SizedBox(
                                     width: 120,
-                                    child: Text('Receipt', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                    child: Text('Receipt',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.4)),
                                   ),
                                   Expanded(
                                     flex: 3,
-                                    child: Text('Buyer', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                    child: Text('Buyer',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.4)),
                                   ),
                                   SizedBox(
                                     width: 110,
-                                    child: Text('Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                    child: Text('Category',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.4)),
                                   ),
                                   Expanded(
                                     flex: 3,
-                                    child: Text('Item', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                    child: Text('Item',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.4)),
                                   ),
                                   SizedBox(
                                     width: 130,
-                                    child: Text('Amount', textAlign: TextAlign.right, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.4)),
+                                    child: Text('Amount',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.4)),
                                   ),
                                 ],
                               ),
@@ -1968,7 +2167,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                     recentInvoices.isEmpty
                                         ? 'No receipts have been generated yet.'
                                         : 'No receipts match your search.',
-                                    style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                                    style: const TextStyle(
+                                        fontSize: 13, color: Color(0xFF6B7280)),
                                   ),
                                 ),
                               )
@@ -1977,10 +2177,12 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: filtered.length,
-                                separatorBuilder: (_, __) => const Divider(height: 1, color: Color(0xFFF3F4F6)),
+                                separatorBuilder: (_, __) => const Divider(
+                                    height: 1, color: Color(0xFFF3F4F6)),
                                 itemBuilder: (context, index) {
                                   final inv = filtered[index];
-                                  final dateStr = DateFormat('dd MMM yyyy').format(inv.date);
+                                  final dateStr = DateFormat('dd MMM yyyy')
+                                      .format(inv.date);
                                   final itemsSummary = inv.items.isEmpty
                                       ? 'Store'
                                       : (inv.items.length == 1
@@ -1991,20 +2193,28 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                     onTap: () => widget.onEditInvoice(inv),
                                     hoverColor: const Color(0xFFF9FAFB),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24, vertical: 14),
                                       child: Row(
                                         children: [
                                           SizedBox(
                                             width: 120,
                                             child: Text(
                                               dateStr,
-                                              style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  color: Color(0xFF6B7280)),
                                             ),
                                           ),
                                           SizedBox(
                                             width: 120,
                                             child: Text(
-                                              formatDisplayInvoiceNumber(inv.invoiceNumber?.isNotEmpty == true ? inv.invoiceNumber : inv.id),
+                                              formatDisplayInvoiceNumber(inv
+                                                          .invoiceNumber
+                                                          ?.isNotEmpty ==
+                                                      true
+                                                  ? inv.invoiceNumber
+                                                  : inv.id),
                                               style: const TextStyle(
                                                 fontSize: 12.5,
                                                 fontFamily: 'monospace',
@@ -2016,16 +2226,27 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                           Expanded(
                                             flex: 3,
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  inv.customer.name.isNotEmpty ? inv.customer.name : 'Yatri',
-                                                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: Color(0xFF111827)),
+                                                  inv.customer.name.isNotEmpty
+                                                      ? inv.customer.name
+                                                      : 'Yatri',
+                                                  style: const TextStyle(
+                                                      fontSize: 13.5,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Color(0xFF111827)),
                                                 ),
-                                                if (inv.customer.email.isNotEmpty)
+                                                if (inv
+                                                    .customer.email.isNotEmpty)
                                                   Text(
                                                     inv.customer.email,
-                                                    style: const TextStyle(fontSize: 11.5, color: Color(0xFF6B7280)),
+                                                    style: const TextStyle(
+                                                        fontSize: 11.5,
+                                                        color:
+                                                            Color(0xFF6B7280)),
                                                   ),
                                               ],
                                             ),
@@ -2035,15 +2256,26 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 3),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFFEFF6FF),
-                                                  borderRadius: BorderRadius.circular(6),
-                                                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                                                  color:
+                                                      const Color(0xFFEFF6FF),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  border: Border.all(
+                                                      color: const Color(
+                                                          0xFFBFDBFE)),
                                                 ),
                                                 child: const Text(
                                                   'Store',
-                                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF007CFF)),
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Color(0xFF007CFF)),
                                                 ),
                                               ),
                                             ),
@@ -2052,7 +2284,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                             flex: 3,
                                             child: Text(
                                               itemsSummary,
-                                              style: const TextStyle(fontSize: 13, color: Color(0xFF374151)),
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  color: Color(0xFF374151)),
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
@@ -2117,6 +2351,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             ],
           ),
           const Spacer(),
+          _buildLayoutToggle(),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
@@ -2189,7 +2425,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             const Spacer(),
             Text(
               'Today & Tomorrow',
-              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -2199,9 +2437,12 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
           final due = DateTime(invoice.dueDate!.year, invoice.dueDate!.month,
               invoice.dueDate!.day);
           final isToday = due == today;
-          final badgeBg = isToday ? const Color(0xFFFEE2E2) : const Color(0xFFFEF3C7);
-          final badgeBorder = isToday ? const Color(0xFFFCA5A5) : const Color(0xFFFCD34D);
-          final badgeTextColor = isToday ? const Color(0xFFB91C1C) : const Color(0xFFB45309);
+          final badgeBg =
+              isToday ? const Color(0xFFFEE2E2) : const Color(0xFFFEF3C7);
+          final badgeBorder =
+              isToday ? const Color(0xFFFCA5A5) : const Color(0xFFFCD34D);
+          final badgeTextColor =
+              isToday ? const Color(0xFFB91C1C) : const Color(0xFFB45309);
           final badgeLabel = isToday ? 'Due Today' : 'Due Tomorrow';
 
           return Container(
@@ -2216,7 +2457,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
               children: [
                 // Due badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(
                     color: badgeBg,
                     borderRadius: BorderRadius.circular(6),
@@ -2267,30 +2509,38 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                 const SizedBox(width: 12),
                 // Actions
                 FilledButton(
-                  onPressed: () => InvoicePdfServices.showInvoiceDetails(context, invoice),
+                  onPressed: () =>
+                      InvoicePdfServices.showInvoiceDetails(context, invoice),
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFF007CFF),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   child: const Text('View'),
                 ),
                 const SizedBox(width: 8),
                 OutlinedButton(
-                  onPressed: () => InvoicePdfServices.previewPDF(context, invoice),
+                  onPressed: () =>
+                      InvoicePdfServices.previewPDF(context, invoice),
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFF0F172A),
                     side: const BorderSide(color: Color(0xFFCBD5E1)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   child: const Text('Preview'),
                 ),
@@ -2307,11 +2557,14 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFF16A34A),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   child: const Text('Record Payment'),
                 ),
@@ -2369,7 +2622,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             const Spacer(),
             Text(
               'Oldest first',
-              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -2392,7 +2647,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
               children: [
                 // Days overdue badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFEE2E2),
                     borderRadius: BorderRadius.circular(6),
@@ -2443,30 +2699,38 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                 const SizedBox(width: 12),
                 // Actions
                 FilledButton(
-                  onPressed: () => InvoicePdfServices.showInvoiceDetails(context, invoice),
+                  onPressed: () =>
+                      InvoicePdfServices.showInvoiceDetails(context, invoice),
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFF007CFF),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   child: const Text('View'),
                 ),
                 const SizedBox(width: 8),
                 OutlinedButton(
-                  onPressed: () => InvoicePdfServices.previewPDF(context, invoice),
+                  onPressed: () =>
+                      InvoicePdfServices.previewPDF(context, invoice),
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFF0F172A),
                     side: const BorderSide(color: Color(0xFFCBD5E1)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   child: const Text('Preview'),
                 ),
@@ -2483,11 +2747,14 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFDC2626),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   child: const Text('Record Payment'),
                 ),
@@ -2533,7 +2800,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             onPressed: () async {
               final qty = int.tryParse(controller.text.trim());
               if (qty == null || qty < 0) return;
-              await ref.read(productRepositoryProvider).updateProductStock(product.id, qty);
+              await ref
+                  .read(productRepositoryProvider)
+                  .updateProductStock(product.id, qty);
               if (ctx.mounted) Navigator.pop(ctx);
               _loadDashboardData();
             },
@@ -2587,7 +2856,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
             const Spacer(),
             Text(
               'Tap to restock',
-              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -2600,7 +2871,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: const Color(0xFFFCA5A5)),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 child: Row(
                   children: [
                     // Name & type
@@ -2611,7 +2883,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                           Text(
                             product.name,
                             style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF0F172A)),
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
@@ -2635,7 +2909,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                     const SizedBox(width: 16),
                     // Stock badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFEE2E2),
                         borderRadius: BorderRadius.circular(6),
@@ -2656,11 +2931,14 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                       style: FilledButton.styleFrom(
                         backgroundColor: const Color(0xFF007CFF),
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                        textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        textStyle: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w600),
                       ),
                       child: const Text('Update Stock'),
                     ),
@@ -2714,7 +2992,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                 subtitle!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTypography.captionStrong(subtitleColor ?? const Color(0xFFDC2626)),
+                style: AppTypography.captionStrong(
+                    subtitleColor ?? const Color(0xFFDC2626)),
               ),
             ],
           ],
@@ -2833,7 +3112,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            child: Text('Cancel',
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -2880,8 +3161,10 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       tooltip: 'Dashboard Layout',
       offset: const Offset(0, 40),
       onSelected: (value) async {
-        if(!mounted) return;
-        await ref.read(settingsRepositoryProvider).setSetting(SettingKey.dashboardLayout, value);
+        if (!mounted) return;
+        await ref
+            .read(settingsRepositoryProvider)
+            .setSetting(SettingKey.dashboardLayout, value);
         setState(() => _dashboardLayout = value);
         if (_showLayoutBanner) _dismissLayoutBanner();
       },
@@ -2906,7 +3189,11 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       value: value,
       child: Row(
         children: [
-          Icon(icon, size: 18, color: active ? primary : Theme.of(context).colorScheme.onSurfaceVariant),
+          Icon(icon,
+              size: 18,
+              color: active
+                  ? primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -2918,9 +3205,13 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                         fontSize: 13,
                         fontWeight:
                             active ? FontWeight.w700 : FontWeight.normal,
-                        color: active ? primary : Theme.of(context).colorScheme.onSurface)),
+                        color: active
+                            ? primary
+                            : Theme.of(context).colorScheme.onSurface)),
                 Text(sub,
-                    style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant)),
               ],
             ),
           ),
@@ -2965,17 +3256,11 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   _buildKpiCard('Total Invoices', totalInvoices.toString(),
                       Icons.receipt_long_outlined, const Color(0xFFE65100)),
                   const SizedBox(width: 10),
-                  _buildKpiCard(
-                      'Customers',
-                      totalCustomers.toString(),
-                      Icons.people_outline,
-                      const Color(0xFF1565C0)),
+                  _buildKpiCard('Customers', totalCustomers.toString(),
+                      Icons.people_outline, const Color(0xFF1565C0)),
                   const SizedBox(width: 10),
-                  _buildKpiCard(
-                    'Products',
-                    totalProducts.toString(),
-                    Icons.inventory_2_outlined,
-                    const Color(0xFF2E7D32)),
+                  _buildKpiCard('Products', totalProducts.toString(),
+                      Icons.inventory_2_outlined, const Color(0xFF2E7D32)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -3272,7 +3557,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                   child: Text(DateFormat('MMM').format(date),
                                       style: TextStyle(
                                           fontSize: 11,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant)),
                                 );
                               } catch (_) {
                                 return const SizedBox.shrink();
@@ -3307,11 +3594,16 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.bar_chart_outlined,
-                            size: 48, color: Theme.of(context).colorScheme.outlineVariant),
+                            size: 48,
+                            color:
+                                Theme.of(context).colorScheme.outlineVariant),
                         const SizedBox(height: 8),
                         Text('No payment data yet',
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                                fontSize: 13)),
                       ],
                     ),
                   ),
@@ -3374,8 +3666,10 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                   )
                 : Center(
                     child: Text('No invoices yet',
-                        style:
-                            TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13))),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontSize: 13))),
           ),
           const SizedBox(height: 14),
           _buildDonutLegend('Collected', const Color(0xFF2E7D32),
@@ -3421,7 +3715,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         const SizedBox(width: 8),
         Expanded(
             child: Text(label,
-                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant))),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant))),
         Text(amount,
             style: TextStyle(
                 fontSize: 12,
@@ -3460,7 +3756,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                       color: Theme.of(context).colorScheme.onSurface)),
               const Spacer(),
               Text('Last $limit',
-                  style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant)),
             ],
           ),
           const SizedBox(height: 4),
@@ -3499,14 +3797,19 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
               ],
             ),
           ),
-          Divider(height: 1, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
+          Divider(
+              height: 1,
+              thickness: 1,
+              color: Theme.of(context).colorScheme.outlineVariant),
           const SizedBox(height: 4),
           if (invoices.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Center(
                   child: Text('No invoices yet',
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13))),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontSize: 13))),
             )
           else
             ...invoices.map(_buildCompactInvoiceRow),
@@ -3551,7 +3854,9 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
           Expanded(
             flex: 3,
             child: Text(inv.customer.name,
-                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis),
           ),
@@ -3584,7 +3889,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
               child: Padding(
                 padding: const EdgeInsets.all(4),
                 child: Icon(Icons.edit_outlined,
-                    size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    size: 15,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ),
           ),
@@ -3597,7 +3903,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
               child: Padding(
                 padding: const EdgeInsets.all(4),
                 child: Icon(Icons.download_outlined,
-                    size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    size: 15,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ),
           ),
@@ -3920,7 +4227,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
           const SizedBox(height: 12),
           _buildQuickActionRow(Icons.add_circle_outline_rounded, 'New Invoice',
               Theme.of(context).primaryColor, () {
-                if(!mounted) return;
+            if (!mounted) return;
             context
                 .findAncestorStateOfType<_DashboardScreenState>()
                 ?.setState(() {
@@ -3933,7 +4240,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
           _buildQuickActionRow(
               Icons.person_add_outlined, 'Customers', const Color(0xFF1565C0),
               () {
-                if(!mounted) return;
+            if (!mounted) return;
             context
                 .findAncestorStateOfType<_DashboardScreenState>()
                 ?.setState(() {
@@ -3944,17 +4251,16 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
           }),
           const SizedBox(height: 4),
           _buildQuickActionRow(
-            Icons.bar_chart_outlined, 'Reports', const Color(0xFF2E7D32), ()
-            {
-              if(!mounted) return;
+              Icons.bar_chart_outlined, 'Reports', const Color(0xFF2E7D32), () {
+            if (!mounted) return;
+            context
+                .findAncestorStateOfType<_DashboardScreenState>()
+                ?.setState(() {
               context
                   .findAncestorStateOfType<_DashboardScreenState>()
-                  ?.setState(() {
-                context
-                    .findAncestorStateOfType<_DashboardScreenState>()
-                    ?._selectedIndex = 7;
-              });
-            }),
+                  ?._selectedIndex = 7;
+            });
+          }),
         ],
       ),
     );
@@ -3984,7 +4290,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                         color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w500))),
             Icon(Icons.chevron_right_rounded,
-                size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                size: 16,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ],
         ),
       ),
@@ -4151,7 +4458,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
 
   Widget _buildPdfActionMenu(Invoice inv) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert_rounded, size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
+      icon: Icon(Icons.more_vert_rounded,
+          size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
       iconSize: 22,
       padding: EdgeInsets.zero,
       tooltip: 'PDF Actions',
@@ -4188,7 +4496,8 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
 
   Widget _buildInvoiceActionMenu(Invoice inv) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert_rounded, size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
+      icon: Icon(Icons.more_vert_rounded,
+          size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
       iconSize: 22,
       padding: EdgeInsets.zero,
       tooltip: 'Actions',

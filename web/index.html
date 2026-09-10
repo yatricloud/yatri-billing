@@ -20,6 +20,7 @@
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Yatri Billing">
   <link rel="apple-touch-icon" href="favicon.png">
@@ -38,43 +39,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer=""></script>
+  <script src="flutter_bootstrap.js" async></script>
 </head>
 <body>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (var registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
-    if ('caches' in window) {
-      caches.keys().then(function(names) {
-        for (var name of names) {
-          caches.delete(name);
-        }
-      });
-    }
-    window.addEventListener('load', function(ev) {
-      // Download fresh main.dart.js with cache busting
-      _flutter.loader.loadEntrypoint({
-        entrypointUrl: "main.dart.js?v=" + Date.now(),
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
-  </script>
-
-
-
-</body></html>
+</body>
+</html>

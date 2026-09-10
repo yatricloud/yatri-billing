@@ -15,7 +15,9 @@ import 'package:invoiso/repositories/sqlite/sqlite_settings_repository.dart';
 import 'package:invoiso/screens/splash_screen.dart';
 import 'package:invoiso/services/backend_services.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:invoiso/services/test_data_seeder.dart';
 
 Future<void> main() async {
   // Set up error handlers BEFORE runApp
@@ -57,8 +59,12 @@ Future<void> main() async {
     );
   };
 
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
+  } else {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   WidgetsFlutterBinding.ensureInitialized();
   BackendServices.configure(
     settings: SqliteSettingsRepository(),
@@ -67,9 +73,11 @@ Future<void> main() async {
     payments: SqlitePaymentRepository(),
     installation: SqliteInstallationRepository()
   );
-  await windowManager.ensureInitialized();
+  if (!kIsWeb) {
+    await windowManager.ensureInitialized();
+  }
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     const WindowOptions options = WindowOptions(
       minimumSize: Size(600, 400),
       center: true,
@@ -84,8 +92,18 @@ Future<void> main() async {
     });
   }
 
-  runApp(ProviderScope(
-    overrides: sqliteRepositoryOverrides,
+  // E2E Web auto-seed for the user's request
+  final container = ProviderContainer(overrides: sqliteRepositoryOverrides);
+  try {
+    debugPrint('Auto-seeding E2E test data...');
+    final result = await TestDataSeeder.runE2ETestsContainer(container);
+    debugPrint('Seeding Result: $result');
+  } catch (e) {
+    debugPrint('Seeding failed: $e');
+  }
+
+  runApp(UncontrolledProviderScope(
+    container: container,
     child: const MyApp()
   ));
 }

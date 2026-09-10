@@ -419,12 +419,18 @@ class _PdfSettingsScreenState extends ConsumerState<PdfSettingsScreen> {
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
           child: SizedBox(
             width: double.infinity,
-            child: ElevatedButton.icon(
+            child: ElevatedButton(
               onPressed: (hasUnsavedChange && !_isSaving) ? _saveTemplate : null,
-              icon: _isSaving
-                  ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Icon(Icons.save_rounded, size: 16),
-              label: Text(_isSaving ? 'Saving...' : 'Save'),
+              child: _isSaving
+                  ? const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
+                        SizedBox(width: 8),
+                        Text('Saving...'),
+                      ],
+                    )
+                  : const Text('Save'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
                 foregroundColor: Colors.white,

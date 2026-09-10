@@ -743,23 +743,23 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
         filled: readOnly,
         fillColor: readOnly ? Theme.of(context).colorScheme.surfaceContainerHighest : null,
         counterText: '',
-          helper: helperText != null ? Tooltip(
-            message: helperText,
-            textStyle: TextStyle(fontSize: 15),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade900, // Background color
-              borderRadius: BorderRadius.circular(8),
+        suffixIcon: helperText != null ? Tooltip(
+          message: helperText,
+          textStyle: const TextStyle(fontSize: 15),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade900,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: InkWell(
+            onTap: null,
+            borderRadius: BorderRadius.circular(4),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              child: Icon(Icons.info_outline, size: 20, color: Colors.indigo[400]),
             ),
-            padding: const EdgeInsets.all(10),
-            child: InkWell(
-              onTap: null,
-              borderRadius: BorderRadius.circular(4),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Icon(Icons.info_outline, size: 18, color: Colors.indigo[400]),
-              ),
-            ),
-          ) : null
+          ),
+        ) : null,
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
@@ -1661,24 +1661,24 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
-              borderRadius: const BorderRadius.only(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            decoration: const BoxDecoration(
+              color: Color(0xFF007CFF),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
-              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEFF6FF),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.add_box_outlined, color: Color(0xFF007CFF), size: 20),
+                  child: const Icon(Icons.add_box_outlined, color: Colors.white, size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -1687,7 +1687,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -1917,11 +1917,11 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppBorderRadius.xsmall)),
         counterText: '',
-        helper: helperText != null ? Tooltip(
+        suffixIcon: helperText != null ? Tooltip(
           message: helperText,
-          textStyle: TextStyle(fontSize: 15),
+          textStyle: const TextStyle(fontSize: 15),
           decoration: BoxDecoration(
-            color: Colors.grey.shade900, // Background color
+            color: Colors.grey.shade900,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.all(10),
@@ -1929,11 +1929,11 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
             onTap: null,
             borderRadius: BorderRadius.circular(4),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-              child: Icon(Icons.info_outline, size: 18, color: Colors.indigo[400]),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              child: Icon(Icons.info_outline, size: 20, color: Colors.indigo[400]),
             ),
           ),
-        ) : null
+        ) : null,
       ),
       validator: (value) {
         if (!required) return null;
@@ -2029,16 +2029,16 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
             ? 'Products($_totalProducts)'
             : 'Services($_totalProducts)');
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFFF8FAFC),
+        color: Color(0xFF007CFF),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
-        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
@@ -2046,44 +2046,45 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
+              color: Colors.white,
             ),
           ),
           Flexible(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: _showImportDialog,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0F172A),
-                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      foregroundColor: const Color(0xFF007CFF),
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                     child: const Text('Import CSV'),
                   ),
                   const SizedBox(width: 8),
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: _exportToCSV,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0F172A),
-                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      foregroundColor: const Color(0xFF007CFF),
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                     child: const Text('Export CSV'),
                   ),
                   const SizedBox(width: 8),
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: _exportToPDF,
-                    style: OutlinedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0F172A),
-                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      foregroundColor: const Color(0xFF007CFF),
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
@@ -2114,14 +2115,13 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFCBD5E1)),
                         ),
                         child: const Text(
                           'More ▾',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF334155),
+                            color: Color(0xFF007CFF),
                           ),
                         ),
                       ),

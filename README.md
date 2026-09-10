@@ -23,8 +23,6 @@
 
 ---
 
-## 🤝 Acknowledgements & QA
-Special thanks to [sparsh1220](https://github.com/sparsh1220) for thoroughly testing the end product and ensuring its stability.
 
 ## ✨ Features
 

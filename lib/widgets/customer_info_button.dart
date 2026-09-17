@@ -53,9 +53,6 @@ class CustomerInfoButton extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.person_outline,
-                        color: Colors.white, size: 18),
-                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         c.name,
@@ -96,13 +93,13 @@ class CustomerInfoButton extends StatelessWidget {
                         ),
                       ),
                     if (c.phone.isNotEmpty)
-                      _infoRow(Icons.phone_outlined, 'Phone', c.phone),
+                      _infoRow('Phone', c.phone),
                     if (c.email.isNotEmpty)
-                      _infoRow(Icons.email_outlined, 'Email', c.email),
+                      _infoRow('Email', c.email),
                     if (c.address.isNotEmpty)
-                      _infoRow(Icons.location_on_outlined, 'Address', c.address),
+                      _infoRow('Address', c.address),
                     if (c.gstin.isNotEmpty)
-                      _infoRow(Icons.badge_outlined, 'GSTIN', c.gstin),
+                      _infoRow('GSTIN', c.gstin),
                   ],
                 ),
               ),
@@ -132,44 +129,27 @@ class CustomerInfoButton extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String label, String value) {
+  Widget _infoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Color(0xFF64748B),
+              fontWeight: FontWeight.w500,
             ),
-            child: Icon(icon, size: 14, color: const Color(0xFF475569)),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF64748B),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF0F172A),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFF0F172A),
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

@@ -732,7 +732,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                       border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.circular(AppBorderRadius.xsmall)),
-                      prefixIcon: const Icon(Icons.numbers),
+
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
@@ -758,7 +758,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.xsmall)),
-                    prefixIcon: const Icon(Icons.discount),
+
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
@@ -799,7 +799,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.xsmall)),
-                    prefixIcon: const Icon(Icons.add_circle_outline, size: 18),
+
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
@@ -1308,7 +1308,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                       border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.circular(AppBorderRadius.xsmall)),
-                      prefixIcon: const Icon(Icons.numbers),
+
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
@@ -1334,7 +1334,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.xsmall)),
-                    prefixIcon: const Icon(Icons.discount),
+
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
@@ -1376,7 +1376,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.xsmall)),
-                    prefixIcon: const Icon(Icons.add_circle_outline, size: 18),
+
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
@@ -1599,7 +1599,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.xsmall)),
-                    prefixIcon: const Icon(Icons.add_circle_outline, size: 18),
+
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
@@ -1855,9 +1855,6 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.people_outline_rounded,
-                    size: 16, color: Colors.white),
-                const SizedBox(width: 8),
                 Text('Customers',
                     style: AppTypography.titleSm(Colors.white)),
               ],
@@ -1968,18 +1965,15 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
           Container(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFF007CFF),
+              color: Color(0xFFF8FAFC),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.inventory_2_outlined,
-                    size: 16, color: Colors.white),
-                const SizedBox(width: 8),
                 Text('Products & Services',
                     overflow: TextOverflow.ellipsis,
-                    style: AppTypography.titleSm(Colors.white)),
+                    style: AppTypography.titleSm(const Color(0xFF0F172A))),
               ],
             ),
           ),
@@ -1991,7 +1985,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                 Text(
                   'Out of stock items are shown in red',
                   overflow: TextOverflow.ellipsis,
-                  style: AppTypography.caption(const Color(0xFFDC2626)),
+                  style: AppTypography.caption(CbTokens.muted),
                 ),
                 const SizedBox(height: 8),
                 TextField(
@@ -2087,7 +2081,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                                   'HSN/SAC: ${product.hsncode.toUpperCase()}',
                                   maxLines: 2,
                                   style: const TextStyle(
-                                      color: Color(0xFF007CFF),
+                                      color: Color(0xFF64748B),
                                       fontWeight: FontWeight.w500,
                                       fontSize: AppFontSize.small),
                                 ),
@@ -2099,7 +2093,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                                         '$_currencySymbol${product.price.toStringAsFixed(2)}  ·  Stock: ${product.unlimitedStock ? '∞' : product.stock}',
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                            color: Color(0xFF16A34A),
+                                            color: Color(0xFF0F172A),
                                             fontWeight: FontWeight.bold,
                                             fontSize: AppFontSize.small),
                                       ),
@@ -2223,18 +2217,15 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
           Container(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFF007CFF),
+              color: Color(0xFFF8FAFC),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.receipt_long_outlined,
-                    size: 16, color: Colors.white),
-                const SizedBox(width: 8),
                 Text(
                   '$invoiceType Details',
-                  style: AppTypography.titleSm(Colors.white),
+                  style: AppTypography.titleSm(const Color(0xFF0F172A)),
                 ),
               ],
             ),
@@ -2836,9 +2827,6 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.person_outline_rounded,
-                    size: 16, color: Colors.white),
-                const SizedBox(width: 8),
                 Text(
                   'Customer Details',
                   style: AppTypography.titleSm(Colors.white),
@@ -3089,9 +3077,9 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
     return Container(
       margin: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
-        color: Colors.teal.withValues(alpha: 0.04),
+        color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(AppBorderRadius.xsmall),
-        border: Border.all(color: Colors.teal.withValues(alpha: 0.25)),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
         children: [
@@ -3532,31 +3520,28 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
           Container(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFF007CFF),
+              color: Color(0xFFF8FAFC),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.list_alt_rounded,
-                    size: 16, color: Colors.white),
-                const SizedBox(width: 8),
                 Text(
                   '$invoiceType Items',
-                  style: AppTypography.titleSm(Colors.white),
+                  style: AppTypography.titleSm(const Color(0xFF0F172A)),
                 ),
                 const Spacer(),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFFE2E8F0),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     '${invoiceItems.length} items',
                     style: const TextStyle(
-                        color: Color(0xFF007CFF),
+                        color: Color(0xFF0F172A),
                         fontWeight: FontWeight.w700,
                         fontSize: 12),
                   ),
@@ -4763,43 +4748,36 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
               ],
               const Spacer(),
               // Right: Invoice number chip
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFBFDBFE)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Invoice ID: ',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF64748B),
-                        fontWeight: FontWeight.w500,
-                      ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Invoice ID: ',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF64748B),
+                      fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      formatDisplayInvoiceNumber(currentInvoiceNumber),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF007CFF),
-                        letterSpacing: 0.3,
-                      ),
+                  ),
+                  Text(
+                    formatDisplayInvoiceNumber(currentInvoiceNumber),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F172A),
+                      letterSpacing: 0.3,
                     ),
-                    const SizedBox(width: 6),
-                    Tooltip(
-                      message: 'Invoice numbers are auto-generated.\n'
-                          'The next number is calculated from the last\n'
-                          'invoice in the database (including deleted ones).',
-                      child: const Icon(Icons.info_outline,
-                          size: 14, color: Color(0xFF94A3B8)),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 6),
+                  Tooltip(
+                    message: 'Invoice numbers are auto-generated.\n'
+                        'The next number is calculated from the last\n'
+                        'invoice in the database (including deleted ones).',
+                    child: const Icon(Icons.info_outline,
+                        size: 16, color: Color(0xFF94A3B8)),
+                  ),
+                ],
               ),
             ],
           ),

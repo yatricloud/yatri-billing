@@ -491,10 +491,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ),
                           if (_selectedLogoFile != null || _base64Logo != null) ...[
                             const SizedBox(height: 8),
-                            TextButton.icon(
+                            TextButton(
                               onPressed: _clearLogo,
-                              icon: const Icon(Icons.delete_outline, size: 16, color: Colors.red),
-                              label: const Text('Remove Logo',
+                              child: const Text('Remove Logo',
                                   style: TextStyle(color: Colors.red, fontSize: 13)),
                             ),
                           ],
@@ -704,8 +703,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.category_outlined, color: Theme.of(context).primaryColor),
-                            const SizedBox(width: 12),
                             const Text('Business Type', style: TextStyle(fontSize: 16)),
                           ],
                         ),
@@ -720,17 +717,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             ButtonSegment(
                               value: BusinessType.product,
                               label: Text('Product'),
-                              icon: Icon(Icons.inventory_2_outlined, size: 16),
                             ),
                             ButtonSegment(
                               value: BusinessType.service,
                               label: Text('Service'),
-                              icon: Icon(Icons.design_services_outlined, size: 16),
                             ),
                             ButtonSegment(
                               value: BusinessType.both,
                               label: Text('Both'),
-                              icon: Icon(Icons.all_inclusive, size: 16),
                             ),
                           ],
                           selected: {_businessType},
@@ -759,10 +753,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       value: _showUpiQr,
                       onChanged: (val) => setState(() => _showUpiQr = val),
                       activeColor: primaryColor,
-                      secondary: Icon(
-                        Icons.payment_rounded,
-                        color: _showUpiQr ? primaryColor : Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -833,7 +823,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   const SizedBox(height: 4),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
+                    child: TextButton(
                       onPressed: () {
                         setState(() {
                           _upiControllers.add((
@@ -842,9 +832,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ));
                         });
                       },
-                      icon: Icon(Icons.add_circle_outline,
-                          color: primaryColor, size: 18),
-                      label: Text('Add UPI Account',
+                      child: Text('Add UPI Account',
                           style: TextStyle(color: primaryColor)),
                     ),
                   ),
@@ -866,10 +854,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       value: _showBankDetails,
                       onChanged: (val) => setState(() => _showBankDetails = val),
                       activeColor: primaryColor,
-                      secondary: Icon(
-                        Icons.account_balance_outlined,
-                        color: _showBankDetails ? primaryColor : Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -965,7 +949,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   const SizedBox(height: 4),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
+                    child: TextButton(
                       onPressed: () {
                         setState(() {
                           _bankControllers.add((
@@ -976,9 +960,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ));
                         });
                       },
-                      icon: Icon(Icons.add_circle_outline,
-                          color: primaryColor, size: 18),
-                      label: Text('Add Bank Account',
+                      child: Text('Add Bank Account',
                           style: TextStyle(color: primaryColor)),
                     ),
                   ),
@@ -1922,56 +1904,38 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
             destinations: [
               const NavigationRailDestination(
-                icon: Icon(Icons.business),
+                icon: SizedBox.shrink(),
                 label: Text('Company Info'),
               ),
               if (cfg.extraSettingsTab != null)
                 NavigationRailDestination(
-                  icon: Icon(cfg.extraSettingsTabIcon ?? Icons.group),
+                  icon: const SizedBox.shrink(),
                   label: Text(cfg.extraSettingsTabLabel ?? 'Team'),
                 ),
               if (!cfg.isCloud)
                 const NavigationRailDestination(
-                  icon: Icon(Icons.backup),
+                  icon: SizedBox.shrink(),
                   label: Text('Backup'),
                 ),
               if (!cfg.isCloud)
                 const NavigationRailDestination(
-                  icon: Icon(Icons.people),
+                  icon: SizedBox.shrink(),
                   label: Text('Users'),
                 ),
               const NavigationRailDestination(
-                icon: Icon(Icons.settings),
+                icon: SizedBox.shrink(),
                 label: Text('PDF Settings'),
               ),
               const NavigationRailDestination(
-                icon: Icon(Icons.file_present),
+                icon: SizedBox.shrink(),
                 label: Text('Invoice Settings'),
               ),
               NavigationRailDestination(
-                icon: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const Icon(Icons.info_outline),
-                    if (cfg.enableUpdateCheck && _updateInfo?.hasUpdate == true)
-                      Positioned(
-                        right: -4,
-                        top: -4,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Colors.orange,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+                icon: const SizedBox.shrink(),
                 label: const Text('Software Info'),
               ),
               const NavigationRailDestination(
-                icon: Icon(Icons.tune_rounded),
+                icon: SizedBox.shrink(),
                 label: Text('Customize'),
               ),
             ],

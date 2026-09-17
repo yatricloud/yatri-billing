@@ -1086,26 +1086,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: CbTokens.surfaceSoft,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: CbTokens.hairline),
-                  ),
-                  child: Icon(icon, color: color, size: 18),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(label,
-                      style: TextStyle(
-                          fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                ),
-              ],
-            ),
+            Text(label,
+                style: TextStyle(
+                    fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(height: 10),
             Flexible(
               child: Align(

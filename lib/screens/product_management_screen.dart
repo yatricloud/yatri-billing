@@ -1672,15 +1672,6 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.add_box_outlined, color: Colors.white, size: 20),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Add new $_newItemType',
@@ -1705,13 +1696,10 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                       segments: const [
                         ButtonSegment(
                             value: 'product',
-                            label: Text('Product'),
-                            icon: Icon(Icons.inventory_2_outlined, size: 16)),
+                            label: Text('Product')),
                         ButtonSegment(
                             value: 'service',
-                            label: Text('Service'),
-                            icon:
-                                Icon(Icons.design_services_outlined, size: 16)),
+                            label: Text('Service')),
                       ],
                       selected: {_newItemType},
                       onSelectionChanged: (val) {
@@ -1912,7 +1900,6 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
               : null,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: prefixText == null ? Icon(icon) : null,
         prefixText: prefixText,
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppBorderRadius.xsmall)),
@@ -2052,6 +2039,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
           Flexible(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

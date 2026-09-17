@@ -1076,6 +1076,7 @@ class _InvoiceManagementScreenState
               children: [
                 Expanded(
                   child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
                     height: 42,
                     constraints: const BoxConstraints(maxWidth: 480),
                     child: TextField(
@@ -1147,6 +1148,7 @@ class _InvoiceManagementScreenState
                       child: SingleChildScrollView(
                         controller: _statsBarScrollController,
                         scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -1376,17 +1378,16 @@ class _InvoiceManagementScreenState
                                                           width: 1.5),
                                                     ),
                                                   ),
-                                                  _buildTableHeader('#'),
+                                                  _buildTableHeader('#', align: TextAlign.center),
                                                   _buildTableHeader('Invoice ID'),
                                                   _buildTableHeader('Customer'),
                                                   _buildTableHeader('Date'),
-                                                  _buildTableHeader('Items'),
-                                                  _buildTableHeader('Total'),
+                                                  _buildTableHeader('Items', align: TextAlign.center),
+                                                  _buildTableHeader('Total', align: TextAlign.right),
                                                   if (widget.filterType ==
                                                       'Invoice') ...[
-                                                    _buildTableHeader('Status'),
-                                                    _buildTableHeader(
-                                                        'Outstanding'),
+                                                    _buildTableHeader('Status', align: TextAlign.center),
+                                                    _buildTableHeader('Outstanding', align: TextAlign.right),
                                                   ],
                                                   _buildTableHeader('Actions',
                                                       align: TextAlign.center),
@@ -1664,7 +1665,11 @@ class _InvoiceManagementScreenState
   // ─── Table helpers ─────────────────────────────────────────────────────────
 
   Widget _buildTableHeader(String text, {TextAlign align = TextAlign.left}) {
-    return Padding(
+    final alignment = align == TextAlign.center
+        ? Alignment.center
+        : (align == TextAlign.right ? Alignment.centerRight : Alignment.centerLeft);
+    return Container(
+      alignment: alignment,
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
       child: Text(
         text,
@@ -1725,6 +1730,7 @@ class _InvoiceManagementScreenState
                     ),
                   ),
                 ),
+                alignment: Alignment.center,
               ),
               // Invoice ID
               _buildTableCell(
@@ -1796,6 +1802,7 @@ class _InvoiceManagementScreenState
                     ),
                   ),
                 ),
+                alignment: Alignment.center,
               ),
               // Total
               _buildTableCell(
@@ -1808,10 +1815,11 @@ class _InvoiceManagementScreenState
                     color: Color(0xFF0F172A),
                   ),
                 ),
+                alignment: Alignment.centerRight,
               ),
               if (widget.filterType == 'Invoice') ...[
                 // Payment status chip
-                _buildTableCell(_buildPaymentStatusChip(invoice.paymentStatus)),
+                _buildTableCell(_buildPaymentStatusChip(invoice.paymentStatus), alignment: Alignment.center),
                 // Outstanding balance
                 _buildTableCell(
                   invoice.paymentStatus == PaymentStatus.paid
@@ -1829,6 +1837,7 @@ class _InvoiceManagementScreenState
                                     : const Color(0xFFDC2626),
                           ),
                         ),
+                  alignment: Alignment.centerRight,
                 ),
               ],
               // Actions (View, Edit, PDF + More)
@@ -1955,6 +1964,7 @@ class _InvoiceManagementScreenState
                     ),
                   ],
                 ),
+                alignment: Alignment.center,
               ),
             ],
           ),
@@ -1963,8 +1973,9 @@ class _InvoiceManagementScreenState
     );
   }
 
-  Widget _buildTableCell(Widget child) {
-    return Padding(
+  Widget _buildTableCell(Widget child, {AlignmentGeometry alignment = Alignment.centerLeft}) {
+    return Container(
+      alignment: alignment,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       child: child,
     );
@@ -2044,26 +2055,20 @@ class _InvoiceManagementScreenState
               const SizedBox(width: 5),
               Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: isOverdue
-                      ? const Color(0xFFFEF2F2)
-                      : const Color(0xFFFFFBEB),
+                      ? const Color(0xFFEF4444)
+                      : const Color(0xFFF59E0B),
                   borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: isOverdue
-                        ? const Color(0xFFFCA5A5)
-                        : const Color(0xFFFCD34D),
-                  ),
                 ),
                 child: Text(
                   isOverdue ? 'Overdue' : 'Today',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 9.5,
-                    fontWeight: FontWeight.w700,
-                    color: isOverdue
-                        ? const Color(0xFFDC2626)
-                        : const Color(0xFFD97706),
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: 0.3,
                   ),
                 ),
               ),
@@ -2122,58 +2127,35 @@ class _InvoiceManagementScreenState
 
   Widget _buildPaymentStatusChip(PaymentStatus status) {
     final Color bgColor;
-    final Color borderColor;
-    final Color textColor;
-    final Color dotColor;
     final String label;
     switch (status) {
       case PaymentStatus.paid:
-        bgColor = const Color(0xFFECFDF5);
-        borderColor = const Color(0xFFA7F3D0);
-        textColor = const Color(0xFF065F46);
-        dotColor = const Color(0xFF10B981);
+        bgColor = const Color(0xFF10B981);
         label = 'Paid';
+        break;
       case PaymentStatus.partial:
-        bgColor = const Color(0xFFFFFBEB);
-        borderColor = const Color(0xFFFDE68A);
-        textColor = const Color(0xFF92400E);
-        dotColor = const Color(0xFFF59E0B);
+        bgColor = const Color(0xFFF59E0B);
         label = 'Partial';
+        break;
       case PaymentStatus.unpaid:
-        bgColor = const Color(0xFFFEF2F2);
-        borderColor = const Color(0xFFFECACA);
-        textColor = const Color(0xFF991B1B);
-        dotColor = const Color(0xFFEF4444);
+        bgColor = const Color(0xFFEF4444);
         label = 'Unpaid';
+        break;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: borderColor),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: dotColor,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11.5,
-              fontWeight: FontWeight.w700,
-              color: textColor,
-            ),
-          ),
-        ],
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 11.5,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+          letterSpacing: 0.3,
+        ),
       ),
     );
   }

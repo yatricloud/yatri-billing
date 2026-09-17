@@ -1038,15 +1038,6 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: const Icon(Icons.person_add_outlined, color: Colors.white, size: 20),
-                ),
-                const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
                     'Add New Customer',
@@ -1213,6 +1204,7 @@ class _CustomerManagementScreenState extends ConsumerState<CustomerManagementScr
           Flexible(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

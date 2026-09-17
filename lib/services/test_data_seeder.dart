@@ -28,6 +28,17 @@ class TestDataSeeder {
     log.writeln('Starting E2E Data Seeding & Verification...');
 
     try {
+      // 0. Cleanup previous test data
+      try {
+        await invoiceRepo.deleteInvoice('inv_test_001');
+        await productRepo.deleteProduct('prod_lic_001');
+        await productRepo.deleteProduct('prod_con_002');
+        await customerRepo.deleteCustomer('cust_acme_001');
+        await customerRepo.deleteCustomer('cust_glob_002');
+      } catch (e) {
+        log.writeln('Cleanup info: $e');
+      }
+
       // 1. Create Test Customers
       final acmeCustomer = Customer(
         id: 'cust_acme_001',

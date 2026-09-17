@@ -1787,102 +1787,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildDummySection(String title) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: Color(0xFF0F172A),
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.2,
-          ),
-        ),
-        titleSpacing: 24,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF0F172A),
-        iconTheme: const IconThemeData(color: Color(0xFF475569)),
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: false,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: const Color(0xFFE2E8F0), height: 1),
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.add_circle_outline, size: 64, color: Colors.blueGrey),
-              AppSpacing.hMedium,
-              Text("Options coming soon...", style: TextStyle(fontSize: 18)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildContent(AppEditionConfig cfg) {
-    final bool hasExtraTab = cfg.extraSettingsTab != null;
-    final int customizeIndex =
-        cfg.isCloud ? (hasExtraTab ? 5 : 4) : 6;
-    // When kIsCloud, Backup (1) and Users (2) tabs are hidden. If the edition
-    // also supplies an extraSettingsTab (e.g. cloud's Team Management), it
-    // takes rail slot 1 and maps to canonical case 7; everything after it
-    // shifts down by 1 instead of 2. Offset back to match canonical case
-    // numbers used below.
-    final int idx;
-    if (!cfg.isCloud) {
-      idx = _selectedIndex;
-    } else if (hasExtraTab && _selectedIndex == 1) {
-      idx = 7;
-    } else if (_selectedIndex == 0) {
-      idx = 0;
-    } else {
-      idx = _selectedIndex + (hasExtraTab ? 1 : 2);
-    }
-    switch (idx) {
-      case 0:
-        return _buildCompanyInfoForm();
-      case 1:
-        return BackupManagementScreen();
-      case 2:
-        return UserManagementScreen(
-          currentUser: widget.currentUser,
-        );
-      case 7:
-        return cfg.extraSettingsTab!(context);
-      case 3:
-        return PdfSettingsScreen(
-          onNavigateToCustomization: () {
-            setState(() {
-              _selectedIndex = customizeIndex;
-              _highlightCustomIndex = 0;
-            });
-          },
-        );
-      case 4:
-        return InvoiceSettingsScreen(
-          onNavigateToCustomization: () {
-            setState(() {
-              _selectedIndex = customizeIndex;
-              _highlightCustomIndex = 1;
-            });
-          },
-        );
-      case 5:
-        return _buildAppInfoScreen();
-      case 6:
-        return _buildCustomizationScreen();
-      default:
-        return _buildDummySection("Invoice Settings");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1891,57 +1796,109 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       return _buildAppInfoScreen();
     }
 
+    int getCustomizeIndex() {
+      int idx = 1;
+      if (cfg.extraSettingsTab != null) idx++;
+      if (!cfg.isCloud) idx += 2;
+      return idx + 3; // PDF, Invoice, Software Info
+    }
+
+    final tabs = <({String title, Widget Function() builder})>[
+      (
+        title: 'Company Info',
+        builder: () => _buildCompanyInfoForm(),
+      ),
+      if (cfg.extraSettingsTab != null)
+        (
+          title: cfg.extraSettingsTabLabel ?? 'Team',
+          builder: () => cfg.extraSettingsTab!(context),
+        ),
+      if (!cfg.isCloud)
+        (
+          title: 'Backup',
+          builder: () => BackupManagementScreen(),
+        ),
+      if (!cfg.isCloud)
+        (
+          title: 'Users',
+          builder: () => UserManagementScreen(currentUser: widget.currentUser),
+        ),
+      (
+        title: 'PDF Settings',
+        builder: () => PdfSettingsScreen(
+          onNavigateToCustomization: () {
+            setState(() {
+              _selectedIndex = getCustomizeIndex();
+              _highlightCustomIndex = 0;
+            });
+          },
+        ),
+      ),
+      (
+        title: 'Invoice Settings',
+        builder: () => InvoiceSettingsScreen(
+          onNavigateToCustomization: () {
+            setState(() {
+              _selectedIndex = getCustomizeIndex();
+              _highlightCustomIndex = 1;
+            });
+          },
+        ),
+      ),
+      (
+        title: 'Software Info',
+        builder: () => _buildAppInfoScreen(),
+      ),
+      (
+        title: 'Customize',
+        builder: () => _buildCustomizationScreen(),
+      ),
+    ];
+
+    if (_selectedIndex >= tabs.length) {
+      _selectedIndex = 0;
+    }
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
       body: Row(
         children: [
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            labelType: NavigationRailLabelType.all,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            destinations: [
-              const NavigationRailDestination(
-                icon: SizedBox.shrink(),
-                label: Text('Company Info'),
-              ),
-              if (cfg.extraSettingsTab != null)
-                NavigationRailDestination(
-                  icon: const SizedBox.shrink(),
-                  label: Text(cfg.extraSettingsTabLabel ?? 'Team'),
-                ),
-              if (!cfg.isCloud)
-                const NavigationRailDestination(
-                  icon: SizedBox.shrink(),
-                  label: Text('Backup'),
-                ),
-              if (!cfg.isCloud)
-                const NavigationRailDestination(
-                  icon: SizedBox.shrink(),
-                  label: Text('Users'),
-                ),
-              const NavigationRailDestination(
-                icon: SizedBox.shrink(),
-                label: Text('PDF Settings'),
-              ),
-              const NavigationRailDestination(
-                icon: SizedBox.shrink(),
-                label: Text('Invoice Settings'),
-              ),
-              NavigationRailDestination(
-                icon: const SizedBox.shrink(),
-                label: const Text('Software Info'),
-              ),
-              const NavigationRailDestination(
-                icon: SizedBox.shrink(),
-                label: Text('Customize'),
-              ),
-            ],
+          Container(
+            width: 240,
+            color: Colors.white,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              itemCount: tabs.length,
+              itemBuilder: (context, index) {
+                final isSelected = _selectedIndex == index;
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: isSelected ? const Color(0xFFEFF6FF) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      tabs[index].title,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        color: isSelected ? const Color(0xFF007CFF) : const Color(0xFF475569),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: _buildContent(cfg)),
+          const VerticalDivider(thickness: 1, width: 1, color: Color(0xFFE2E8F0)),
+          Expanded(child: tabs[_selectedIndex].builder()),
         ],
       ),
     );

@@ -45,7 +45,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = _passwordController.text;
 
     if (username.isEmpty || password.isEmpty) {
-      _showSnack('Please enter username and password');
+      _showSnack(cfg.isCloud
+          ? 'Please enter email and password'
+          : 'Please enter username and password');
       return;
     }
 
@@ -139,12 +141,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 28),
 
-                        // Username field
+                        // Username / Email field
                         CbTextField(
                           controller: _usernameController,
-                          label: 'Username',
-                          hint: 'Enter your username',
-                          keyboardType: TextInputType.text,
+                          label: cfg.isCloud ? 'Email' : 'Username',
+                          hint: cfg.isCloud
+                              ? 'name@company.com'
+                              : 'Enter your username',
+                          keyboardType: cfg.isCloud
+                              ? TextInputType.emailAddress
+                              : TextInputType.text,
                         ),
                         const SizedBox(height: 18),
 

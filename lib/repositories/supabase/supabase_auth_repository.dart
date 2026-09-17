@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:invoiso/models/user.dart';
 import 'package:invoiso/repositories/auth_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
@@ -40,9 +41,11 @@ class SupabaseAuthRepository implements AuthRepository {
       // Re-issue the JWT so it includes the `tenant_id` app_metadata claim
       // stamped by the profile trigger (may be missing on first login).
       await _client.auth.refreshSession();
-    } on AuthException {
+    } on AuthException catch (e) {
+      debugPrint('[SupabaseAuthRepository] AuthException: ${e.message}');
       return null;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[SupabaseAuthRepository] Unexpected login error: $e');
       return null;
     }
     final current = _client.auth.currentUser;

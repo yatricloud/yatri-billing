@@ -16,7 +16,7 @@ class _GuideSection {
   final List<_GuideStep> steps;
   final String? redirectLabel;
   final int? redirectIndex;
-  bool isExpanded;
+  bool isExpanded = false;
 
   _GuideSection({
     required this.icon,
@@ -26,8 +26,7 @@ class _GuideSection {
     required this.steps,
     this.redirectLabel,
     this.redirectIndex,
-    this.isExpanded = false,
-  });
+  }) : isExpanded = false;
 }
 
 // ─── Screen ──────────────────────────────────────────────────────────────────
@@ -370,7 +369,7 @@ class _HeroHeader extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(Icons.menu_book, color: Colors.white, size: 28),
@@ -393,7 +392,7 @@ class _HeroHeader extends StatelessWidget {
                       'Everything you need to use the app — step by step',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         height: 1.4,
                       ),
                     ),
@@ -406,19 +405,19 @@ class _HeroHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
+              color: Colors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, color: Colors.white.withOpacity(0.9), size: 20),
+                Icon(Icons.info_outline, color: Colors.white.withValues(alpha: 0.9), size: 20),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'Tap any section below to expand it. Use the highlighted buttons to jump directly to that part of the app.',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 13,
                       height: 1.5,
                     ),
@@ -447,8 +446,8 @@ class _QuickJumpRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       color: isDark
-          ? const Color(0xFF1E1B4B).withOpacity(0.4)
-          : const Color(0xFF6366F1).withOpacity(0.06),
+          ? const Color(0xFF1E1B4B).withValues(alpha: 0.4)
+          : const Color(0xFF6366F1).withValues(alpha: 0.06),
       child: SizedBox(
         height: 40,
         child: ListView.separated(
@@ -467,9 +466,9 @@ class _QuickJumpRow extends StatelessWidget {
               ),
               onPressed: () => onTap(i),
               backgroundColor: isDark
-                  ? const Color(0xFF007CFF).withOpacity(0.15)
-                  : const Color(0xFF007CFF).withOpacity(0.1),
-              side: BorderSide(color: const Color(0xFF007CFF).withOpacity(0.35)),
+                  ? const Color(0xFF007CFF).withValues(alpha: 0.15)
+                  : const Color(0xFF007CFF).withValues(alpha: 0.1),
+              side: BorderSide(color: const Color(0xFF007CFF).withValues(alpha: 0.35)),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             );
           },
@@ -510,14 +509,14 @@ class _SectionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: section.isExpanded
-                ? const Color(0xFF007CFF).withOpacity(0.5)
-                : colorScheme.outlineVariant.withOpacity(0.4),
+                ? const Color(0xFF007CFF).withValues(alpha: 0.5)
+                : colorScheme.outlineVariant.withValues(alpha: 0.4),
             width: section.isExpanded ? 1.5 : 1,
           ),
           boxShadow: section.isExpanded
               ? [
                   BoxShadow(
-                    color: const Color(0xFF007CFF).withOpacity(0.12),
+                    color: const Color(0xFF007CFF).withValues(alpha: 0.12),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   )
@@ -539,7 +538,7 @@ class _SectionCard extends StatelessWidget {
                       height: 48,
                       decoration: BoxDecoration(
                         color: const Color(0xFF007CFF)
-                            .withOpacity(isDark ? 0.2 : 0.12),
+                            .withValues(alpha: isDark ? 0.2 : 0.12),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
@@ -576,7 +575,7 @@ class _SectionCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF007CFF).withOpacity(0.12),
+                        color: const Color(0xFF007CFF).withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -643,7 +642,7 @@ class _SectionBody extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: Divider(color: const Color(0xFF007CFF).withOpacity(0.25), height: 1),
+          child: Divider(color: const Color(0xFF007CFF).withValues(alpha: 0.25), height: 1),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
@@ -726,7 +725,7 @@ class _StepRow extends StatelessWidget {
                     child: Container(
                       width: 2,
                       margin: const EdgeInsets.symmetric(vertical: 4),
-                      color: accentColor.withOpacity(0.2),
+                      color: accentColor.withValues(alpha: 0.2),
                     ),
                   ),
               ],
@@ -797,7 +796,7 @@ class _RedirectButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: brandColor.withOpacity(0.35),
+                  color: brandColor.withValues(alpha: 0.35),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

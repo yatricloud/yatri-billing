@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invoiso/constants.dart';
@@ -153,10 +154,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 32),
         CbTextField(
           controller: _usernameController,
-          label: isCloud ? 'Email' : 'Username',
-          hint: isCloud ? 'name@company.com' : 'Enter username',
-          keyboardType:
-              isCloud ? TextInputType.emailAddress : TextInputType.text,
+          label: 'Username',
+          hint: 'Enter username',
+          keyboardType: TextInputType.text,
         ),
         const SizedBox(height: 20),
         CbTextField(
@@ -197,6 +197,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       MaterialPageRoute(builder: (_) => const SignUpScreen()),
                     );
                   },
+          ),
+        ],
+        // Show default credentials hint in debug/local builds
+        if (kDebugMode) ...[
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFFBEB),
+              border: Border.all(color: const Color(0xFFFDE68A)),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, size: 16, color: Color(0xFFB45309)),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'Local build — use username: admin  |  password: admin',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF92400E),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ],

@@ -235,7 +235,7 @@ class DatabaseHelper {
       'password': hashedPw,
       'user_type': 'admin',
       'salt': salt,
-      'password_changed': 0,
+      'password_changed': 1, // already set — skip forced change on first login
     });
 
     // Insert default template

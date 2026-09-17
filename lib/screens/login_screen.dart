@@ -316,37 +316,4 @@ class _CloudPromoBanner extends StatelessWidget {
   }
 }
 
-class _FooterLink extends StatelessWidget {
-  const _FooterLink({
-    required this.label,
-    required this.url,
-    this.icon,
-  });
 
-  final String label;
-  final String url;
-  final IconData? icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 14, color: CbTokens.muted),
-            const SizedBox(width: 4),
-          ],
-          Text(
-            label,
-            style: AppTypography.caption().copyWith(
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

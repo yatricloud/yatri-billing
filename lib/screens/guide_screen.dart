@@ -314,18 +314,8 @@ class _GuideScreenState extends State<GuideScreen>
             SliverToBoxAdapter(
               child: _HeroHeader(isDark: isDark, colorScheme: colorScheme),
             ),
-            SliverToBoxAdapter(
-              child: _QuickJumpRow(
-                sections: _sections,
-                onTap: (i) {
-                  setState(() {
-                    _sections[i].isExpanded = true;
-                  });
-                },
-              ),
-            ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 80),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => _SectionCard(
@@ -405,50 +395,7 @@ class _HeroHeader extends StatelessWidget {
   }
 }
 
-// ─── Quick Jump Row ───────────────────────────────────────────────────────────
 
-class _QuickJumpRow extends StatelessWidget {
-  final List<_GuideSection> sections;
-  final void Function(int index) onTap;
-  const _QuickJumpRow({required this.sections, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      color: isDark
-          ? const Color(0xFF1E1B4B).withValues(alpha: 0.4)
-          : const Color(0xFF6366F1).withValues(alpha: 0.06),
-      child: SizedBox(
-        height: 40,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: sections.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 8),
-          itemBuilder: (context, i) {
-            final section = sections[i];
-            return ActionChip(
-              label: Text(
-                section.title,
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-              ),
-              onPressed: () => onTap(i),
-              backgroundColor: isDark
-                  ? const Color(0xFF007CFF).withValues(alpha: 0.15)
-                  : const Color(0xFF007CFF).withValues(alpha: 0.1),
-              side: BorderSide(color: const Color(0xFF007CFF).withValues(alpha: 0.35)),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
 
 // ─── Section Card ─────────────────────────────────────────────────────────────
 

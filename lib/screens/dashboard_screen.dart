@@ -2090,6 +2090,7 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                           children: [
                             // Table Column Headers — solid brand blue per Yatri Cloud reference
                             Container(
+                              width: double.infinity,
                               decoration: const BoxDecoration(
                                 color: Color(0xFF007CFF),
                               ),

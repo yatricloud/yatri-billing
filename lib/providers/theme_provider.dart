@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
 ThemeMode themeModeFromKey(String key) {
   switch (key) {
@@ -10,7 +10,7 @@ ThemeMode themeModeFromKey(String key) {
     case 'dark':
       return ThemeMode.dark;
     default:
-      return ThemeMode.system;
+      return ThemeMode.light; // Default to light for business UI
   }
 }
 

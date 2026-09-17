@@ -9,20 +9,20 @@ class _GuideStep {
 }
 
 class _GuideSection {
-  final String emoji;
+  final IconData icon;
   final String title;
   final String subtitle;
-  final Color color;
+  
   final List<_GuideStep> steps;
   final String? redirectLabel;
   final int? redirectIndex;
   bool isExpanded;
 
   _GuideSection({
-    required this.emoji,
+    required this.icon,
     required this.title,
     required this.subtitle,
-    required this.color,
+    
     required this.steps,
     this.redirectLabel,
     this.redirectIndex,
@@ -48,10 +48,10 @@ class _GuideScreenState extends State<GuideScreen>
 
   final List<_GuideSection> _sections = [
     _GuideSection(
-      emoji: '🏢',
+      icon: Icons.business,
       title: 'Getting Started',
       subtitle: 'Set up your business profile before anything else',
-      color: const Color(0xFF6366F1),
+      
       redirectLabel: 'Open Settings →',
       redirectIndex: 8,
       steps: const [
@@ -78,10 +78,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '👥',
+      icon: Icons.people,
       title: 'Client Management',
       subtitle: 'Save customer details once, use them on every invoice',
-      color: const Color(0xFF10B981),
+      
       redirectLabel: 'Manage Customers →',
       redirectIndex: 5,
       steps: const [
@@ -104,10 +104,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '📦',
+      icon: Icons.inventory_2,
       title: 'Products & Services',
       subtitle: 'Build your catalog so adding line items is instant',
-      color: const Color(0xFFF59E0B),
+      
       redirectLabel: 'Manage Products →',
       redirectIndex: 6,
       steps: const [
@@ -130,10 +130,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '🧾',
+      icon: Icons.receipt_long,
       title: 'Creating Invoices',
       subtitle: 'Generate professional invoices in under a minute',
-      color: const Color(0xFFEF4444),
+      
       redirectLabel: 'Create Invoice →',
       redirectIndex: 1,
       steps: const [
@@ -164,10 +164,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '📋',
+      icon: Icons.assignment,
       title: 'Invoice Management',
       subtitle: 'View, search, filter, and take action on all invoices',
-      color: const Color(0xFF8B5CF6),
+      
       redirectLabel: 'View Invoices →',
       redirectIndex: 2,
       steps: const [
@@ -194,10 +194,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '📊',
+      icon: Icons.bar_chart,
       title: 'Reports & Analytics',
       subtitle: 'Understand your revenue and business health at a glance',
-      color: const Color(0xFF0EA5E9),
+      
       redirectLabel: 'View Reports →',
       redirectIndex: 7,
       steps: const [
@@ -220,10 +220,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '💾',
+      icon: Icons.save,
       title: 'Backup & Data',
       subtitle: 'Export your data and keep it safe across devices',
-      color: const Color(0xFF64748B),
+      
       steps: const [
         _GuideStep(
           'Export to Excel',
@@ -244,10 +244,10 @@ class _GuideScreenState extends State<GuideScreen>
       ],
     ),
     _GuideSection(
-      emoji: '⚙️',
+      icon: Icons.settings,
       title: 'Account & Settings',
       subtitle: 'Manage your profile, theme, and app preferences',
-      color: const Color(0xFF475569),
+      
       redirectLabel: 'Open Settings →',
       redirectIndex: 8,
       steps: const [
@@ -360,13 +360,7 @@ class _HeroHeader extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 48, 24, 36),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0xFF1E1B4B), const Color(0xFF312E81)]
-              : [const Color(0xFF6366F1), const Color(0xFF8B5CF6)],
-        ),
+        color: isDark ? const Color(0xFF1E293B) : const Color(0xFF007CFF),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,7 +373,7 @@ class _HeroHeader extends StatelessWidget {
                   color: Colors.white.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Text('📖', style: TextStyle(fontSize: 28)),
+                child: const Icon(Icons.menu_book, color: Colors.white, size: 28),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -418,8 +412,7 @@ class _HeroHeader extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.lightbulb_outline_rounded,
-                    color: Colors.amber.shade200, size: 20),
+                Icon(Icons.info_outline, color: Colors.white.withOpacity(0.9), size: 20),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -466,7 +459,7 @@ class _QuickJumpRow extends StatelessWidget {
           itemBuilder: (context, i) {
             final section = sections[i];
             return ActionChip(
-              avatar: Text(section.emoji, style: const TextStyle(fontSize: 14)),
+              avatar: Icon(section.icon, size: 14, color: const Color(0xFF007CFF)),
               label: Text(
                 section.title,
                 style:
@@ -474,9 +467,9 @@ class _QuickJumpRow extends StatelessWidget {
               ),
               onPressed: () => onTap(i),
               backgroundColor: isDark
-                  ? section.color.withOpacity(0.15)
-                  : section.color.withOpacity(0.1),
-              side: BorderSide(color: section.color.withOpacity(0.35)),
+                  ? const Color(0xFF007CFF).withOpacity(0.15)
+                  : const Color(0xFF007CFF).withOpacity(0.1),
+              side: BorderSide(color: const Color(0xFF007CFF).withOpacity(0.35)),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             );
           },
@@ -517,14 +510,14 @@ class _SectionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: section.isExpanded
-                ? section.color.withOpacity(0.5)
+                ? const Color(0xFF007CFF).withOpacity(0.5)
                 : colorScheme.outlineVariant.withOpacity(0.4),
             width: section.isExpanded ? 1.5 : 1,
           ),
           boxShadow: section.isExpanded
               ? [
                   BoxShadow(
-                    color: section.color.withOpacity(0.12),
+                    color: const Color(0xFF007CFF).withOpacity(0.12),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   )
@@ -545,13 +538,12 @@ class _SectionCard extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: section.color
+                        color: const Color(0xFF007CFF)
                             .withOpacity(isDark ? 0.2 : 0.12),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
-                        child: Text(section.emoji,
-                            style: const TextStyle(fontSize: 22)),
+                        child: Icon(section.icon, size: 22, color: const Color(0xFF007CFF)),
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -584,7 +576,7 @@ class _SectionCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: section.color.withOpacity(0.12),
+                        color: const Color(0xFF007CFF).withOpacity(0.12),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -592,7 +584,7 @@ class _SectionCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: section.color,
+                          color: const Color(0xFF007CFF),
                         ),
                       ),
                     ),
@@ -651,7 +643,7 @@ class _SectionBody extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: Divider(color: section.color.withOpacity(0.25), height: 1),
+          child: Divider(color: const Color(0xFF007CFF).withOpacity(0.25), height: 1),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
@@ -662,7 +654,7 @@ class _SectionBody extends StatelessWidget {
               return _StepRow(
                 stepNumber: i + 1,
                 step: step,
-                accentColor: section.color,
+                accentColor: const Color(0xFF007CFF),
                 isDark: isDark,
                 colorScheme: colorScheme,
                 isLast: isLast,
@@ -673,7 +665,6 @@ class _SectionBody extends StatelessWidget {
         if (section.redirectLabel != null && section.redirectIndex != null)
           _RedirectButton(
             label: section.redirectLabel!,
-            color: section.color,
             isDark: isDark,
             onTap: () => onNavigate(section.redirectIndex!),
           ),
@@ -779,19 +770,20 @@ class _StepRow extends StatelessWidget {
 
 class _RedirectButton extends StatelessWidget {
   final String label;
-  final Color color;
+  
   final bool isDark;
   final VoidCallback onTap;
 
   const _RedirectButton({
     required this.label,
-    required this.color,
+    
     required this.isDark,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    const Color brandColor = Color(0xFF007CFF);
     return Padding(
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 8),
       child: Material(
@@ -801,18 +793,11 @@ class _RedirectButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Ink(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  color,
-                  Color.lerp(color, Colors.black, 0.15)!,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: brandColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.35),
+                  color: brandColor.withOpacity(0.35),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

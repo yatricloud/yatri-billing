@@ -533,19 +533,7 @@ class _SectionCard extends StatelessWidget {
                 padding: const EdgeInsets.all(18),
                 child: Row(
                   children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF007CFF)
-                            .withValues(alpha: isDark ? 0.2 : 0.12),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Icon(section.icon, size: 22, color: const Color(0xFF007CFF)),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
+                    // Icon removed as requested
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,23 +559,7 @@ class _SectionCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF007CFF).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        '${section.steps.length} steps',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF007CFF),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
+                    // Steps text removed as requested
                     AnimatedRotation(
                       turns: section.isExpanded ? 0.5 : 0,
                       duration: const Duration(milliseconds: 250),

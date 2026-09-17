@@ -4747,6 +4747,28 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                 ),
               ],
               const Spacer(),
+              // Customers & Products button
+              OutlinedButton.icon(
+                onPressed: _showSidePanelSheet,
+                icon: const Icon(Icons.people_alt_outlined, size: 15),
+                label: Text(
+                  selectedCustomer != null
+                      ? selectedCustomer!.name.split(' ').first
+                      : 'Customers & Products',
+                  style: const TextStyle(fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFF007CFF),
+                  side: const BorderSide(color: Color(0xFF007CFF), width: 1.2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+              const SizedBox(width: 12),
               // Right: Invoice number chip
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -4782,6 +4804,21 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: LayoutBuilder(
+        builder: (context, constraints) {
+          // Only show FAB on narrow/mobile screens
+          if (constraints.maxWidth > 600) return const SizedBox.shrink();
+          return FloatingActionButton.extended(
+            onPressed: _showSidePanelSheet,
+            backgroundColor: const Color(0xFF007CFF),
+            foregroundColor: Colors.white,
+            icon: const Icon(Icons.people_alt_outlined),
+            label: Text(
+              selectedCustomer != null ? selectedCustomer!.name.split(' ').first : 'Customers',
+            ),
+          );
+        },
       ),
       body: !isEditing && _invoice != null
           ? buildInvoiceSuccessScreen()
@@ -4821,43 +4858,93 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
     ));
   }
 
+  // ─── Side panel sheet ──────────────────────────────────────────────────────
+
+  void _showSidePanelSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.92,
+        minChildSize: 0.5,
+        maxChildSize: 1.0,
+        expand: false,
+        builder: (ctx, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // drag handle
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Customers & Products',
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w700),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(ctx).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                  children: [
+                    _customerSearchView(),
+                    const SizedBox(height: 16),
+                    _productSearchView(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildDesktopLayout(double tax, double subtotal, double total,
       double grossSubtotal, double totalDiscount) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
-          flex: 1,
-          child: Column(
-            children: [
-              _customerSearchView(),
-              const SizedBox(height: 20),
-              _productSearchView(),
-            ],
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 2, child: _invoiceDetailsForm()),
+            const SizedBox(width: 20),
+            Expanded(flex: 3, child: _customerDetailsForm()),
+          ],
         ),
-        const SizedBox(width: 20),
-        Expanded(
-          flex: 4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 2, child: _invoiceDetailsForm()),
-                  const SizedBox(width: 20),
-                  Expanded(flex: 3, child: _customerDetailsForm()),
-                ],
-              ),
-              const SizedBox(height: 20),
-              _invoiceItems(tax, subtotal, total, grossSubtotal, totalDiscount),
-              const SizedBox(height: 20),
-              _actionButtons(),
-            ],
-          ),
-        ),
+        const SizedBox(height: 20),
+        _invoiceItems(tax, subtotal, total, grossSubtotal, totalDiscount),
+        const SizedBox(height: 20),
+        _actionButtons(),
       ],
     );
   }
@@ -4865,44 +4952,20 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
   Widget _buildTabletLayout(double tax, double subtotal, double total,
       double grossSubtotal, double totalDiscount) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  _customerSearchView(),
-                  const SizedBox(height: 16),
-                  _productSearchView(),
-                ],
-              ),
-            ),
+            Expanded(flex: 2, child: _invoiceDetailsForm()),
             const SizedBox(width: 16),
-            Expanded(
-              flex: 4,
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 2, child: _invoiceDetailsForm()),
-                      const SizedBox(width: 16),
-                      Expanded(flex: 3, child: _customerDetailsForm()),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  _invoiceItems(
-                      tax, subtotal, total, grossSubtotal, totalDiscount),
-                  const SizedBox(height: 16),
-                  _actionButtons(),
-                ],
-              ),
-            ),
+            Expanded(flex: 3, child: _customerDetailsForm()),
           ],
         ),
+        const SizedBox(height: 16),
+        _invoiceItems(tax, subtotal, total, grossSubtotal, totalDiscount),
+        const SizedBox(height: 16),
+        _actionButtons(),
       ],
     );
   }
@@ -4911,10 +4974,6 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
       double grossSubtotal, double totalDiscount) {
     return Column(
       children: [
-        _customerSearchView(),
-        const SizedBox(height: 16),
-        _productSearchView(),
-        const SizedBox(height: 16),
         _invoiceDetailsForm(),
         const SizedBox(height: 16),
         _customerDetailsForm(),

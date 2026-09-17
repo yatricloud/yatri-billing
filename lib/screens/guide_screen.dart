@@ -51,7 +51,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Getting Started',
       subtitle: 'Set up your business profile before anything else',
       
-      redirectLabel: 'Open Settings →',
+      redirectLabel: 'Open Settings',
       redirectIndex: 8,
       steps: const [
         _GuideStep(
@@ -81,7 +81,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Client Management',
       subtitle: 'Save customer details once, use them on every invoice',
       
-      redirectLabel: 'Manage Customers →',
+      redirectLabel: 'Manage Customers',
       redirectIndex: 5,
       steps: const [
         _GuideStep(
@@ -107,7 +107,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Products & Services',
       subtitle: 'Build your catalog so adding line items is instant',
       
-      redirectLabel: 'Manage Products →',
+      redirectLabel: 'Manage Products',
       redirectIndex: 6,
       steps: const [
         _GuideStep(
@@ -133,7 +133,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Creating Invoices',
       subtitle: 'Generate professional invoices in under a minute',
       
-      redirectLabel: 'Create Invoice →',
+      redirectLabel: 'Create Invoice',
       redirectIndex: 1,
       steps: const [
         _GuideStep(
@@ -167,7 +167,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Invoice Management',
       subtitle: 'View, search, filter, and take action on all invoices',
       
-      redirectLabel: 'View Invoices →',
+      redirectLabel: 'View Invoices',
       redirectIndex: 2,
       steps: const [
         _GuideStep(
@@ -197,7 +197,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Reports & Analytics',
       subtitle: 'Understand your revenue and business health at a glance',
       
-      redirectLabel: 'View Reports →',
+      redirectLabel: 'View Reports',
       redirectIndex: 7,
       steps: const [
         _GuideStep(
@@ -247,7 +247,7 @@ class _GuideScreenState extends State<GuideScreen>
       title: 'Account & Settings',
       subtitle: 'Manage your profile, theme, and app preferences',
       
-      redirectLabel: 'Open Settings →',
+      redirectLabel: 'Open Settings',
       redirectIndex: 8,
       steps: const [
         _GuideStep(
@@ -364,42 +364,23 @@ class _HeroHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(Icons.menu_book, color: Colors.white, size: 28),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'User Guide',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    Text(
-                      'Everything you need to use the app — step by step',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.8),
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          const Text(
+            'User Guide',
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Everything you need to use the app — step by step',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.8),
+              height: 1.4,
+            ),
           ),
           const SizedBox(height: 24),
           Container(
@@ -409,21 +390,13 @@ class _HeroHeader extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
             ),
-            child: Row(
-              children: [
-                Icon(Icons.info_outline, color: Colors.white.withValues(alpha: 0.9), size: 20),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Tap any section below to expand it. Use the highlighted buttons to jump directly to that part of the app.',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontSize: 13,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
-              ],
+            child: Text(
+              'Tap any section below to expand it. Use the highlighted buttons to jump directly to that part of the app.',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.9),
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
           ),
         ],
@@ -458,7 +431,6 @@ class _QuickJumpRow extends StatelessWidget {
           itemBuilder: (context, i) {
             final section = sections[i];
             return ActionChip(
-              avatar: Icon(section.icon, size: 14, color: const Color(0xFF007CFF)),
               label: Text(
                 section.title,
                 style:
@@ -739,64 +711,73 @@ class _StepRow extends StatelessWidget {
 
 // ─── Redirect Button ──────────────────────────────────────────────────────────
 
-class _RedirectButton extends StatelessWidget {
+class _RedirectButton extends StatefulWidget {
   final String label;
-  
   final bool isDark;
   final VoidCallback onTap;
 
   const _RedirectButton({
     required this.label,
-    
     required this.isDark,
     required this.onTap,
   });
 
   @override
+  State<_RedirectButton> createState() => _RedirectButtonState();
+}
+
+class _RedirectButtonState extends State<_RedirectButton> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
     const Color brandColor = Color(0xFF007CFF);
+    const Color hoverColor = Color(0xFF0066D6);
+
+    // Ensure label never contains duplicate arrows
+    final cleanLabel = widget.label.replaceAll('→', '').replaceAll('->', '').trim();
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 8),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Ink(
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
             decoration: BoxDecoration(
-              color: brandColor,
+              color: _isHovered ? hoverColor : brandColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: brandColor.withValues(alpha: 0.35),
-                  blurRadius: 10,
+                  color: brandColor.withValues(alpha: _isHovered ? 0.45 : 0.3),
+                  blurRadius: _isHovered ? 14 : 10,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.arrow_forward_rounded,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  cleanLabel,
+                  style: const TextStyle(
                     color: Colors.white,
-                    size: 18,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.2,
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ],
             ),
           ),
         ),

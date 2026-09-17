@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ import 'package:invoiso/domain/invoice_calculator.dart';
 import 'package:invoiso/models/invoice.dart';
 import 'package:invoiso/models/product.dart';
 import 'package:invoiso/screens/settings_screen.dart';
+import 'package:invoiso/screens/guide_screen.dart';
 import 'package:invoiso/common.dart';
 import 'package:invoiso/services/invoice_pdf_services.dart';
 import 'package:invoiso/services/pdf_service.dart';
@@ -198,6 +200,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           key: ValueKey('revenue_screen'),
           initialTabIndex: 0,
         );
+      case 10:
+        return GuideScreen(onNavigate: _selectTab);
       default:
         return const Center(child: Text('Unknown tab'));
     }
@@ -376,25 +380,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 builder: (ctx) => AlertDialog(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
-                  title: const Row(
-                    children: [
-                      Icon(Icons.headset_mic_outlined,
-                          color: Color(0xFF007CFF)),
-                      SizedBox(width: 10),
-                      Text('Contact & Support',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700)),
-                    ],
-                  ),
+                  title: const Text('Contact & Support',
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w700)),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: Color(0xFFEFF6FF),
-                          child: Icon(Icons.email_outlined,
-                              color: Color(0xFF007CFF), size: 20),
-                        ),
                         title: const Text('Email Support',
                             style: TextStyle(
                                 fontSize: 13, color: Color(0xFF64748B))),
@@ -408,11 +400,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       const SizedBox(height: 8),
                       ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: Color(0xFFF0FDF4),
-                          child: Icon(Icons.phone_outlined,
-                              color: Color(0xFF16A34A), size: 20),
-                        ),
                         title: const Text('Phone / WhatsApp',
                             style: TextStyle(
                                 fontSize: 13, color: Color(0xFF64748B))),
@@ -771,6 +758,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       _buildNavItem(8, Icons.settings_outlined,
                           Icons.settings_rounded, 'Settings',
                           inDrawer: inDrawer),
+                      _buildNavItem(10, Icons.help_outline,
+                          Icons.help_rounded, 'User Guide',
+                          inDrawer: inDrawer),
                     ] else ...[
                       _buildNavItem(0, Icons.grid_view_outlined,
                           Icons.grid_view_rounded, 'Dashboard',
@@ -806,6 +796,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           inDrawer: inDrawer),
                       _buildNavItem(8, Icons.settings_outlined,
                           Icons.settings_rounded, 'Settings',
+                          inDrawer: inDrawer),
+                      _buildNavItem(10, Icons.help_outline,
+                          Icons.help_rounded, 'User Guide',
                           inDrawer: inDrawer),
                     ],
                   ],
@@ -2085,11 +2078,15 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                         },
                       ),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: 860,
-                        child: Column(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: math.max(constraints.maxWidth, 860.0),
+                            ),
+                            child: Column(
                           children: [
                             // Table Column Headers — solid brand blue per Yatri Cloud reference
                             Container(
@@ -2308,10 +2305,11 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
                                   );
                                 },
                               ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -3004,42 +3002,34 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
 
   Widget _buildPaymentStatusChip(PaymentStatus status) {
     final Color bgColor;
-    final Color borderColor;
-    final Color textColor;
     final String label;
     switch (status) {
       case PaymentStatus.paid:
-        bgColor = const Color(0xFFDCFCE7);
-        borderColor = const Color(0xFF86EFAC);
-        textColor = const Color(0xFF15803D);
+        bgColor = const Color(0xFF10B981);
         label = 'Paid';
         break;
       case PaymentStatus.partial:
-        bgColor = const Color(0xFFFEF3C7);
-        borderColor = const Color(0xFFFCD34D);
-        textColor = const Color(0xFFB45309);
+        bgColor = const Color(0xFFF59E0B);
         label = 'Partial';
         break;
       case PaymentStatus.unpaid:
-        bgColor = const Color(0xFFFEE2E2);
-        borderColor = const Color(0xFFFCA5A5);
-        textColor = const Color(0xFFB91C1C);
+        bgColor = const Color(0xFFEF4444);
         label = 'Unpaid';
         break;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: textColor,
+        style: const TextStyle(
+          fontSize: 11.5,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+          letterSpacing: 0.3,
         ),
       ),
     );
@@ -3189,12 +3179,6 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
       value: value,
       child: Row(
         children: [
-          Icon(icon,
-              size: 18,
-              color: active
-                  ? primary
-                  : Theme.of(context).colorScheme.onSurfaceVariant),
-          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -3433,14 +3417,6 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         ),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(9),
-              decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Icon(icon, color: color, size: 19),
-            ),
-            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -4275,14 +4251,6 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 4),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8)),
-              child: Icon(icon, color: color, size: 15),
-            ),
-            const SizedBox(width: 10),
             Expanded(
                 child: Text(label,
                     style: TextStyle(
@@ -4475,17 +4443,17 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         PopupMenuItem(
           value: 'preview',
           child: Row(children: [
-            Icon(Icons.visibility_outlined, size: 16, color: Colors.green),
-            SizedBox(width: 10),
-            Text('Preview PDF', style: TextStyle(fontSize: 13)),
+            const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF64748B)),
+            const SizedBox(width: 10),
+            const Text('Preview PDF', style: TextStyle(fontSize: 13)),
           ]),
         ),
         PopupMenuItem(
           value: 'download',
           child: Row(children: [
-            Icon(Icons.download_outlined, size: 16, color: Colors.deepPurple),
-            SizedBox(width: 10),
-            Text('Download PDF', style: TextStyle(fontSize: 13)),
+            const Icon(Icons.download_outlined, size: 16, color: Color(0xFF64748B)),
+            const SizedBox(width: 10),
+            const Text('Download PDF', style: TextStyle(fontSize: 13)),
           ]),
         ),
       ],
@@ -4526,25 +4494,25 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         PopupMenuItem(
           value: 'payment',
           child: Row(children: [
-            Icon(Icons.payments_outlined, size: 16, color: Color(0xFF6A1B9A)),
-            SizedBox(width: 10),
-            Text('Record Payment', style: TextStyle(fontSize: 13)),
+            const Icon(Icons.payments_outlined, size: 16, color: Color(0xFF64748B)),
+            const SizedBox(width: 10),
+            const Text('Record Payment', style: TextStyle(fontSize: 13)),
           ]),
         ),
         PopupMenuItem(
           value: 'preview',
           child: Row(children: [
-            Icon(Icons.visibility_outlined, size: 16, color: Colors.green),
-            SizedBox(width: 10),
-            Text('Preview PDF', style: TextStyle(fontSize: 13)),
+            const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF64748B)),
+            const SizedBox(width: 10),
+            const Text('Preview PDF', style: TextStyle(fontSize: 13)),
           ]),
         ),
         PopupMenuItem(
           value: 'download',
           child: Row(children: [
-            Icon(Icons.download_outlined, size: 16, color: Colors.deepPurple),
-            SizedBox(width: 10),
-            Text('Download PDF', style: TextStyle(fontSize: 13)),
+            const Icon(Icons.download_outlined, size: 16, color: Color(0xFF64748B)),
+            const SizedBox(width: 10),
+            const Text('Download PDF', style: TextStyle(fontSize: 13)),
           ]),
         ),
       ],
@@ -4572,15 +4540,6 @@ class _DashboardHomeState extends ConsumerState<DashboardHome> {
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                    color: const Color(0xFF1565C0).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8)),
-                child: const Icon(Icons.emoji_events_outlined,
-                    color: Color(0xFF1565C0), size: 15),
-              ),
-              const SizedBox(width: 8),
               Text('Top Customers',
                   style: TextStyle(
                       fontSize: 13,

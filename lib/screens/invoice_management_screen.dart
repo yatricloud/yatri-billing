@@ -277,7 +277,7 @@ class _InvoiceManagementScreenState
       title: 'Move to Trash',
       message: 'Move Invoice ${formatDisplayInvoiceNumber(invoice.invoiceNumber ?? invoice.id)} to trash?',
       confirmLabel: 'Move to Trash',
-      confirmColor: Colors.orange,
+      confirmColor: Colors.red,
     );
     if (!confirmed) return;
 
@@ -463,7 +463,7 @@ class _InvoiceManagementScreenState
       title: 'Move to Trash',
       message: 'Move $count invoice${count == 1 ? '' : 's'} to trash?',
       confirmLabel: 'Move to Trash',
-      confirmColor: Colors.orange,
+      confirmColor: Colors.red,
     );
     if (!confirmed) return;
 
@@ -1898,66 +1898,32 @@ class _InvoiceManagementScreenState
                             invoice.paymentStatus != PaymentStatus.paid)
                           const PopupMenuItem(
                             value: 'payment',
-                            child: Row(
-                              children: [
-                                Icon(Icons.payments_outlined,
-                                    size: 16, color: Color(0xFF475569)),
-                                SizedBox(width: 8),
-                                Text('Apply Payment',
-                                    style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
-                              ],
-                            ),
+                            child: Text('Apply Payment',
+                                style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                           ),
                         const PopupMenuItem(
                           value: 'duplicate',
-                          child: Row(
-                            children: [
-                              Icon(Icons.copy_all_outlined,
-                                  size: 16, color: Color(0xFF475569)),
-                              SizedBox(width: 8),
-                              Text('Duplicate',
-                                  style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
-                            ],
-                          ),
+                          child: Text('Duplicate',
+                              style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                         ),
                         const PopupMenuItem(
                           value: 'download',
-                          child: Row(
-                            children: [
-                              Icon(Icons.download_outlined,
-                                  size: 16, color: Color(0xFF475569)),
-                              SizedBox(width: 8),
-                              Text('Download PDF',
-                                  style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
-                            ],
-                          ),
+                          child: Text('Download PDF',
+                              style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                         ),
                         const PopupMenuItem(
                           value: 'print',
-                          child: Row(
-                            children: [
-                              Icon(Icons.print_outlined,
-                                  size: 16, color: Color(0xFF475569)),
-                              SizedBox(width: 8),
-                              Text('Print', style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
-                            ],
-                          ),
+                          child: Text('Print',
+                              style: TextStyle(fontSize: 13, color: Color(0xFF0F172A))),
                         ),
                         if (widget.user.isAdmin()) ...[
                           const PopupMenuDivider(),
                           const PopupMenuItem(
                             value: 'trash',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete_outline,
-                                    size: 16, color: Color(0xFF475569)),
-                                SizedBox(width: 8),
-                                Text('Move to Trash',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: Color(0xFF0F172A))),
-                              ],
-                            ),
+                            child: Text('Move to Trash',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xFFDC2626))),
                           ),
                         ],
                       ],

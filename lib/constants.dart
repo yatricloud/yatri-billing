@@ -64,7 +64,7 @@ class AppBorderRadius
 
 class AppConfig
 {
-  static const kIsCloud = kIsWeb;
+  static const kIsCloud = false;
   static const name = "Yatri Billing";
   static const version = "v1.0.0";
   static const developer = "Yatri Cloud";

@@ -102,7 +102,24 @@ Future<void> main() async {
   );
 
   runApp(ProviderScope(
-    overrides: supabaseRepositoryOverrides,
+    overrides: [
+      ...supabaseRepositoryOverrides,
+      appEditionConfigProvider.overrideWithValue(
+        const AppEditionConfig(
+          name: AppConfig.name,
+          version: AppConfig.version,
+          developer: AppConfig.developer,
+          supportEmail: AppConfig.supportEmail,
+          website: AppConfig.website,
+          license: AppConfig.license,
+          description: AppConfig.description,
+          additionalNote: DefaultValues.additionalNote,
+          thankYouNote: DefaultValues.thankYouNote,
+          enableUpdateCheck: UpdateConfig.enableUpdateCheck,
+          isCloud: true,
+        ),
+      ),
+    ],
     child: const MyApp(),
   ));
 }

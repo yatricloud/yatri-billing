@@ -567,39 +567,18 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
   }
 
   void addInvoiceProductPrompt(Product product) {
-    // Check if this product is already in the invoice
-    final existingIndex = (!_allowDuplicateInvoiceItems && !product.id.startsWith('custom-'))
-        ? invoiceItems.indexWhere((it) => it.product.id == product.id)
-        : -1;
-    final existingItem = existingIndex >= 0 ? invoiceItems[existingIndex] : null;
-    final isUpdate = existingItem != null;
-
-    // Pre-fill from existing item if updating, otherwise use product defaults
-    final quantityController = TextEditingController(
-        text: isUpdate
-            ? (existingItem.quantity == existingItem.quantity.roundToDouble()
-                ? existingItem.quantity.toInt().toString()
-                : existingItem.quantity.toString())
-            : '');
+    final quantityController = TextEditingController();
     final discountController = TextEditingController(
-        text: isUpdate
-            ? existingItem.discount.toString()
-            : (product.defaultDiscount > 0
-                ? product.defaultDiscount.toString()
-                : '0'));
-    final unitPriceController = TextEditingController(
-        text: isUpdate
-            ? existingItem.effectivePrice.toString()
-            : product.price.toString());
-    final extraCostController = TextEditingController(
-        text: isUpdate && existingItem.extraCost != null
-            ? existingItem.extraCost.toString()
-            : '');
-    final unitController = TextEditingController(
-        text: isUpdate ? existingItem.effectiveUnit : product.unit);
+        text: product.defaultDiscount > 0
+            ? product.defaultDiscount.toString()
+            : '0');
+    final unitPriceController =
+        TextEditingController(text: product.price.toString());
+    final extraCostController = TextEditingController();
+    final unitController = TextEditingController(text: product.unit);
 
-    bool discountPerUnit = isUpdate ? existingItem.discountPerUnit : true;
-    String dialogUnit = isUpdate ? existingItem.effectiveUnit : product.unit;
+    bool discountPerUnit = true;
+    String dialogUnit = product.unit;
     int insertAt = invoiceItems.length + 1;
 
     showDialog(
@@ -830,7 +809,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                   ],
                 ),
-                if (invoiceItems.isNotEmpty && !isUpdate) ...[
+                if (invoiceItems.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   const Divider(height: 1),
                   const SizedBox(height: 12),
@@ -900,30 +879,11 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                     : null;
                 final extraCost = double.tryParse(extraCostController.text);
 
-                // --- UPDATE existing item ---
-                if (isUpdate) {
-                  Navigator.pop(context);
-                  final updatedItem = InvoiceItem(
-                    product: product,
-                    quantity: qty,
-                    discount: discount,
-                    unitPrice: unitPrice,
-                    extraCost: extraCost,
-                    unit: dialogUnit.trim(),
-                    discountPerUnit: discountPerUnit,
-                  );
-                  if (mounted) {
-                    setState(() {
-                      invoiceItems[existingIndex] = updatedItem;
-                    });
-                  }
-                  return;
-                }
-
-                // --- ADD new item (stock checks) ---
+                // Check stock
                 if (!product.unlimitedStock &&
                     product.stock > 0 &&
                     qty > product.stock) {
+                  // Insufficient stock — ask user if they want to add anyway
                   Navigator.pop(context);
                   final addAnyway = await showDialog<bool>(
                     context: context,
@@ -1006,7 +966,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                       insertAt: insertAt);
                 }
               },
-              child: Text(isUpdate ? 'Update' : 'Add'),
+              child: const Text('Add'),
             ),
           ],
         ),
